@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "quant-met"
+version = "0.0.1"
+description = ""
+authors = ["Tjark Sievers <tsievers@physnet.uni-hamburg.de>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+numpy = "^1.26.4"
+scipy = "^1.13.0"
+click = "^8.1.7"
+matplotlib = "^3.8.4"
+pandas = "^2.2.2"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.7.0"
+scriv = "^1.5.1"
+tox = "^4.15.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

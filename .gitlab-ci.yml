@@ -1,0 +1,39 @@
+stages:
+  - test
+
+.base:
+  image: python:3.12.2
+
+.tests:
+  image: 31z4/tox
+  stage: test
+  before_script:
+    - pip install tox
+  tags:
+    - docker
+
+Linting:
+  extends: .tests
+  script:
+    - tox -e lint
+
+Type check:
+  extends: .tests
+  script:
+    - tox -e type
+
+Test python3.12:
+  extends: .tests
+  script:
+    - tox -e py312
+  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
+  artifacts:
+    when: always
+    paths:
+      - report.xml
+      - coverage.xml
+    reports:
+      junit: report.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
