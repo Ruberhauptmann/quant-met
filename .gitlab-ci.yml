@@ -7,20 +7,18 @@ stages:
 .tests:
   image: 31z4/tox
   stage: test
-  before_script:
-    - pip install tox
   tags:
     - docker
 
 Linting:
   extends: .tests
   script:
-    - tox -e lint
+    - tox -e py312-lint
 
 Type check:
   extends: .tests
   script:
-    - tox -e type
+    - tox -e py312-type
 
 Test python3.12:
   extends: .tests
