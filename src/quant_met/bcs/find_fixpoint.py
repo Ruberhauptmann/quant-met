@@ -1,16 +1,17 @@
 import numpy as np
-from scipy import optimize
+from matplotlib import pyplot as plt
+from scipy import interpolate, optimize
 
-from quant_met.plotting.plot import scatter_into_BZ
+from quant_met import plotting
+from quant_met.configuration import Configuration, DeltaVector
 
-from .configuration import Configuration, DeltaVector
 from .gap_equation import gap_equation_real
 from .nonint import generate_bloch
 
 
 def solve_gap_equation():
     config = Configuration(
-        a=np.sqrt(3) * 1, t_gr=1, t_x=0.01, V=1, U_X=1, U_Gr=1, mu=-1
+        a=np.sqrt(3) * 1, t_gr=1, t_x=0.01, V=0.5, U_X=0, U_Gr=0, mu=-2
     )
 
     all_K_points = (
@@ -27,8 +28,8 @@ def solve_gap_equation():
     K_vector_1 = all_K_points[1]
     K_vector_2 = all_K_points[5]
 
-    nx = 5
-    number_of_rows = 5
+    nx = 8
+    number_of_rows = 8
 
     k_points = np.concatenate(
         [
@@ -43,11 +44,11 @@ def solve_gap_equation():
 
     energies, bloch_absolute = generate_bloch(k_points, config)
 
-    # plot_into_BZ(all_K_points, k_points)
+    plotting.plot_into_BZ(all_K_points, k_points)
 
     delta_vector = DeltaVector(k_points=k_points, initial=1)
 
-    beta = 10000
+    beta = 100000
 
     solution = optimize.fixed_point(
         gap_equation_real,
@@ -57,6 +58,83 @@ def solve_gap_equation():
 
     delta_vector.update_from_1d_vector(solution)
 
-    print(delta_vector)
+    delta_vector.save("gap.hdf5")
 
-    scatter_into_BZ(all_K_points, k_points, delta_vector.data.loc[:, "delta_3"])
+    plotting.scatter_into_BZ(
+        all_K_points, k_points, delta_vector.data.loc[:, "delta_3"]
+    )
+
+    whole_path, whole_path_plot, ticks, labels = plotting.generate_BZ_path(config.a)
+
+    gap1_on_bandpath = np.abs(
+        interpolate.griddata(
+            delta_vector.k_points,
+            delta_vector.data.loc[:, "delta_1"],
+            whole_path,
+            method="cubic",
+        )
+    )
+    gap2_on_bandpath = np.abs(
+        interpolate.griddata(
+            delta_vector.k_points,
+            delta_vector.data.loc[:, "delta_2"],
+            whole_path,
+            method="cubic",
+        )
+    )
+    gap3_on_bandpath = np.abs(
+        interpolate.griddata(
+            delta_vector.k_points,
+            delta_vector.data.loc[:, "delta_3"],
+            whole_path,
+            method="cubic",
+        )
+    )
+
+    # scatter_into_BZ(all_K_points, whole_path, gap1_on_bandpath)
+
+    fig, ax = plt.subplots()
+
+    energies_on_bandpath, _ = generate_bloch(whole_path, config)
+
+    ax.plot(
+        whole_path_plot,
+        np.sqrt(energies_on_bandpath[:, 0] ** 2 + gap1_on_bandpath**2),
+        label="band 1, +",
+    )
+    ax.plot(
+        whole_path_plot,
+        -np.sqrt(energies_on_bandpath[:, 0] ** 2 + gap1_on_bandpath**2),
+        label="band 1, -",
+    )
+    ax.plot(
+        whole_path_plot,
+        np.sqrt(energies_on_bandpath[:, 1] ** 2 + gap2_on_bandpath**2),
+        label="band 2, +",
+    )
+    ax.plot(
+        whole_path_plot,
+        -np.sqrt(energies_on_bandpath[:, 1] ** 2 + gap2_on_bandpath**2),
+        label="band 2, -",
+    )
+    ax.plot(
+        whole_path_plot,
+        np.sqrt(energies_on_bandpath[:, 2] ** 2 + gap3_on_bandpath**2),
+        label="band 3, +",
+    )
+    ax.plot(
+        whole_path_plot,
+        -np.sqrt(energies_on_bandpath[:, 2] ** 2 + gap3_on_bandpath**2),
+        label="band 3, -",
+    )
+
+    ax.axhline(y=config.mu)
+
+    ax.set_xticks(ticks, labels)
+    ax.tick_params(
+        axis="both", direction="in", bottom=True, top=True, left=True, right=True
+    )
+
+    fig.legend()
+
+    fig.savefig("BCS_bandstructure.pdf", bbox_inches="tight")
