@@ -1,7 +1,8 @@
 import numpy as np
 import numpy.typing as npt
+import pandas as pd
 
-from .configuration import Configuration
+from quant_met.configuration import Configuration
 
 
 def generate_non_interacting_hamiltonian(k: npt.NDArray, config: Configuration):
@@ -37,6 +38,8 @@ def generate_non_interacting_hamiltonian(k: npt.NDArray, config: Configuration):
         )
     )
 
+    h = h - config.mu * np.eye(3)
+
     return h
 
 
@@ -48,8 +51,39 @@ def generate_bloch(k_points: npt.NDArray, config: Configuration):
         h = generate_non_interacting_hamiltonian(k, config)
 
         energies[i], bloch[i] = np.linalg.eigh(h)
-        energies[i] = energies[i] - config.mu
+        energies[i] = energies[i]
 
     bloch_absolute = np.power(np.absolute(bloch), 2)
 
     return energies, bloch_absolute
+
+
+def calculate_bandstructure(config: Configuration, k_point_list):
+    results = pd.DataFrame(
+        columns=["band_1", "wx_1", "band_2", "wx_2", "band_3", "wx_3"],
+        index=range(len(k_point_list)),
+        dtype=float,
+    )
+
+    for i, k in enumerate(k_point_list):
+        h = generate_non_interacting_hamiltonian(k=k, config=config)
+
+        energies, eigenvectors = np.linalg.eigh(h)
+
+        results.at[i, "band_1"] = energies[0]
+        results.at[i, "wx_1"] = (
+            np.abs(np.dot(eigenvectors[:, 0], np.array([0, 0, 1]))) ** 2
+            - np.abs(np.dot(eigenvectors[:, 0], np.array([1, 0, 0]))) ** 2
+        )
+        results.at[i, "band_2"] = energies[1]
+        results.at[i, "wx_2"] = (
+            np.abs(np.dot(eigenvectors[:, 1], np.array([0, 0, 1]))) ** 2
+            - np.abs(np.dot(eigenvectors[:, 1], np.array([1, 0, 0]))) ** 2
+        )
+        results.at[i, "band_3"] = energies[2]
+        results.at[i, "wx_3"] = (
+            np.abs(np.dot(eigenvectors[:, 2], np.array([0, 0, 1]))) ** 2
+            - np.abs(np.dot(eigenvectors[:, 2], np.array([1, 0, 0]))) ** 2
+        )
+
+    return results
