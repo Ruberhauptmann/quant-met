@@ -23,6 +23,7 @@ scriv = "^1.5.1"
 tox = "^4.15.0"
 jupyter = "^1.0.0"
 ipympl = "^0.9.4"
+black = "^24.4.2"
 
 [build-system]
 requires = ["poetry-core"]
