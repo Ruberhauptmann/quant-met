@@ -41,7 +41,7 @@ Check version:
   extends: .base
   stage: test
   rules:
-    - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME ~= /release-.*/
+    - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /release-.*/
   before_script:
     - pip install poetry
   script:
