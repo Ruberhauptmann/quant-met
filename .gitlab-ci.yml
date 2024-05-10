@@ -9,6 +9,7 @@ stages:
   image: 31z4/tox
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_TAG
   stage: test
   tags:
     - docker
@@ -44,6 +45,7 @@ Check version:
   stage: test
   rules:
     - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /release-.*/
+    - if: $CI_COMMIT_TAG
   before_script:
     - pip install poetry
   script:
