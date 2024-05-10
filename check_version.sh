@@ -7,9 +7,6 @@ pip install quant-met --extra-index-url "${CI_API_V4_URL}/projects/${CI_PROJECT_
 current_version=$(poetry version | awk '{print $2}')
 registry_version=$(pip show quant-met | grep "Version: " | awk '{print $2}')
 
-echo "$current_version"
-echo "$registry_version"
-
 if [[ "$current_version" == "$registry_version" ]];
 then
   echo "Version is not bumped!"
