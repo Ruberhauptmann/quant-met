@@ -39,7 +39,7 @@ Test python3.12:
 
 Check version:
   extends: .base
-  stage: tests
+  stage: test
   before_script:
     - pip install poetry
   script:
