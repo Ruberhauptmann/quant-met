@@ -12,8 +12,9 @@ class Configuration:
     a: float
     V: float
     mu: float
-    U_Gr: float
-    U_X: float
+    U_Gr: float | None = 0
+    U_X: float | None = 0
+    beta: float | None = np.inf
 
     @property
     def U(self) -> list[float]:

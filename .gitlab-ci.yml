@@ -37,6 +37,18 @@ Test python3.12:
         coverage_format: cobertura
         path: coverage.xml
 
+Check version:
+  extends: .base
+  stage: test
+  rules:
+    - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /release-.*/
+  before_script:
+    - pip install poetry
+  script:
+    - bash ./check_version.sh
+  tags:
+    - docker
+
 Publish package:
   extends: .base
   stage: publish
