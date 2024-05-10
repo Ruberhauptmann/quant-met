@@ -3,32 +3,92 @@ import numpy as np
 from matplotlib.collections import LineCollection
 
 
-def plot_into_BZ(all_K_points, k_points):
-    fig, ax = plt.subplots()
+def plot_into_bz(
+    bz_corners, k_points, fig: plt.Figure | None = None, ax: plt.Axes | None = None
+):
+    if fig is None:
+        fig, ax = plt.subplots()
 
     ax.scatter(*zip(*k_points))
-    ax.scatter(*zip(*all_K_points), alpha=0.6)
+    ax.scatter(*zip(*bz_corners), alpha=0.8)
 
     ax.set_aspect("equal", adjustable="box")
 
     return fig
 
 
-def scatter_into_BZ(all_K_points, k_points, data):
-    fig, ax = plt.subplots()
+def scatter_into_bz(
+    bz_corners,
+    k_points,
+    data,
+    fig: plt.Figure | None = None,
+    ax: plt.Axes | None = None,
+):
+    if fig is None:
+        fig, ax = plt.subplots()
 
     scatter = ax.scatter(*zip(*k_points), c=data, cmap="viridis")
-    ax.scatter(*zip(*all_K_points), alpha=0.8)
-    fig.colorbar(scatter, ax=ax, ticks=[0, 1, 2, 3])
+    ax.scatter(*zip(*bz_corners), alpha=0.8)
+    fig.colorbar(scatter, ax=ax, fraction=0.046, pad=0.04)
 
     ax.set_aspect("equal", adjustable="box")
 
     return fig
+
+
+def plot_bcs_bandstructure(
+    non_interacting_bands,
+    deltas,
+    k_point_list,
+    ticks,
+    labels,
+    fig: plt.Figure | None = None,
+    ax: plt.Axes | None = None,
+):
+    if fig is None:
+        fig, ax = plt.subplots()
+
+    ax.axhline(y=0, alpha=0.7, linestyle="--", color="black")
+
+    for index, (band, delta) in enumerate(zip(non_interacting_bands, deltas)):
+        ax.plot(
+            k_point_list,
+            np.sqrt(band**2 + np.abs(delta) ** 2),
+            label=f"band {index}, +",
+        )
+        ax.plot(
+            k_point_list,
+            -np.sqrt(band**2 + np.abs(delta) ** 2),
+            label=f"band {index}, -",
+        )
+    ax.set_box_aspect(1)
+
+    ax.set_xticks(ticks, labels)
+    ax.set_yticks(range(-5, 6))
+    ax.set_facecolor("lightgray")
+    ax.grid(visible=True)
+    # ax.set_ylim([-5, 5])
+    ax.tick_params(
+        axis="both", direction="in", bottom=True, top=True, left=True, right=True
+    )
+
+    ax.legend()
+
+    return fig, ax
 
 
 def plot_nonint_bandstructure(
-    bands, overlaps, k_point_list, ticks, labels, fig: plt.Figure, ax: plt.Axes
+    bands,
+    overlaps,
+    k_point_list,
+    ticks,
+    labels,
+    fig: plt.Figure | None = None,
+    ax: plt.Axes | None = None,
 ):
+    if fig is None:
+        fig, ax = plt.subplots()
+
     line = None
     ax.axhline(y=0, alpha=0.7, linestyle="--", color="black")
 
@@ -50,10 +110,14 @@ def plot_nonint_bandstructure(
 
     ax.set_xticks(ticks, labels)
     ax.set_yticks(range(-5, 6))
+    ax.set_facecolor("lightgray")
+    ax.grid(visible=True)
     # ax.set_ylim([-5, 5])
     ax.tick_params(
         axis="both", direction="in", bottom=True, top=True, left=True, right=True
     )
+
+    return fig
 
 
 def _generate_part_of_path(p_0, p_1, n, length_whole_path):
@@ -70,7 +134,7 @@ def _generate_part_of_path(p_0, p_1, n, length_whole_path):
     return k_space_path
 
 
-def generate_BZ_path(a, points=None):
+def generate_bz_path(a, points=None):
     Gamma = np.array([0, 0])
     M = np.pi / a * np.array([1, 1 / np.sqrt(3)])
     K = 4 * np.pi / (3 * a) * np.array([1, 0])
