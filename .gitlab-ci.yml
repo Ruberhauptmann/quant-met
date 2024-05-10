@@ -7,6 +7,8 @@ stages:
 
 .tests:
   image: 31z4/tox
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   stage: test
   tags:
     - docker
