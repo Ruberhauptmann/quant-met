@@ -37,6 +37,16 @@ Test python3.12:
         coverage_format: cobertura
         path: coverage.xml
 
+Check version:
+  extends: .base
+  stage: tests
+  before_script:
+    - pip install poetry
+  script:
+    - bash ./check_version.sh
+  tags:
+    - docker
+
 Publish package:
   extends: .base
   stage: publish
