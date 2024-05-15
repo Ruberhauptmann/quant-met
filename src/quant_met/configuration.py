@@ -15,6 +15,7 @@ class Configuration:
     U_Gr: float | None = 0
     U_X: float | None = 0
     beta: float | None = np.inf
+    filling: float | None = None
 
     @property
     def U(self) -> list[float]:

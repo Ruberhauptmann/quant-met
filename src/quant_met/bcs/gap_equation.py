@@ -43,6 +43,7 @@ def gap_equation_real(
     beta: float,
     bloch_absolute: npt.NDArray,
     energies: npt.NDArray,
+    mu: float,
 ):
     return_vector = np.zeros(len(delta_k))
 
@@ -61,19 +62,20 @@ def gap_equation_real(
                             0.5
                             * 1
                             / np.sqrt(
-                                energies[k_prime_index][m] ** 2
+                                (energies[k_prime_index][m] - mu) ** 2
                                 + np.abs(delta_k[k_prime_index]) ** 2
                             )
                             * bloch_absolute[k_prime_index][alpha][m]
                             * delta_k[k_prime_index]
-                            * np.tanh(
-                                0.5
-                                * beta
-                                * np.sqrt(
-                                    energies[k_prime_index][m] ** 2
-                                    + np.abs(delta_k[k_prime_index]) ** 2
-                                )
-                            )
+                            * 1
+                            # * np.tanh(
+                            #    0.5
+                            #    * beta
+                            #    * np.sqrt(
+                            #        energies[k_prime_index][m] ** 2
+                            #        + np.abs(delta_k[k_prime_index]) ** 2
+                            #    )
+                            # )
                         )
                 sum_tmp += prefactor * integral / number_k_points
 

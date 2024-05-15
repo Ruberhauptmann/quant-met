@@ -1,9 +1,7 @@
 import numpy as np
 import numpy.typing as npt
-from matplotlib import pyplot as plt
 from scipy import interpolate, optimize
 
-from quant_met import plotting
 from quant_met.configuration import Configuration, DeltaVector
 
 from .gap_equation import gap_equation_real
@@ -33,7 +31,7 @@ def solve_gap_equation(config: Configuration, k_points: npt.NDArray) -> DeltaVec
     solution = optimize.fixed_point(
         gap_equation_real,
         delta_vector.as_1d_vector,
-        args=(config.U, config.beta, bloch_absolute, energies),
+        args=(config.U, config.beta, bloch_absolute, energies, config.mu),
     )
 
     delta_vector.update_from_1d_vector(solution)
@@ -49,7 +47,7 @@ def interpolate_gap(
     for band in [1, 2, 3]:
         delta_vector_interpolated.data.loc[:, f"delta_{band}"] = interpolate.griddata(
             delta_vector_on_grid.k_points,
-            delta_vector_on_grid.data.loc[:, "delta_1"],
+            delta_vector_on_grid.data.loc[:, f"delta_{band}"],
             bandpath,
             method="cubic",
         )
