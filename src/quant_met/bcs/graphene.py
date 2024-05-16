@@ -112,20 +112,21 @@ def gap_equation_real(
     mu: float,
 ):
     number_k_points = len(energies)
+    # print(number_k_points)
 
     sum_tmp = 0
     for m in [0, 1]:
         for k_index in range(0, number_k_points):
             # sum_tmp += 0.5 * 1 / np.sqrt((energies[k_prime_index][m] - mu) ** 2 + np.abs(delta) ** 2) * np.tanh(0.5 * beta * np.sqrt((energies[k_prime_index][m] - mu) ** 2 + np.abs(delta) ** 2))
-            sum_tmp += 1 / np.sqrt(
-                (energies[k_index][m] - mu) ** 2 + np.abs(delta) ** 2
+            sum_tmp += 1 / (
+                number_k_points
+                * np.sqrt((energies[k_index][m] - mu) ** 2 + np.abs(delta) ** 2)
             )
-        sum_tmp *= 1 / number_k_points
     # delta_out = U[0] * delta * sum_tmp
     # return delta - delta_out
     # print(delta)
 
-    return 1 - 0.5 * U[0] * sum_tmp
+    return 1 - 0.5 * U[0] * sum_tmp / 2.5980762113533156
 
 
 """
@@ -222,10 +223,10 @@ def solve_gap_equation(config: Configuration, k_points: npt.NDArray) -> DeltaVec
 
     solution = optimize.root_scalar(
         f=gap_equation_real,
-        x0=1,
+        x0=0.01,
         args=(config.U, config.beta, bloch_absolute, energies, config.mu),
         method="newton",
-        rtol=1e-9,
+        # rtol=1e-9,
     )
 
     # solution = optimize.root(
@@ -278,7 +279,7 @@ def solve_gap_equation(config: Configuration, k_points: npt.NDArray) -> DeltaVec
 
     # return delta_vector, solution.x[-1]
     # return delta_vector
-    if solution.converged and solution.root > 0:
+    if solution.converged:
         return solution.root
     else:
         return 0
