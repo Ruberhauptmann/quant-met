@@ -94,7 +94,7 @@ def generate_bloch(k_points: npt.NDArray, config: Configuration):
         h = generate_non_interacting_hamiltonian(k, config)
 
         energies[i], bloch[i] = np.linalg.eigh(h)
-        # energies[i] = energies[i]
+        energies[i] = energies[i] - config.mu
 
     # print(energies)
     bloch_absolute = np.power(np.absolute(bloch), 2)
@@ -103,7 +103,7 @@ def generate_bloch(k_points: npt.NDArray, config: Configuration):
 
 
 def gap_equation_real(
-    delta: float,
+    delta_k: npt.NDArray,
     U: npt.NDArray,
     beta: float,
     bloch_absolute: npt.NDArray,
@@ -111,22 +111,75 @@ def gap_equation_real(
     # filling_in: float
     mu: float,
 ):
-    number_k_points = len(energies)
+    # number_k_points = len(energies)
     # print(number_k_points)
+    return_vector = np.zeros(len(delta_k))
 
-    sum_tmp = 0
-    for m in [0, 1]:
+    number_k_points = int(len(return_vector) / 2)
+
+    """
+    for n in [0, 1]:
+        offset = int(len(delta_k) / 3 * n)
         for k_index in range(0, number_k_points):
-            # sum_tmp += 0.5 * 1 / np.sqrt((energies[k_prime_index][m] - mu) ** 2 + np.abs(delta) ** 2) * np.tanh(0.5 * beta * np.sqrt((energies[k_prime_index][m] - mu) ** 2 + np.abs(delta) ** 2))
-            sum_tmp += 1 / (
-                number_k_points
-                * np.sqrt((energies[k_index][m] - mu) ** 2 + np.abs(delta) ** 2)
+            sum_tmp = 0
+            for alpha in [0, 1]:
+                prefactor = U[alpha] * bloch_absolute[k_index][alpha][n]
+                integral = 0
+                for m in [0, 1]:
+                    for k_prime_index in range(0, number_k_points):
+                        integral += 1 / np.sqrt(
+                            (energies[k_prime_index][m] - mu) ** 2
+                            + np.abs(delta_k[k_prime_index+offset]) ** 2
+                        ) * bloch_absolute[k_prime_index][alpha][m] * delta_k[k_prime_index] * 1
+                            # * np.tanh(
+                            #    0.5
+                            #    * beta
+                            #    * np.sqrt(
+                            #        energies[k_prime_index][m] ** 2
+                            #        + np.abs(delta_k[k_prime_index]) ** 2
+                            #    )
+                            # )
+                sum_tmp += prefactor * integral / (number_k_points * 2.5980762113533156)
+
+            return_vector[k_index + offset] = sum_tmp
+    """
+
+    for n in [0, 1]:
+        offset_n = int(len(delta_k) / 2 * n)
+        for k_prime_index in range(0, number_k_points):
+            sum_tmp = 0
+            for alpha in [0, 1]:
+                for m in [0, 1]:
+                    offset = int(len(delta_k) / 2 * m)
+                    for k_index in range(0, number_k_points):
+                        sum_tmp += (
+                            U[alpha]
+                            * bloch_absolute[k_prime_index][alpha][n]
+                            * bloch_absolute[k_index][alpha][m]
+                            * delta_k[k_index + offset]
+                            / (
+                                2
+                                * np.sqrt(
+                                    (energies[k_index][m]) ** 2
+                                    + np.abs(delta_k[k_index + offset]) ** 2
+                                )
+                            )
+                        )
+                        # sum_tmp += U[alpha] * bloch_absolute[k_prime_index][alpha][n] * bloch_absolute[k_index][alpha][m] * delta_k[k_index+offset] / (2 * np.sqrt((energies[k_index][m] - mu) ** 2 + np.abs(delta_k[k_index+offset]) ** 2))
+                        # sum_tmp += delta_k[k_index+offset] / (2 * np.sqrt((energies[k_index][m] - mu) ** 2 + np.abs(delta_k[k_index+offset]) ** 2))
+
+                    # U[alpha] * bloch_absolute[k_prime_index][alpha][n]
+            return_vector[k_prime_index + offset_n] = sum_tmp / (
+                2.5980762113533156 * number_k_points
             )
-    # delta_out = U[0] * delta * sum_tmp
+            # return_vector[k_prime_index + offset_n] = U[0] * sum_tmp / (2.5980762113533156 * number_k_points)
     # return delta - delta_out
     # print(delta)
+    # return return_vector - delta_k
+    return return_vector
 
-    return 1 - 0.5 * U[0] * sum_tmp / 2.5980762113533156
+    # return 1 - 0.5 * U[0] * sum_tmp / 2.5980762113533156
+    # return return_vector - delta_k
 
 
 """
@@ -154,36 +207,22 @@ def gap_equation_real(
                 integral = 0
                 for m in [0, 1]:
                     for k_prime_index in range(0, number_k_points):
-                        integral += (
-                                0.5
-                                * 1
-                                / np.sqrt(
+                        integral += 1 / np.sqrt(
                             (energies[k_prime_index][m] - mu) ** 2
-                            + np.abs(delta_k[k_prime_index]) ** 2
-                        )
-                                * bloch_absolute[k_prime_index][alpha][m]
-                                * delta_k[k_prime_index]
-                                * np.tanh( 0.5 * beta * np.sqrt((energies[k_prime_index][m] - mu) ** 2 + np.abs(delta_k[k_prime_index]) ** 2))
-                        )
-                sum_tmp += prefactor * integral / number_k_points
+                            + np.abs(delta_k[k_prime_index+offset]) ** 2
+                        ) * bloch_absolute[k_prime_index][alpha][m] * delta_k[k_prime_index+offset] * np.tanh( 0.5 * beta * np.sqrt((energies[k_prime_index][m] - mu) ** 2 + np.abs(delta_k[k_prime_index+offset]) ** 2))
+                sum_tmp += prefactor * integral / (number_k_points * 2.5980762113533156)
 
             return_vector[k_index + offset] = sum_tmp
-    """
 
-"""
     return_vector -= delta_k
 
-    integral = 0
-    for m in [0, 1]:
-        for k_prime_index in range(0, number_k_points):
-            integral += 0.5 * (1 - (energies[k_prime_index][m] - mu) / (np.sqrt((energies[k_prime_index][m] - mu)**2 + np.abs(delta_k[k_prime_index]) ** 2)))
+    #filling = 4 * 2 * integral
 
-    filling = 4 * 2 * integral
+    #return_vector[-1] = filling - filling_in
 
-    return_vector[-1] = filling - filling_in
+    return return_vector
 """
-
-# return return_vector
 
 
 def generate_k_space_grid(nx, nrows, corner_1, corner_2):
@@ -206,40 +245,49 @@ def solve_gap_equation(config: Configuration, k_points: npt.NDArray) -> DeltaVec
 
     # print(energies)
 
-    # delta_vector = DeltaVector(k_points=k_points, initial=1)
+    delta_vector = DeltaVector(k_points=k_points, initial=0.1)
     # mu_initial = 1
 
-    # solution = optimize.fixed_point(
-    #    gap_equation_real,
-    #    delta_vector.as_1d_vector,
-    #    args=(config.U, config.beta, bloch_absolute, energies, config.mu),
-    #    xtol=1e-12
-    # )
+    try:
+        solution = optimize.fixed_point(
+            gap_equation_real,
+            delta_vector.as_1d_vector,
+            args=(config.U, config.beta, bloch_absolute, energies, config.mu),
+            # xtol=1e-10
+        )
+    except RuntimeError:
+        print("Failed")
+        solution = DeltaVector(k_points=k_points, initial=0).as_1d_vector
     # solution = optimize.fixed_point(
     #    gap_equation_real,
     #    1,
     #    args=(config.U, config.beta, bloch_absolute, energies, config.mu)
     # )
 
-    solution = optimize.root_scalar(
-        f=gap_equation_real,
-        x0=0.01,
-        args=(config.U, config.beta, bloch_absolute, energies, config.mu),
-        method="newton",
-        # rtol=1e-9,
-    )
-
-    # solution = optimize.root(
-    #    gap_equation_real,
-    #    np.concatenate([delta_vector.as_1d_vector, [mu_initial]]),
-    #    args=(config.U, config.beta, bloch_absolute, energies, config.filling),
-    #    method="krylov"
+    # solution = optimize.root_scalar(
+    #    f=gap_equation_real,
+    #    x0=0.01,
+    #    args=(config.U, config.beta, bloch_absolute, energies, config.mu),
+    #    method="newton",
+    #    # rtol=1e-9,
     # )
 
+    """
+    solution = optimize.root(
+        gap_equation_real,
+        delta_vector.as_1d_vector,
+        args=(config.U, config.beta, bloch_absolute, energies, config.mu),
+        tol=1e-9
+        #method="krylov",
+    )
+    """
     # delta_vector.update_from_1d_vector(solution.x[:-1])
-    """
     delta_vector.update_from_1d_vector(solution)
-    """
+    # if solution.success:
+    #    print("Success")
+    #    delta_vector.update_from_1d_vector(solution.x)
+    # else:
+    #    delta_vector = DeltaVector(k_points=k_points, initial=0)
 
     """
     bog_energies = []
@@ -276,13 +324,14 @@ def solve_gap_equation(config: Configuration, k_points: npt.NDArray) -> DeltaVec
     if free_energy_with_gap < free_energy:
         print("SC order is stable")
     """
+    return delta_vector
 
     # return delta_vector, solution.x[-1]
     # return delta_vector
-    if solution.converged:
-        return solution.root
-    else:
-        return 0
+    # if solution.converged:
+    #    return solution.root
+    # else:
+    #    return 0
 
 
 def interpolate_gap(
@@ -312,6 +361,7 @@ def calculate_bandstructure(config: Configuration, k_point_list):
         h = generate_non_interacting_hamiltonian(k=k, config=config)
 
         energies, eigenvectors = np.linalg.eigh(h)
+        energies = energies - config.mu
 
         results.at[i, "band_1"] = energies[0]
         results.at[i, "wx_1"] = (
