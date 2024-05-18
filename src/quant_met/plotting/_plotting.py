@@ -134,52 +134,42 @@ def _generate_part_of_path(p_0, p_1, n, length_whole_path):
     return k_space_path
 
 
-def generate_bz_path(a, points=None):
-    Gamma = np.array([0, 0])
-    M = np.pi / a * np.array([1, 1 / np.sqrt(3)])
-    K = 4 * np.pi / (3 * a) * np.array([1, 0])
+def generate_bz_path(points=None, number_of_points=1000):
+    n = number_of_points
 
-    n = 1000
+    cycle = [
+        np.linalg.norm(points[i][0] - points[i + 1][0]) for i in range(len(points) - 1)
+    ]
+    cycle.append(np.linalg.norm(points[-1][0] - points[0][0]))
 
-    length_whole_path = (
-        np.linalg.norm(M - Gamma) + np.linalg.norm(Gamma - K) + np.linalg.norm(K - M)
-    )
+    length_whole_path = np.sum(np.array([cycle]))
 
-    x_1 = np.linalg.norm(M - Gamma) / length_whole_path
-    x_2 = (np.linalg.norm(M - Gamma) + np.linalg.norm(Gamma - K)) / length_whole_path
+    ticks = [0]
+    for i in range(0, len(cycle) - 1):
+        ticks.append(np.sum(cycle[0 : i + 1]) / length_whole_path)
+    ticks.append(1)
+    labels = [rf"${points[i][1]}$" for i in range(len(points))]
+    labels.append(rf"${points[0][1]}$")
 
     whole_path_plot = np.concatenate(
-        (
+        [
             np.linspace(
-                0,
-                x_1,
-                num=int(n * np.linalg.norm(M - Gamma) / length_whole_path),
+                ticks[i],
+                ticks[i + 1],
+                num=int(n * cycle[i] / length_whole_path),
                 endpoint=False,
-            ),
-            np.linspace(
-                x_1,
-                x_2,
-                num=int(n * np.linalg.norm(Gamma - K) / length_whole_path),
-                endpoint=False,
-            ),
-            np.linspace(
-                x_2,
-                1,
-                num=int(n * np.linalg.norm(K - M) / length_whole_path),
-                endpoint=False,
-            ),
-        )
+            )
+            for i in range(0, len(ticks) - 1)
+        ]
     )
 
-    ticks = [0, x_1, x_2, 1]
-    labels = ["$M$", r"$\Gamma$", "$K$", "$M$"]
-
-    whole_path = np.concatenate(
-        (
-            _generate_part_of_path(M, Gamma, n, length_whole_path),
-            _generate_part_of_path(Gamma, K, n, length_whole_path),
-            _generate_part_of_path(K, M, n, length_whole_path),
-        )
+    points_path = [
+        _generate_part_of_path(points[i][0], points[i + 1][0], n, length_whole_path)
+        for i in range(0, len(points) - 1)
+    ]
+    points_path.append(
+        _generate_part_of_path(points[-1][0], points[0][0], n, length_whole_path)
     )
+    whole_path = np.concatenate(points_path)
 
     return whole_path, whole_path_plot, ticks, labels
