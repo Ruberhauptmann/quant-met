@@ -9,7 +9,7 @@ readme = "README.md"
 quantmet = "quant_met.cli:cli"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.10"
 numpy = "^1.26.4"
 scipy = "^1.13.0"
 click = "^8.1.7"
