@@ -1,11 +1,10 @@
 import numpy as np
 import numpy.typing as npt
-from scipy import interpolate, optimize
+from scipy import optimize
 
+from quant_met.bcs.gap_equation import gap_equation_real
 from quant_met.configuration import Configuration, DeltaVector
-
-from .gap_equation import gap_equation_real
-from .nonint import generate_bloch
+from quant_met.hamiltonians import BaseHamiltonian
 
 
 def generate_k_space_grid(nx, nrows, corner_1, corner_2):
@@ -23,33 +22,30 @@ def generate_k_space_grid(nx, nrows, corner_1, corner_2):
     return k_points
 
 
-def solve_gap_equation(config: Configuration, k_points: npt.NDArray) -> DeltaVector:
-    energies, bloch_absolute = generate_bloch(k_points, config)
-
-    delta_vector = DeltaVector(k_points=k_points, initial=1)
-
-    solution = optimize.fixed_point(
-        gap_equation_real,
-        delta_vector.as_1d_vector,
-        args=(config.U, config.beta, bloch_absolute, energies, config.mu),
+def solve_gap_equation(
+    config: Configuration, hamiltonian: BaseHamiltonian, k_points: npt.NDArray
+) -> DeltaVector:
+    energies, bloch_absolute = hamiltonian.generate_bloch(
+        k_points=k_points, mu=config.mu
     )
+
+    delta_vector = DeltaVector(
+        k_points=k_points, initial=0.1, number_bands=hamiltonian.number_bands
+    )
+
+    try:
+        solution = optimize.fixed_point(
+            gap_equation_real,
+            delta_vector.as_1d_vector,
+            args=(config.U, config.beta, bloch_absolute, energies, len(k_points)),
+            # xtol=1e-10
+        )
+    except RuntimeError:
+        print("Failed")
+        solution = DeltaVector(
+            k_points=k_points, initial=0.0, number_bands=hamiltonian.number_bands
+        ).as_1d_vector
 
     delta_vector.update_from_1d_vector(solution)
 
     return delta_vector
-
-
-def interpolate_gap(
-    delta_vector_on_grid: DeltaVector, bandpath: npt.NDArray
-) -> DeltaVector:
-    delta_vector_interpolated = DeltaVector(k_points=bandpath)
-
-    for band in [1, 2, 3]:
-        delta_vector_interpolated.data.loc[:, f"delta_{band}"] = interpolate.griddata(
-            delta_vector_on_grid.k_points,
-            delta_vector_on_grid.data.loc[:, f"delta_{band}"],
-            bandpath,
-            method="cubic",
-        )
-
-    return delta_vector_interpolated

@@ -96,8 +96,8 @@ def generate_bloch(k_points: npt.NDArray, config: Configuration):
         energies[i], bloch[i] = np.linalg.eigh(h)
         energies[i] = energies[i] - config.mu
 
-    # print(energies)
     bloch_absolute = np.power(np.absolute(bloch), 2)
+    print(bloch_absolute)
 
     return energies, bloch_absolute
 

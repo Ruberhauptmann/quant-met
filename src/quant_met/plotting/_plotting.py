@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.typing as npt
 from matplotlib.collections import LineCollection
 
 
@@ -79,35 +80,39 @@ def plot_bcs_bandstructure(
 
 def plot_nonint_bandstructure(
     bands,
-    overlaps,
     k_point_list,
     ticks,
     labels,
+    overlaps: npt.NDArray | None = None,
     fig: plt.Figure | None = None,
     ax: plt.Axes | None = None,
 ):
     if fig is None:
         fig, ax = plt.subplots()
 
-    line = None
     ax.axhline(y=0, alpha=0.7, linestyle="--", color="black")
 
-    for band, wx in zip(bands, overlaps):
-        points = np.array([k_point_list, band]).T.reshape(-1, 1, 2)
-        segments = np.concatenate([points[:-1], points[1:]], axis=1)
+    if overlaps is None:
+        for band in bands:
+            ax.plot(k_point_list, band)
+    else:
+        line = None
 
-        norm = plt.Normalize(-1, 1)
-        lc = LineCollection(segments, cmap="seismic", norm=norm)
-        lc.set_array(wx)
-        lc.set_linewidth(2)
-        line = ax.add_collection(lc)
+        for band, wx in zip(bands, overlaps):
+            points = np.array([k_point_list, band]).T.reshape(-1, 1, 2)
+            segments = np.concatenate([points[:-1], points[1:]], axis=1)
 
-    colorbar = fig.colorbar(line, fraction=0.046, pad=0.04, ax=ax)
-    color_ticks = [-1, 1]
-    colorbar.set_ticks(ticks=color_ticks, labels=[r"$w_{\mathrm{Gr}_1}$", r"$w_X$"])
+            norm = plt.Normalize(-1, 1)
+            lc = LineCollection(segments, cmap="seismic", norm=norm)
+            lc.set_array(wx)
+            lc.set_linewidth(2)
+            line = ax.add_collection(lc)
+
+        colorbar = fig.colorbar(line, fraction=0.046, pad=0.04, ax=ax)
+        color_ticks = [-1, 1]
+        colorbar.set_ticks(ticks=color_ticks, labels=[r"$w_{\mathrm{Gr}_1}$", r"$w_X$"])
 
     ax.set_box_aspect(1)
-
     ax.set_xticks(ticks, labels)
     ax.set_yticks(range(-5, 6))
     ax.set_facecolor("lightgray")
