@@ -1,24 +1,6 @@
-from dataclasses import dataclass
-
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
-
-
-@dataclass
-class Configuration:
-    t_gr: float
-    a: float
-    mu: float
-    t_x: float = 0
-    V: float = 0
-    U_Gr: float = 0
-    U_X: float = 0
-    beta: float = np.inf
-
-    @property
-    def U(self) -> list[float]:
-        return [self.U_Gr, self.U_Gr, self.U_X]
 
 
 class DeltaVector:
@@ -52,7 +34,6 @@ class DeltaVector:
         return self.data.to_string(index=False)
 
     def update_from_1d_vector(self, delta: npt.NDArray):
-        print(self.data)
         for n in range(self.number_bands):
             offset = int(n * len(delta) / self.number_bands)
             self.data.loc[:, f"delta_{n}"] = delta[offset : offset + len(self.k_points)]
