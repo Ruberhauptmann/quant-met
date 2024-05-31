@@ -22,8 +22,8 @@ class BaseHamiltonian(ABC):
 
     def k_space_matrix(self, k: npt.NDArray) -> npt.NDArray:
         if k.ndim == 1:
-            h = np.zeros((self.number_bands, self.number_bands), dtype=complex)
-            h = self._k_space_matrix_one_point(k, h)
+            h = np.zeros((1, self.number_bands, self.number_bands), dtype=complex)
+            h[0] = self._k_space_matrix_one_point(k, h[0])
         else:
             h = np.zeros(
                 (k.shape[0], self.number_bands, self.number_bands), dtype=complex
@@ -51,18 +51,18 @@ class BaseHamiltonian(ABC):
     def generate_bloch(self, k_points: npt.NDArray):
         k_point_matrix = self.k_space_matrix(k_points)
 
-        bloch = np.zeros(
-            (len(k_points), self.number_bands, self.number_bands), dtype=complex
-        )
-        energies = np.zeros((len(k_points), self.number_bands))
+        if k_points.ndim == 1:
+            energies, bloch = np.linalg.eigh(k_point_matrix[0])
+        else:
+            bloch = np.zeros(
+                (len(k_points), self.number_bands, self.number_bands), dtype=complex
+            )
+            energies = np.zeros((len(k_points), self.number_bands))
 
-        for i, k in enumerate(k_points):
-            energies[i], bloch[i] = np.linalg.eigh(k_point_matrix[i])
-            energies[i] = energies[i]
+            for i, k in enumerate(k_points):
+                energies[i], bloch[i] = np.linalg.eigh(k_point_matrix[i])
 
-        bloch_absolute = np.power(np.absolute(bloch), 2)
-
-        return energies, bloch_absolute
+        return energies, bloch
 
 
 class GrapheneHamiltonian(BaseHamiltonian):
@@ -137,8 +137,8 @@ class EGXHamiltonian(BaseHamiltonian):
 
         h[1, 0] = h[0, 1].conjugate()
 
-        h[2, 1] = V
-        h[1, 2] = V
+        h[2, 0] = V
+        h[0, 2] = V
 
         h[2, 2] = (
             -2
