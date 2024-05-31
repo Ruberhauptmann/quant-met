@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "quant-met"
-version = "0.0.3"
+version = "0.0.1"
 description = ""
 authors = ["Tjark Sievers <tsievers@physnet.uni-hamburg.de>"]
 readme = "README.md"
@@ -25,6 +25,11 @@ tox = "^4.15.0"
 jupyter = "^1.0.0"
 ipympl = "^0.9.4"
 black = "^24.4.2"
+sphinx = "^7.3.7"
+sphinx-rtd-theme = "^2.0.0"
+myst-parser = "^3.0.1"
+nbsphinx = "^0.9.4"
+sphinx-gallery = "^0.16.0"
 
 [build-system]
 requires = ["poetry-core"]
