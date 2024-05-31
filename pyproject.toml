@@ -25,6 +25,9 @@ tox = "^4.15.0"
 jupyter = "^1.0.0"
 ipympl = "^0.9.4"
 black = "^24.4.2"
+sphinx = "^7.3.7"
+sphinx-rtd-theme = "^2.0.0"
+myst-parser = "^3.0.1"
 
 [build-system]
 requires = ["poetry-core"]
