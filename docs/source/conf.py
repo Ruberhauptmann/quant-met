@@ -25,6 +25,8 @@ extensions = [
     "myst_parser",
     "sphinx.ext.intersphinx",
     "sphinx_rtd_theme",
+    "nbsphinx",
+    "sphinx_gallery.load_style",
 ]
 
 templates_path = ["_templates"]

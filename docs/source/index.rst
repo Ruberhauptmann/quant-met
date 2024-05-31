@@ -4,6 +4,9 @@ Documentation
 :doc:`changelog`
     Changelog
 
+:doc:`examples`
+    Examples
+
 Development
 -----------
 
@@ -17,6 +20,7 @@ Development
    :hidden:
 
    changelog
+   examples
 
 
 .. toctree::
