@@ -5,4 +5,4 @@ API Documentation
    :caption: Content
    :maxdepth: 3
 
-   api/quant-met
+   api/quant_met
