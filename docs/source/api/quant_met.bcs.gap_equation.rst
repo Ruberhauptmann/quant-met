@@ -1,7 +1,7 @@
-src.quant\_met.configuration module
+quant\_met.bcs.gap\_equation module
 ===================================
 
-.. automodule:: src.quant_met.configuration
+.. automodule:: quant_met.bcs.gap_equation
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,7 +1,7 @@
-src.quant\_met.plotting package
+quant\_met.configuration module
 ===============================
 
-.. automodule:: src.quant_met.plotting
+.. automodule:: quant_met.configuration
    :members:
    :undoc-members:
    :show-inheritance:

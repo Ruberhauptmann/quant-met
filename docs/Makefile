@@ -15,7 +15,7 @@ help:
 .PHONY: help Makefile
 
 buildapi:
-	sphinx-apidoc -d 1 -fMeT -t templates -o api ../src
+	sphinx-apidoc -d 1 -fMeT -t templates -o source/api ../src/quant_met
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).

@@ -20,13 +20,10 @@ Development
 
 
 .. toctree::
-   :caption: Entwicklung
+   :caption: Development
    :maxdepth: 2
    :hidden:
 
-   dependency_update
-   entwicklung
-   deployment
    api
 
 Indices and tables
