@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "quant-met"
-version = "0.0.3"
+version = "0.0.1"
 description = ""
 authors = ["Tjark Sievers <tsievers@physnet.uni-hamburg.de>"]
 readme = "README.md"
