@@ -24,7 +24,6 @@ extensions = [
     "sphinx.ext.napoleon",
     "myst_parser",
     "sphinx.ext.intersphinx",
-    "sphinx.ext.autosectionlabel",
     "sphinx_rtd_theme",
 ]
 
