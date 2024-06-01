@@ -1,7 +1,8 @@
 # quant-met
 
+[![Test](https://github.com/Ruberhauptmann/quant-met/actions/workflows/test.yml/badge.svg)](https://github.com/Ruberhauptmann/quant-met/actions/workflows/test.yml)
 
-* Documentation:
+* Documentation: [quant-met.readthedocs.io](https://quant-met.readthedocs.io/en/latest/)
 
 ## Installation
 
