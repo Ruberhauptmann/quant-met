@@ -11,4 +11,4 @@ jobs:
       - uses: actions/checkout@v4
       - name: check version
         if: ${{ !startsWith(github.head_ref, 'release') }}
-        run: ./check_versions.sh
+        run: ./check_version.sh
