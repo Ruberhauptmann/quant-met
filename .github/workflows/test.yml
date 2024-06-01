@@ -12,6 +12,9 @@ concurrency:
   group: check-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  pull-requests: write
+
 jobs:
   test:
     name: test with ${{ matrix.py }} on ${{ matrix.os }}
