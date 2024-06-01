@@ -31,7 +31,7 @@ Set up the development environment:
 
 Now you can create a separate branch to work on the project.
 
-You can manually run tests using for example `tox -e py310` (for running against python 3.10).
+You can manually run tests using for example `tox -e py312` (for running against python 3.12).
 After pushing your branch, all tests will also be run via Gitlab Actions.
 
 Using `pre-commit`, automatic linting and formatting is done before every commit, which may cause the first commit to fail.
