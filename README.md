@@ -1,6 +1,7 @@
 # quant-met
 
 [![Test](https://github.com/Ruberhauptmann/quant-met/actions/workflows/test.yml/badge.svg)](https://github.com/Ruberhauptmann/quant-met/actions/workflows/test.yml)
+[![Coverage Status](https://coveralls.io/repos/github/Ruberhauptmann/quant-met/badge.svg?branch=main)](https://coveralls.io/github/Ruberhauptmann/quant-met?branch=main)
 
 * Documentation: [quant-met.readthedocs.io](https://quant-met.readthedocs.io/en/latest/)
 
