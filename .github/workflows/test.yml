@@ -1,4 +1,4 @@
-name: Test, typecheck and linting
+name: Test
 
 on:
   pull_request:
@@ -11,6 +11,9 @@ on:
 concurrency:
   group: check-${{ github.ref }}
   cancel-in-progress: true
+
+permissions:
+  pull-requests: write
 
 jobs:
   test:
@@ -39,3 +42,18 @@ jobs:
         run: tox -vv --notest
       - name: Run test suite
         run: tox --skip-pkg-install
+      - name: Upload coverage to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          parallel: true
+          flag-name: py${{ matrix.python-version }}
+
+  finish:
+    needs: test
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@v2
+        with:
+          parallel-finished: true
