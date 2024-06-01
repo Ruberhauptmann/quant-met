@@ -13,10 +13,11 @@ class DeltaVector:
     ):
         self.number_bands = number_bands
         if hdf_file is not None:
-            self.data = pd.DataFrame(pd.read_hdf(hdf_file, key="table"))
-            self.k_points = np.column_stack(
-                (np.array(self.data.loc[:, "kx"]), np.array(self.data.loc[:, "ky"]))
-            )
+            pass
+        #    self.data = pd.DataFrame(pd.read_hdf(hdf_file, key="table"))
+        #    self.k_points = np.column_stack(
+        #        (np.array(self.data.loc[:, "kx"]), np.array(self.data.loc[:, "ky"]))
+        #    )
         else:
             self.k_points = k_points
             self.data = pd.DataFrame(
@@ -39,7 +40,8 @@ class DeltaVector:
             self.data.loc[:, f"delta_{n}"] = delta[offset : offset + len(self.k_points)]
 
     def save(self, path):
-        self.data.to_hdf(path, key="table", format="table", data_columns=True)
+        pass
+        # self.data.to_hdf(path, key="table", format="table", data_columns=True)
 
     @property
     def as_1d_vector(self) -> npt.NDArray:
