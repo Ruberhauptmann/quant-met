@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-pip install quant-met
+pip install quant-met poetry
 
 current_version=$(poetry version | awk '{print $2}')
 registry_version=$(pip show quant-met | grep "Version: " | awk '{print $2}')
