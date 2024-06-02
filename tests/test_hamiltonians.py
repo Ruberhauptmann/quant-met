@@ -67,7 +67,15 @@ def test_samples(sample: hamiltonians.BaseHamiltonian, k: npt.NDArray):
     assert linalg.ishermitian(h_k_space)
 
 
-def test_base_hamiltonian(patch_abstract):
+def test_base_hamiltonian(patch_abstract) -> None:
+    """Test whether the Hamiltonian Base class fullfills relevant promises.
+
+    Args:
+        patch_abstract: Fixture to be able to initialise BaseHamiltonian.
+
+    Returns:
+        None
+    """
     base_hamiltonian = hamiltonians.BaseHamiltonian()
     with pytest.raises(NotImplementedError):
         print(base_hamiltonian.number_of_bands)
