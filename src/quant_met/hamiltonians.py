@@ -8,6 +8,15 @@ import numpy.typing as npt
 import pandas as pd
 
 
+def check_valid_float(float_in: float, parameter_name: str) -> float:
+    if np.isinf(float_in):
+        raise ValueError(f"{parameter_name} must not be Infinity")
+    elif np.isnan(float_in):
+        raise ValueError(f"{parameter_name} must not be NaN")
+    else:
+        return float_in
+
+
 class BaseHamiltonian(ABC):
     """Base class for Hamiltonians."""
 
@@ -92,20 +101,12 @@ class BaseHamiltonian(ABC):
 
 class GrapheneHamiltonian(BaseHamiltonian):
     def __init__(self, t_nn: float, a: float, mu: float, coulomb_gr: float):
-        if np.isinf(t_nn) or np.isnan(t_nn):
-            raise ValueError("Hopping must not be NaN or Infinity")
-        self.t_nn = t_nn
+        self.t_nn = check_valid_float(t_nn, "Hopping")
         if a <= 0:
             raise ValueError("Lattice constant must be positive")
-        if np.isinf(a) or np.isnan(a):
-            raise ValueError("Lattice constant must not be NaN or Infinity")
-        self.a = a
-        if np.isinf(mu) or np.isnan(mu):
-            raise ValueError("Chemical potential must not be NaN or Infinity")
-        self.mu = mu
-        if np.isinf(coulomb_gr) or np.isnan(coulomb_gr):
-            raise ValueError("Coloumb interaction must not be NaN or Infinity")
-        self.coloumb_gr = coulomb_gr
+        self.a = check_valid_float(a, "Lattice constant")
+        self.mu = check_valid_float(mu, "Chemical potential")
+        self.coloumb_gr = check_valid_float(coulomb_gr, "Coloumb interaction")
 
     @property
     def coloumb_orbital_basis(self) -> list[float]:
@@ -144,13 +145,13 @@ class EGXHamiltonian(BaseHamiltonian):
         U_gr: float,
         U_x: float,
     ):
-        self.t_gr = t_gr
-        self.t_x = t_x
-        self.V = V
-        self.a = a
-        self.mu = mu
-        self.U_gr = U_gr
-        self.U_x = U_x
+        self.t_gr = check_valid_float(t_gr, "Hopping graphene")
+        self.t_x = check_valid_float(t_x, "Hopping impurity")
+        self.V = check_valid_float(V, "Hybridisation")
+        self.a = check_valid_float(a, "Lattice constant")
+        self.mu = check_valid_float(mu, "Chemical potential")
+        self.U_gr = check_valid_float(U_gr, "Coloumb interaction graphene")
+        self.U_x = check_valid_float(U_x, "Coloumb interaction impurity")
 
     @property
     def coloumb_orbital_basis(self) -> list[float]:
@@ -189,7 +190,7 @@ class EGXHamiltonian(BaseHamiltonian):
             )
         )
         h = h - mu * np.eye(3)
-        return h
+        return np.nan_to_num(h)
 
     def calculate_bandstructure(self, k_point_list: npt.NDArray) -> pd.DataFrame:
         """

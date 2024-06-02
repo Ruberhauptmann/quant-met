@@ -30,6 +30,7 @@ myst-parser = "^3.0.1"
 nbsphinx = "^0.9.4"
 sphinx-gallery = "^0.16.0"
 hypothesis = {extras = ["numpy"], version = "^6.103.0"}
+pytest = "^8.2.1"
 
 [build-system]
 requires = ["poetry-core"]
