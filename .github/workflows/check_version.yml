@@ -7,8 +7,8 @@ jobs:
   check-version:
     name: Check whether verion number is bumped
     runs-on: ubuntu-latest
+    if: ${{ startsWith(github.head_ref, 'release') }}
     steps:
       - uses: actions/checkout@v4
       - name: check version
-        if: ${{ startsWith(github.head_ref, 'release') }}
         run: ./check_version.sh

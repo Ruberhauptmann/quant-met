@@ -5,3 +5,4 @@ report.xml
 .tox/
 **/__pycache__/
 docs/build
+.hypothesis/
