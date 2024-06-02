@@ -14,6 +14,13 @@ from scipy import linalg
 
 from quant_met import hamiltonians
 
+
+@pytest.fixture()
+def patch_abstract(monkeypatch):
+    """Patch the abstract methods."""
+    monkeypatch.setattr(hamiltonians.BaseHamiltonian, "__abstractmethods__", set())
+
+
 register_type_strategy(
     hamiltonians.GrapheneHamiltonian,
     builds(
@@ -52,4 +59,23 @@ register_type_strategy(
     ),
 )
 def test_samples(sample: hamiltonians.BaseHamiltonian, k: npt.NDArray):
-    assert linalg.ishermitian(sample.hamiltonian_k_space(k)[0])
+    h_k_space = sample.hamiltonian_k_space(k)[0]
+    assert (
+        h_k_space.shape[0] == sample.number_of_bands
+        and h_k_space.shape[1] == sample.number_of_bands
+    )
+    assert linalg.ishermitian(h_k_space)
+
+
+def test_base_hamiltonian(patch_abstract):
+    base_hamiltonian = hamiltonians.BaseHamiltonian()
+    with pytest.raises(NotImplementedError):
+        print(base_hamiltonian.number_of_bands)
+    with pytest.raises(NotImplementedError):
+        print(base_hamiltonian.coloumb_orbital_basis)
+    with pytest.raises(NotImplementedError):
+        print(
+            base_hamiltonian._hamiltonian_k_space_one_point(
+                k_point=np.array([0, 0]), matrix_in=np.array([[0, 0], [0, 0]])
+            )
+        )
