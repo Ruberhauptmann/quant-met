@@ -1,14 +1,12 @@
 import click
 
-from quant_met.bcs import find_fixpoint
+from quant_met import minimize_free_energy
 
-"""
+
 @click.command()
 def cli():
-    find_fixpoint.solve_gap_equation()
-"""
+    minimize_free_energy.minimize_loop()
 
 
 if __name__ == "__main__":
-    pass
-    # cli()
+    cli()

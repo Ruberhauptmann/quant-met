@@ -52,6 +52,37 @@ class BaseHamiltonian(ABC):
         """
         raise NotImplementedError
 
+    def diagonalize_bdg(self, k_point, delta):
+        bdg_matrix = np.block(
+            [
+                [
+                    self._hamiltonian_k_space_one_point(
+                        k_point,
+                        np.zeros(
+                            shape=(self.number_of_bands, self.number_of_bands),
+                            dtype=complex,
+                        ),
+                    ),
+                    delta * np.eye(self.number_of_bands),
+                ],
+                [
+                    np.conjugate(delta * np.eye(self.number_of_bands)),
+                    -np.conjugate(
+                        self._hamiltonian_k_space_one_point(
+                            k_point,
+                            np.zeros(
+                                shape=(self.number_of_bands, self.number_of_bands),
+                                dtype=complex,
+                            ),
+                        ).T
+                    ),
+                ],
+            ]
+        )
+        eigenvalues, eigenvectors = np.linalg.eigh(bdg_matrix)
+
+        return eigenvalues, eigenvectors
+
     def hamiltonian_k_space(self, k: npt.NDArray) -> npt.NDArray:
         if np.isnan(k).any() or np.isinf(k).any():
             raise ValueError("k is NaN or Infinity")
@@ -67,7 +98,7 @@ class BaseHamiltonian(ABC):
         return h
 
     def calculate_bandstructure(self, k_point_list: npt.NDArray) -> pd.DataFrame:
-        k_point_matrix = self.k_space_matrix(k_point_list)
+        k_point_matrix = self.hamiltonian_k_space(k_point_list)
 
         results = pd.DataFrame(
             index=range(len(k_point_list)),
@@ -77,21 +108,22 @@ class BaseHamiltonian(ABC):
         for i, k in enumerate(k_point_list):
             energies, eigenvectors = np.linalg.eigh(k_point_matrix[i])
 
-            for band_index in range(self.number_bands):
+            for band_index in range(self.number_of_bands):
                 results.at[i, f"band_{band_index}"] = energies[band_index]
 
         return results
 
     def generate_bloch(self, k_points: npt.NDArray) -> tuple[npt.NDArray, npt.NDArray]:
-        k_point_matrix = self.k_space_matrix(k_points)
+        k_point_matrix = self.hamiltonian_k_space(k_points)
 
         if k_points.ndim == 1:
             energies, bloch = np.linalg.eigh(k_point_matrix[0])
         else:
             bloch = np.zeros(
-                (len(k_points), self.number_bands, self.number_bands), dtype=complex
+                (len(k_points), self.number_of_bands, self.number_of_bands),
+                dtype=complex,
             )
-            energies = np.zeros((len(k_points), self.number_bands))
+            energies = np.zeros((len(k_points), self.number_of_bands))
 
             for i, k in enumerate(k_points):
                 energies[i], bloch[i] = np.linalg.eigh(k_point_matrix[i])
@@ -190,6 +222,7 @@ class EGXHamiltonian(BaseHamiltonian):
             )
         )
         h = h - mu * np.eye(3)
+
         return np.nan_to_num(h)
 
     def calculate_bandstructure(self, k_point_list: npt.NDArray) -> pd.DataFrame:
