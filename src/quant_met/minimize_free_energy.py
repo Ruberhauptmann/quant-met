@@ -16,11 +16,13 @@ def free_energy(
 
     for k in k_points:
         sum_tmp += np.real(np.trace(hamiltonian.hamiltonian_k_space(k)[0]))
-        sum_tmp -= np.sum(
+        sum_tmp += np.sum(
             np.power(np.abs(delta_vector), 2) / hamiltonian.coloumb_orbital_basis
         )
         bdg_energies, _ = hamiltonian.diagonalize_bdg(k, delta_vector)
-        sum_tmp -= np.sum(np.log(1 + np.exp(-beta * bdg_energies))) / beta
+        sum_tmp -= (
+            np.sum(np.log(1 + np.nan_to_num(np.exp(-beta * bdg_energies)))) / beta
+        )
 
     return sum_tmp / (2.5980762113533156 * number_k_points)
 
