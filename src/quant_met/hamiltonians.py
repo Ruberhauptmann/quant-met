@@ -59,8 +59,8 @@ class BaseHamiltonian(ABC):
                             delta * np.eye(self.number_of_bands),
                         ],
                         [
-                            delta * np.eye(self.number_of_bands),
-                            np.conjugate(self.hamiltonian_k_space(k)[0]),
+                            np.conjugate(delta * np.eye(self.number_of_bands)),
+                            -np.conjugate(self.hamiltonian_k_space(k)[0]),
                         ],
                     ]
                 )
