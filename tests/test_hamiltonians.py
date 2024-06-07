@@ -58,12 +58,10 @@ register_type_strategy(
         elements=floats(allow_nan=False, allow_infinity=False),
     ),
 )
-def test_samples(sample: hamiltonians.BaseHamiltonian, k: npt.NDArray):
+def test_hamiltonians(sample: hamiltonians.BaseHamiltonian, k: npt.NDArray):
     h_k_space = sample.hamiltonian_k_space(k)[0]
-    assert (
-        h_k_space.shape[0] == sample.number_of_bands
-        and h_k_space.shape[1] == sample.number_of_bands
-    )
+    assert h_k_space.shape[0] == sample.number_of_bands
+    assert h_k_space.shape[1] == sample.number_of_bands
     assert linalg.ishermitian(h_k_space)
 
 

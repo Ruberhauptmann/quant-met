@@ -4,34 +4,23 @@ import numpy.typing as npt
 from matplotlib.collections import LineCollection
 
 
-def plot_into_bz(
-    bz_corners, k_points, fig: plt.Figure | None = None, ax: plt.Axes | None = None
-):
-    if fig is None:
-        fig, ax = plt.subplots()
-
-    ax.scatter(*zip(*k_points))
-    ax.scatter(*zip(*bz_corners), alpha=0.8)
-
-    ax.set_aspect("equal", adjustable="box")
-
-    return fig
-
-
 def scatter_into_bz(
     bz_corners,
     k_points,
-    data,
+    data: npt.NDArray | None = None,
     fig: plt.Figure | None = None,
     ax: plt.Axes | None = None,
-):
+) -> plt.Figure:
     if fig is None:
         fig, ax = plt.subplots()
 
-    scatter = ax.scatter(*zip(*k_points), c=data, cmap="viridis")
-    ax.scatter(*zip(*bz_corners), alpha=0.8)
-    fig.colorbar(scatter, ax=ax, fraction=0.046, pad=0.04)
+    if data is not None:
+        scatter = ax.scatter(*zip(*k_points), c=data, cmap="viridis")
+        fig.colorbar(scatter, ax=ax, fraction=0.046, pad=0.04)
+    else:
+        ax.scatter(*zip(*k_points))
 
+    ax.scatter(*zip(*bz_corners), alpha=0.8)
     ax.set_aspect("equal", adjustable="box")
 
     return fig
