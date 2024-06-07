@@ -1,6 +1,3 @@
-"""
-
-"""
 from abc import ABC, abstractmethod
 
 import numpy as np
@@ -52,31 +49,22 @@ class BaseHamiltonian(ABC):
         """
         raise NotImplementedError
 
-    def diagonalize_bdg(self, k_point, delta):
-        bdg_matrix = np.block(
+    def diagonalize_bdg(self, k_list: npt.NDArray, delta: npt.NDArray):
+        bdg_matrix = np.array(
             [
-                [
-                    self._hamiltonian_k_space_one_point(
-                        k_point,
-                        np.zeros(
-                            shape=(self.number_of_bands, self.number_of_bands),
-                            dtype=complex,
-                        ),
-                    ),
-                    delta * np.eye(self.number_of_bands),
-                ],
-                [
-                    np.conjugate(delta * np.eye(self.number_of_bands)),
-                    -np.conjugate(
-                        self._hamiltonian_k_space_one_point(
-                            k_point,
-                            np.zeros(
-                                shape=(self.number_of_bands, self.number_of_bands),
-                                dtype=complex,
-                            ),
-                        ).T
-                    ),
-                ],
+                np.block(
+                    [
+                        [
+                            self.hamiltonian_k_space(k)[0],
+                            delta * np.eye(self.number_of_bands),
+                        ],
+                        [
+                            delta * np.eye(self.number_of_bands),
+                            np.conjugate(self.hamiltonian_k_space(k)[0]),
+                        ],
+                    ]
+                )
+                for k in k_list
             ]
         )
         eigenvalues, eigenvectors = np.linalg.eigh(bdg_matrix)

@@ -12,37 +12,36 @@ def free_energy(
     k_points: npt.NDArray,
 ) -> float:
     number_k_points = len(k_points)
-    sum_tmp = 0
+    bdg_energies, _ = hamiltonian.diagonalize_bdg(k_points, delta_vector)
+    print(bdg_energies)
+    print(np.power(np.abs(delta_vector), 2) / hamiltonian.coloumb_orbital_basis)
+    print(np.sum(np.power(np.abs(delta_vector), 2) / hamiltonian.coloumb_orbital_basis))
+    print(
+        np.ones(number_k_points)
+        * np.sum(np.power(np.abs(delta_vector), 2) / hamiltonian.coloumb_orbital_basis)
+    )
+    k_array = (
+        np.real(np.trace(hamiltonian.hamiltonian_k_space(k_points), axis1=-2, axis2=-1))
+        + np.ones(number_k_points)
+        * np.sum(np.power(np.abs(delta_vector), 2) / hamiltonian.coloumb_orbital_basis)
+        - np.sum(np.log(1 + np.nan_to_num(np.exp(-beta * bdg_energies))), axis=-1)
+        / beta
+    )
 
-    for k in k_points:
-        sum_tmp += np.real(np.trace(hamiltonian.hamiltonian_k_space(k)[0]))
-        sum_tmp += np.sum(
-            np.power(np.abs(delta_vector), 2) / hamiltonian.coloumb_orbital_basis
-        )
-        bdg_energies, _ = hamiltonian.diagonalize_bdg(k, delta_vector)
-        sum_tmp -= (
-            np.sum(np.log(1 + np.nan_to_num(np.exp(-beta * bdg_energies)))) / beta
-        )
-
-    return sum_tmp / (2.5980762113533156 * number_k_points)
-
-
-def write_progress(intermediate_result: optimize.OptimizeResult):
-    print(np.linalg.norm(intermediate_result.x))
+    return np.sum(k_array) / (2.5980762113533156 * number_k_points)
 
 
 def minimize_loop(
     beta: float, hamiltonian: BaseHamiltonian, k_points: npt.NDArray
 ) -> optimize.OptimizeResult:
-    initial_guess = np.ones(shape=hamiltonian.number_of_bands) * 0.1
-    solution = optimize.minimize(
+    initial_guess = np.ones(shape=hamiltonian.number_of_bands)
+    solution = optimize.differential_evolution(
         free_energy,
-        tol=1e-12,
-        options={"disp": True},
+        tol=1e-10,
         x0=initial_guess,
+        # options={"eps": 1e-12, 'ftol': 1e-12, 'gtol': 1e-12},
         args=(beta, hamiltonian, k_points),
-        bounds=[(0, 10) for _ in range(hamiltonian.number_of_bands)],
-        callback=write_progress,
+        bounds=[(0, 4) for _ in range(hamiltonian.number_of_bands)],
     )
 
     return solution
