@@ -1,8 +1,15 @@
 import numpy as np
+import numpy.typing as npt
 
 
-def generate_uniform_grid(ncols, nrows, corner_1, corner_2, origin):
-    grid = np.concatenate(
+def generate_uniform_grid(
+    ncols: int,
+    nrows: int,
+    corner_1: npt.NDArray[np.float64],
+    corner_2: npt.NDArray[np.float64],
+    origin: npt.NDArray[np.float64],
+) -> npt.NDArray[np.float64]:
+    grid: npt.NDArray[np.float64] = np.concatenate(
         [
             np.linspace(
                 origin[0] + i / (nrows - 1) * corner_2,
