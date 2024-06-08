@@ -31,7 +31,7 @@ def minimize_loop(
     initial_guess = np.ones(shape=hamiltonian.number_of_bands)
     solution = optimize.differential_evolution(
         free_energy,
-        tol=1e-12,
+        # tol=1e-12,
         x0=initial_guess,
         atol=0,
         # options={"eps": 1e-12, 'ftol': 1e-12, 'gtol': 1e-12},
