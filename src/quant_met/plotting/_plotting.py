@@ -6,9 +6,7 @@ import matplotlib.figure
 import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
-from matplotlib.axes import Axes
 from matplotlib.collections import LineCollection
-from matplotlib.figure import Figure
 from numpy import dtype, generic, ndarray
 
 
@@ -36,50 +34,7 @@ def scatter_into_bz(
     return fig
 
 
-def plot_bcs_bandstructure(
-    non_interacting_bands: npt.NDArray[np.float64],
-    deltas: npt.NDArray[np.float64],
-    k_point_list: npt.NDArray[np.float64],
-    ticks: List[float],
-    labels: List[str],
-    fig_in: matplotlib.figure.Figure | None = None,
-    ax_in: matplotlib.axes.Axes | None = None,
-) -> tuple[Figure | Any, Axes | Any]:
-    if fig_in is None or ax_in is None:
-        fig, ax = plt.subplots()
-    else:
-        fig, ax = fig_in, ax_in
-
-    ax.axhline(y=0, alpha=0.7, linestyle="--", color="black")
-
-    for index, (band, delta) in enumerate(zip(non_interacting_bands, deltas)):
-        ax.plot(
-            k_point_list,
-            np.sqrt(band**2 + np.abs(delta) ** 2),
-            label=f"band {index}, +",
-        )
-        ax.plot(
-            k_point_list,
-            -np.sqrt(band**2 + np.abs(delta) ** 2),
-            label=f"band {index}, -",
-        )
-    ax.set_box_aspect(1)
-
-    ax.set_xticks(ticks, labels)
-    ax.set_yticks(range(-5, 6))
-    ax.set_facecolor("lightgray")
-    ax.grid(visible=True)
-    # ax.set_ylim([-5, 5])
-    ax.tick_params(
-        axis="both", direction="in", bottom=True, top=True, left=True, right=True
-    )
-
-    ax.legend()
-
-    return fig, ax
-
-
-def plot_nonint_bandstructure(
+def plot_bandstructure(
     bands: npt.NDArray[np.float64],
     k_point_list: npt.NDArray[np.float64],
     ticks: List[float],

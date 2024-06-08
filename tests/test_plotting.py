@@ -63,7 +63,7 @@ def test_plotting_nonint_bandstructure_graphene():
 
     band_structure = graphene_h.calculate_bandstructure(band_path)
 
-    plotting.plot_nonint_bandstructure(
+    plotting.plot_bandstructure(
         bands=band_structure[["band_0", "band_1"]].to_numpy().T,
         k_point_list=band_path_plot,
         labels=labels,
@@ -106,7 +106,7 @@ def test_plotting_nonint_bandstructure_egx():
 
     band_structure = egx_h.calculate_bandstructure(band_path)
 
-    plotting.plot_nonint_bandstructure(
+    plotting.plot_bandstructure(
         bands=band_structure[["band_0", "band_1", "band_2"]].to_numpy().T,
         overlaps=band_structure[["wx_0", "wx_1", "wx_2"]].to_numpy().T,
         k_point_list=band_path_plot,
