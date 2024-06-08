@@ -2,8 +2,8 @@
 
 [![Test](https://github.com/Ruberhauptmann/quant-met/actions/workflows/test.yml/badge.svg)](https://github.com/Ruberhauptmann/quant-met/actions/workflows/test.yml)
 [![Coverage Status](https://coveralls.io/repos/github/Ruberhauptmann/quant-met/badge.svg?branch=main)](https://coveralls.io/github/Ruberhauptmann/quant-met?branch=main)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/quant-met)
-![PyPI - Version](https://img.shields.io/pypi/v/quant-met)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/quant-met)](https://pypi.org/project/quant-met/)
+[![PyPI - Version](https://img.shields.io/pypi/v/quant-met)](https://pypi.org/project/quant-met/)
 
 
 * Documentation: [quant-met.readthedocs.io](https://quant-met.readthedocs.io/en/latest/)

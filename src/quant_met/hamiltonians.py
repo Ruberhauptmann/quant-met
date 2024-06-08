@@ -1,6 +1,3 @@
-"""
-
-"""
 from abc import ABC, abstractmethod
 
 import numpy as np
@@ -37,8 +34,8 @@ class BaseHamiltonian(ABC):
 
     @abstractmethod
     def _hamiltonian_k_space_one_point(
-        self, k_point: npt.NDArray, matrix_in: npt.NDArray
-    ) -> npt.NDArray:
+        self, k_point: npt.NDArray[np.float64], matrix_in: npt.NDArray[np.complex64]
+    ) -> npt.NDArray[np.complex64]:
         """Calculates
 
         This method is system-specific, so it needs to be implemented in every subclass
@@ -52,7 +49,33 @@ class BaseHamiltonian(ABC):
         """
         raise NotImplementedError
 
-    def hamiltonian_k_space(self, k: npt.NDArray) -> npt.NDArray:
+    def diagonalize_bdg(
+        self, k_list: npt.NDArray[np.float64], delta: npt.NDArray[np.float64]
+    ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.complex64]]:
+        bdg_matrix = np.array(
+            [
+                np.block(
+                    [
+                        [
+                            self.hamiltonian_k_space(k)[0],
+                            delta * np.eye(self.number_of_bands),
+                        ],
+                        [
+                            np.conjugate(delta * np.eye(self.number_of_bands)),
+                            -np.conjugate(self.hamiltonian_k_space(k)[0]),
+                        ],
+                    ]
+                )
+                for k in k_list
+            ]
+        )
+        eigenvalues, eigenvectors = np.linalg.eigh(bdg_matrix)
+
+        return eigenvalues, eigenvectors
+
+    def hamiltonian_k_space(
+        self, k: npt.NDArray[np.float64]
+    ) -> npt.NDArray[np.complex64]:
         if np.isnan(k).any() or np.isinf(k).any():
             raise ValueError("k is NaN or Infinity")
         if k.ndim == 1:
@@ -66,8 +89,10 @@ class BaseHamiltonian(ABC):
                 h[k_index] = self._hamiltonian_k_space_one_point(k, h[k_index])
         return h
 
-    def calculate_bandstructure(self, k_point_list: npt.NDArray) -> pd.DataFrame:
-        k_point_matrix = self.k_space_matrix(k_point_list)
+    def calculate_bandstructure(
+        self, k_point_list: npt.NDArray[np.float64]
+    ) -> pd.DataFrame:
+        k_point_matrix = self.hamiltonian_k_space(k_point_list)
 
         results = pd.DataFrame(
             index=range(len(k_point_list)),
@@ -77,21 +102,24 @@ class BaseHamiltonian(ABC):
         for i, k in enumerate(k_point_list):
             energies, eigenvectors = np.linalg.eigh(k_point_matrix[i])
 
-            for band_index in range(self.number_bands):
+            for band_index in range(self.number_of_bands):
                 results.at[i, f"band_{band_index}"] = energies[band_index]
 
         return results
 
-    def generate_bloch(self, k_points: npt.NDArray) -> tuple[npt.NDArray, npt.NDArray]:
-        k_point_matrix = self.k_space_matrix(k_points)
+    def generate_bloch(
+        self, k_points: npt.NDArray[np.float64]
+    ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
+        k_point_matrix = self.hamiltonian_k_space(k_points)
 
         if k_points.ndim == 1:
             energies, bloch = np.linalg.eigh(k_point_matrix[0])
         else:
             bloch = np.zeros(
-                (len(k_points), self.number_bands, self.number_bands), dtype=complex
+                (len(k_points), self.number_of_bands, self.number_of_bands),
+                dtype=complex,
             )
-            energies = np.zeros((len(k_points), self.number_bands))
+            energies = np.zeros((len(k_points), self.number_of_bands))
 
             for i, k in enumerate(k_points):
                 energies[i], bloch[i] = np.linalg.eigh(k_point_matrix[i])
@@ -117,8 +145,8 @@ class GrapheneHamiltonian(BaseHamiltonian):
         return 2
 
     def _hamiltonian_k_space_one_point(
-        self, k: npt.NDArray, h: npt.NDArray
-    ) -> npt.NDArray:
+        self, k: npt.NDArray[np.float64], h: npt.NDArray[np.complex64]
+    ) -> npt.NDArray[np.complex64]:
         t_nn = self.t_nn
         a = self.a
         mu = self.mu
@@ -162,12 +190,12 @@ class EGXHamiltonian(BaseHamiltonian):
         return 3
 
     def _hamiltonian_k_space_one_point(
-        self, k: npt.NDArray, h: npt.NDArray
-    ) -> npt.NDArray:
+        self, k: npt.NDArray[np.float64], h: npt.NDArray[np.complex64]
+    ) -> npt.NDArray[np.complex64]:
         t_gr = self.t_gr
         t_x = self.t_x
         a = self.a
-        a_0 = a / np.sqrt(3)
+        # a_0 = a / np.sqrt(3)
         V = self.V
         mu = self.mu
 
@@ -190,9 +218,12 @@ class EGXHamiltonian(BaseHamiltonian):
             )
         )
         h = h - mu * np.eye(3)
+
         return np.nan_to_num(h)
 
-    def calculate_bandstructure(self, k_point_list: npt.NDArray) -> pd.DataFrame:
+    def calculate_bandstructure(
+        self, k_point_list: npt.NDArray[np.float64]
+    ) -> pd.DataFrame:
         """
 
         Args:
