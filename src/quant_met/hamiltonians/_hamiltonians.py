@@ -3,9 +3,10 @@ from abc import ABC, abstractmethod
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
+import sympy as sp
 
 
-def check_valid_float(float_in: float, parameter_name: str) -> float:
+def _check_valid_float(float_in: float, parameter_name: str) -> float:
     if np.isinf(float_in):
         raise ValueError(f"{parameter_name} must not be Infinity")
     elif np.isnan(float_in):
@@ -15,79 +16,44 @@ def check_valid_float(float_in: float, parameter_name: str) -> float:
 
 
 class BaseHamiltonian(ABC):
-    """Base class for Hamiltonians."""
+    def __repr__(self):
+        return str(self.hamiltonian)
 
+    @abstractmethod
+    def hamiltonian(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def eval_nonint_hamiltonian(self):
+        raise NotImplementedError
+
+    @abstractmethod
     @property
-    @abstractmethod
-    def number_of_bands(self) -> int:
+    def parameters(self):
         raise NotImplementedError
 
-    @property
-    @abstractmethod
-    def coloumb_orbital_basis(self) -> list[float]:
-        """
-
-        Returns:
-            list[float]:
-        """
-        raise NotImplementedError
-
-    @abstractmethod
-    def _hamiltonian_k_space_one_point(
-        self, k_point: npt.NDArray[np.float64], matrix_in: npt.NDArray[np.complex64]
-    ) -> npt.NDArray[np.complex64]:
-        """Calculates
-
-        This method is system-specific, so it needs to be implemented in every subclass
-
-        Args:
-            k_point:
-            matrix_in:
-
-        Returns:
-
-        """
-        raise NotImplementedError
-
-    def diagonalize_bdg(
-        self, k_list: npt.NDArray[np.float64], delta: npt.NDArray[np.float64]
-    ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.complex64]]:
-        bdg_matrix = np.array(
+    def bdg_hamiltonian(self, k):
+        bdg_matrix = np.block(
             [
-                np.block(
-                    [
-                        [
-                            self.hamiltonian_k_space(k)[0],
-                            delta * np.eye(self.number_of_bands),
-                        ],
-                        [
-                            np.conjugate(delta * np.eye(self.number_of_bands)),
-                            -np.conjugate(self.hamiltonian_k_space(k)[0]),
-                        ],
-                    ]
-                )
-                for k in k_list
+                [
+                    self.hamiltonian_k_space(k)[0],
+                    delta * np.eye(self.number_of_bands),
+                ],
+                [
+                    np.conjugate(delta * np.eye(self.number_of_bands)),
+                    -np.conjugate(self.hamiltonian_k_space(k)[0]),
+                ],
             ]
         )
+        return bdg_matrix
+
+    def diagonalize_bdg(
+        self, k_list: npt.NDArray[np.float64], delta: npt.NDArray[np.float64], **kwargs
+    ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.complex64]]:
+        bdg_matrix = np.array([self.bdg_hamiltonian(k) for k in k_list])
         eigenvalues, eigenvectors = np.linalg.eigh(bdg_matrix)
 
         return eigenvalues, eigenvectors
-
-    def hamiltonian_k_space(
-        self, k: npt.NDArray[np.float64]
-    ) -> npt.NDArray[np.complex64]:
-        if np.isnan(k).any() or np.isinf(k).any():
-            raise ValueError("k is NaN or Infinity")
-        if k.ndim == 1:
-            h = np.zeros((1, self.number_of_bands, self.number_of_bands), dtype=complex)
-            h[0] = self._hamiltonian_k_space_one_point(k, h[0])
-        else:
-            h = np.zeros(
-                (k.shape[0], self.number_of_bands, self.number_of_bands), dtype=complex
-            )
-            for k_index, k in enumerate(k):
-                h[k_index] = self._hamiltonian_k_space_one_point(k, h[k_index])
-        return h
 
     def calculate_bandstructure(
         self, k_point_list: npt.NDArray[np.float64]
@@ -107,7 +73,7 @@ class BaseHamiltonian(ABC):
 
         return results
 
-    def generate_bloch(
+    def calculate_bloch_functions(
         self, k_points: npt.NDArray[np.float64]
     ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
         k_point_matrix = self.hamiltonian_k_space(k_points)
@@ -128,28 +94,72 @@ class BaseHamiltonian(ABC):
 
 
 class GrapheneHamiltonian(BaseHamiltonian):
-    def __init__(self, t_nn: float, a: float, mu: float, coulomb_gr: float):
-        self.t_nn = check_valid_float(t_nn, "Hopping")
-        if a <= 0:
-            raise ValueError("Lattice constant must be positive")
-        self.a = check_valid_float(a, "Lattice constant")
-        self.mu = check_valid_float(mu, "Chemical potential")
-        self.coloumb_gr = check_valid_float(coulomb_gr, "Coloumb interaction")
+    parameters = {
+        "t_nn": (
+            sp.symbols("t_nn", real=True, positive=True),
+            "Hopping between nearest neighbours",
+        ),
+        "mu": (sp.symbols("mu", real=True), "Chemical potential"),
+        "a": (sp.symbols("a", real=True, positive=True), "Lattice constant"),
+        "U": (sp.symbols("U", real=True), "Local coloumb interaction"),
+        "k": (
+            sp.Matrix([sp.symbols("k_x, k_y", real=True)]),
+            "Lattice momentum vector",
+        ),
+    }
 
-    @property
-    def coloumb_orbital_basis(self) -> list[float]:
-        return [self.coloumb_gr, self.coloumb_gr]
+    def __init__(self):
+        pass
 
-    @property
-    def number_of_bands(self) -> int:
-        return 2
+    def eval_nonint_hamiltonian(
+        self, k: npt.NDArray[np.float64], t_nn, mu, a
+    ) -> npt.NDArray[np.complex64]:
+        if np.isnan(k).any() or np.isinf(k).any():
+            raise ValueError("k is NaN or Infinity")
+        h_eval = sp.lambdify(
+            args=[
+                self.parameters["t_nn"],
+                self.parameters["mu"],
+                self.parameters["a"],
+                self.parameters["k"][0],
+                self.parameters["k"][1],
+            ],
+            expr=sp.ImmutableDenseMatrix(self.hamiltonian),
+            modules="numpy",
+        )
+        h = np.transpose(
+            h_eval(
+                t_nn=t_nn * np.ones(k.shape[0]),
+                mu=mu * np.ones(k.shape[0]),
+                a=a * np.ones(k.shape[0]),
+                k_x=k.T[0],
+                k_y=k.T[1],
+            ),
+            axes=(2, 0, 1),
+        )
+        return h
 
-    def _hamiltonian_k_space_one_point(
+    def nonint_hamiltonian(self):
+        f_gr = self.t_nn * (
+            sp.exp(1j * self.k[1] * self.a / sp.sqrt(3))
+            + 2
+            * sp.exp(-0.5j * self.a / sp.sqrt(3) * self.k[1])
+            * (sp.cos(0.5 * self.a * self.k[0]))
+        )
+        hamiltonian = sp.Matrix([[-self.mu, f_gr], [sp.conjugate(f_gr), -self.mu]])
+        return hamiltonian
+
+    def eval_nonint_hamiltonian_numpy(
         self, k: npt.NDArray[np.float64], h: npt.NDArray[np.complex64]
     ) -> npt.NDArray[np.complex64]:
+        """
         t_nn = self.t_nn
         a = self.a
         mu = self.mu
+        """
+        t_nn = 1
+        a = np.sqrt(3)
+        mu = 1
 
         h[0, 1] = t_nn * (
             np.exp(1j * k[1] * a / np.sqrt(3))
@@ -173,13 +183,13 @@ class EGXHamiltonian(BaseHamiltonian):
         U_gr: float,
         U_x: float,
     ):
-        self.t_gr = check_valid_float(t_gr, "Hopping graphene")
-        self.t_x = check_valid_float(t_x, "Hopping impurity")
-        self.V = check_valid_float(V, "Hybridisation")
-        self.a = check_valid_float(a, "Lattice constant")
-        self.mu = check_valid_float(mu, "Chemical potential")
-        self.U_gr = check_valid_float(U_gr, "Coloumb interaction graphene")
-        self.U_x = check_valid_float(U_x, "Coloumb interaction impurity")
+        self.t_gr = _check_valid_float(t_gr, "Hopping graphene")
+        self.t_x = _check_valid_float(t_x, "Hopping impurity")
+        self.V = _check_valid_float(V, "Hybridisation")
+        self.a = _check_valid_float(a, "Lattice constant")
+        self.mu = _check_valid_float(mu, "Chemical potential")
+        self.U_gr = _check_valid_float(U_gr, "Coloumb interaction graphene")
+        self.U_x = _check_valid_float(U_x, "Coloumb interaction impurity")
 
     @property
     def coloumb_orbital_basis(self) -> list[float]:
@@ -224,11 +234,6 @@ class EGXHamiltonian(BaseHamiltonian):
     def calculate_bandstructure(
         self, k_point_list: npt.NDArray[np.float64]
     ) -> pd.DataFrame:
-        """
-
-        Args:
-             k_point_list (npt.NDArray): Test
-        """
         k_point_matrix = self.hamiltonian_k_space(k_point_list)
 
         results = pd.DataFrame(
