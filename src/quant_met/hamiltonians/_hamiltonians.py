@@ -16,32 +16,30 @@ def _check_valid_float(float_in: float, parameter_name: str) -> float:
 
 
 class BaseHamiltonian(ABC):
-    def __repr__(self):
-        return str(self.hamiltonian)
-
-    @abstractmethod
-    def hamiltonian(self):
-        raise NotImplementedError
-
-    @abstractmethod
-    def eval_nonint_hamiltonian(self):
-        raise NotImplementedError
-
-    @abstractmethod
     @property
+    @abstractmethod
+    def nonint_hamiltonian(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def eval_nonint_hamiltonian(self, *args, **kwargs):
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
     def parameters(self):
         raise NotImplementedError
 
-    def bdg_hamiltonian(self, k):
+    def bdg_hamiltonian(self, k, delta):
         bdg_matrix = np.block(
             [
                 [
-                    self.hamiltonian_k_space(k)[0],
+                    self.eval_nonint_hamiltonian(k)[0],
                     delta * np.eye(self.number_of_bands),
                 ],
                 [
                     np.conjugate(delta * np.eye(self.number_of_bands)),
-                    -np.conjugate(self.hamiltonian_k_space(k)[0]),
+                    -np.conjugate(self.eval_nonint_hamiltonian(k)[0]),
                 ],
             ]
         )
@@ -50,7 +48,7 @@ class BaseHamiltonian(ABC):
     def diagonalize_bdg(
         self, k_list: npt.NDArray[np.float64], delta: npt.NDArray[np.float64], **kwargs
     ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.complex64]]:
-        bdg_matrix = np.array([self.bdg_hamiltonian(k) for k in k_list])
+        bdg_matrix = np.array([self.bdg_hamiltonian(k, delta) for k in k_list])
         eigenvalues, eigenvectors = np.linalg.eigh(bdg_matrix)
 
         return eigenvalues, eigenvectors
@@ -108,12 +106,14 @@ class GrapheneHamiltonian(BaseHamiltonian):
         ),
     }
 
-    def __init__(self):
-        pass
-
     def eval_nonint_hamiltonian(
         self, k: npt.NDArray[np.float64], t_nn, mu, a
     ) -> npt.NDArray[np.complex64]:
+        t_nn = _check_valid_float(t_nn, "Hopping")
+        if a <= 0:
+            raise ValueError("Lattice constant must be positive")
+        a = _check_valid_float(a, "Lattice constant")
+        mu = _check_valid_float(mu, "Chemical potential")
         if np.isnan(k).any() or np.isinf(k).any():
             raise ValueError("k is NaN or Infinity")
         h_eval = sp.lambdify(
@@ -124,7 +124,7 @@ class GrapheneHamiltonian(BaseHamiltonian):
                 self.parameters["k"][0],
                 self.parameters["k"][1],
             ],
-            expr=sp.ImmutableDenseMatrix(self.hamiltonian),
+            expr=sp.ImmutableDenseMatrix(self.nonint_hamiltonian),
             modules="numpy",
         )
         h = np.transpose(
@@ -139,14 +139,19 @@ class GrapheneHamiltonian(BaseHamiltonian):
         )
         return h
 
+    @property
     def nonint_hamiltonian(self):
-        f_gr = self.t_nn * (
-            sp.exp(1j * self.k[1] * self.a / sp.sqrt(3))
-            + 2
-            * sp.exp(-0.5j * self.a / sp.sqrt(3) * self.k[1])
-            * (sp.cos(0.5 * self.a * self.k[0]))
+        t_nn = self.parameters["t_nn"][0]
+        mu = self.parameters["mu"][0]
+        a = self.parameters["a"][0]
+        k_x = self.parameters["k"][0][0]
+        k_y = self.parameters["k"][0][1]
+
+        f_gr = t_nn * (
+            sp.exp(1j * k_y * a / sp.sqrt(3))
+            + 2 * sp.exp(-0.5j * a / sp.sqrt(3) * k_y) * (sp.cos(0.5 * a * k_x))
         )
-        hamiltonian = sp.Matrix([[-self.mu, f_gr], [sp.conjugate(f_gr), -self.mu]])
+        hamiltonian = sp.Matrix([[-mu, f_gr], [sp.conjugate(f_gr), -mu]])
         return hamiltonian
 
     def eval_nonint_hamiltonian_numpy(
