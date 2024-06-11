@@ -1,6 +1,5 @@
 import numpy as np
 import numpy.typing as npt
-import pandas as pd
 
 from ._base_hamiltonian import BaseHamiltonian
 from ._utils import _check_valid_float

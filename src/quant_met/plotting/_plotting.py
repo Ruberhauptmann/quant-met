@@ -54,7 +54,7 @@ def plot_bandstructure(
         for band in bands:
             ax.plot(k_point_list, band)
     else:
-        line = None
+        line = LineCollection(segments=[np.array([(0, 0)])])
         for band, wx in zip(bands, overlaps):
             points = np.array([k_point_list, band]).T.reshape(-1, 1, 2)
             segments = np.concatenate([points[:-1], points[1:]], axis=1)
