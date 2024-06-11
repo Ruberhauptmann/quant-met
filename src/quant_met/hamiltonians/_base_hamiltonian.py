@@ -4,7 +4,6 @@ from typing import Callable
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
-from numpy._typing import _64Bit
 from scipy import optimize
 
 
