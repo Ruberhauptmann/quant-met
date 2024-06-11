@@ -60,9 +60,31 @@ register_type_strategy(
 )
 def test_hamiltonians(sample: hamiltonians.BaseHamiltonian, k: npt.NDArray):
     h_k_space = sample.hamiltonian_k_space(k)[0]
+    assert len(sample.coloumb_orbital_basis) == sample.number_of_bands
     assert h_k_space.shape[0] == sample.number_of_bands
     assert h_k_space.shape[1] == sample.number_of_bands
     assert linalg.ishermitian(h_k_space)
+
+
+def test_invalid_values():
+    with pytest.raises(ValueError):
+        print(hamiltonians.GrapheneHamiltonian(t_nn=1, a=-1, mu=1, coulomb_gr=1))
+    with pytest.raises(ValueError):
+        print(hamiltonians.GrapheneHamiltonian(t_nn=np.nan, a=1, mu=1, coulomb_gr=1))
+    with pytest.raises(ValueError):
+        print(hamiltonians.GrapheneHamiltonian(t_nn=1, a=np.nan, mu=1, coulomb_gr=1))
+    with pytest.raises(ValueError):
+        print(hamiltonians.GrapheneHamiltonian(t_nn=1, a=1, mu=np.nan, coulomb_gr=1))
+    with pytest.raises(ValueError):
+        print(hamiltonians.GrapheneHamiltonian(t_nn=1, a=1, mu=1, coulomb_gr=np.nan))
+    with pytest.raises(ValueError):
+        print(hamiltonians.GrapheneHamiltonian(t_nn=np.inf, a=1, mu=1, coulomb_gr=1))
+    with pytest.raises(ValueError):
+        print(hamiltonians.GrapheneHamiltonian(t_nn=1, a=np.inf, mu=1, coulomb_gr=1))
+    with pytest.raises(ValueError):
+        print(hamiltonians.GrapheneHamiltonian(t_nn=1, a=1, mu=np.inf, coulomb_gr=1))
+    with pytest.raises(ValueError):
+        print(hamiltonians.GrapheneHamiltonian(t_nn=1, a=1, mu=1, coulomb_gr=np.nan))
 
 
 def test_base_hamiltonian(patch_abstract) -> None:

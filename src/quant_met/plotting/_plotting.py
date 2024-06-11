@@ -54,7 +54,7 @@ def plot_bandstructure(
         for band in bands:
             ax.plot(k_point_list, band)
     else:
-        line = None
+        line = LineCollection(segments=[np.array([(0, 0)])])
         for band, wx in zip(bands, overlaps):
             points = np.array([k_point_list, band]).T.reshape(-1, 1, 2)
             segments = np.concatenate([points[:-1], points[1:]], axis=1)
@@ -65,12 +65,9 @@ def plot_bandstructure(
             lc.set_linewidth(2)
             line = ax.add_collection(lc)
 
-        if line is not None:
-            colorbar = fig.colorbar(line, fraction=0.046, pad=0.04, ax=ax)
-            color_ticks = [-1, 1]
-            colorbar.set_ticks(
-                ticks=color_ticks, labels=[r"$w_{\mathrm{Gr}_1}$", r"$w_X$"]
-            )
+        colorbar = fig.colorbar(line, fraction=0.046, pad=0.04, ax=ax)
+        color_ticks = [-1, 1]
+        colorbar.set_ticks(ticks=color_ticks, labels=[r"$w_{\mathrm{Gr}_1}$", r"$w_X$"])
 
     ax.set_box_aspect(1)
     ax.set_xticks(ticks, labels)
