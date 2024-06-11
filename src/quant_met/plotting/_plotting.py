@@ -65,12 +65,9 @@ def plot_bandstructure(
             lc.set_linewidth(2)
             line = ax.add_collection(lc)
 
-        if line is not None:
-            colorbar = fig.colorbar(line, fraction=0.046, pad=0.04, ax=ax)
-            color_ticks = [-1, 1]
-            colorbar.set_ticks(
-                ticks=color_ticks, labels=[r"$w_{\mathrm{Gr}_1}$", r"$w_X$"]
-            )
+        colorbar = fig.colorbar(line, fraction=0.046, pad=0.04, ax=ax)
+        color_ticks = [-1, 1]
+        colorbar.set_ticks(ticks=color_ticks, labels=[r"$w_{\mathrm{Gr}_1}$", r"$w_X$"])
 
     ax.set_box_aspect(1)
     ax.set_xticks(ticks, labels)

@@ -83,7 +83,9 @@ class BaseHamiltonian(ABC):
         return h
 
     def calculate_bandstructure(
-        self, k_point_list: npt.NDArray[np.float64]
+        self,
+        k_point_list: npt.NDArray[np.float64],
+        overlaps: tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]] | None = None,
     ) -> pd.DataFrame:
         k_point_matrix = self.hamiltonian_k_space(k_point_list)
 
@@ -97,6 +99,12 @@ class BaseHamiltonian(ABC):
 
             for band_index in range(self.number_of_bands):
                 results.at[i, f"band_{band_index}"] = energies[band_index]
+
+                if overlaps is not None:
+                    results.at[i, f"wx_{band_index}"] = (
+                        np.abs(np.dot(eigenvectors[:, band_index], overlaps[0])) ** 2
+                        - np.abs(np.dot(eigenvectors[:, band_index], overlaps[1])) ** 2
+                    )
 
         return results
 

@@ -64,32 +64,3 @@ class EGXHamiltonian(BaseHamiltonian):
         h = h - mu * np.eye(3)
 
         return np.nan_to_num(h)
-
-    def calculate_bandstructure(
-        self, k_point_list: npt.NDArray[np.float64]
-    ) -> pd.DataFrame:
-        """
-
-        Args:
-             k_point_list (npt.NDArray): Test
-        """
-        k_point_matrix = self.hamiltonian_k_space(k_point_list)
-
-        results = pd.DataFrame(
-            index=range(len(k_point_list)),
-            dtype=float,
-        )
-
-        for i, k in enumerate(k_point_list):
-            energies, eigenvectors = np.linalg.eigh(k_point_matrix[i])
-
-            for band_index in range(self.number_of_bands):
-                results.at[i, f"band_{band_index}"] = energies[band_index]
-                results.at[i, f"wx_{band_index}"] = (
-                    np.abs(np.dot(eigenvectors[:, band_index], np.array([0, 0, 1])))
-                    ** 2
-                    - np.abs(np.dot(eigenvectors[:, band_index], np.array([1, 0, 0])))
-                    ** 2
-                )
-
-        return results
