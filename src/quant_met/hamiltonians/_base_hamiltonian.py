@@ -1,14 +1,16 @@
 from abc import ABC, abstractmethod
-from typing import Callable
 
+import h5py
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
-from scipy import optimize
 
 
 class BaseHamiltonian(ABC):
     """Base class for Hamiltonians."""
+
+    def __init__(self, *args, **kwargs) -> None:
+        pass
 
     @property
     @abstractmethod
@@ -18,11 +20,16 @@ class BaseHamiltonian(ABC):
     @property
     @abstractmethod
     def coloumb_orbital_basis(self) -> list[float]:
-        """
+        raise NotImplementedError
 
-        Returns:
-            list[float]:
-        """
+    @property
+    @abstractmethod
+    def delta_orbital_basis(self) -> npt.NDArray[np.float64]:
+        raise NotImplementedError
+
+    @delta_orbital_basis.setter
+    @abstractmethod
+    def delta_orbital_basis(self, new_delta: npt.NDArray[np.float64]):
         raise NotImplementedError
 
     @abstractmethod
@@ -41,6 +48,23 @@ class BaseHamiltonian(ABC):
 
         """
         raise NotImplementedError
+
+    def save(self, filename):
+        with h5py.File(f"{filename}", "a") as f:
+            f.create_dataset("delta", data=self.delta_orbital_basis)
+            for key, value in vars(self).items():
+                if not key.startswith("_"):
+                    f.attrs[key] = value
+
+    @classmethod
+    def from_file(cls, filename):
+        config_dict = {}
+        with h5py.File(f"{filename}", "r") as f:
+            config_dict["delta"] = f["delta"][()]
+            for key, value in f.attrs.items():
+                config_dict[key] = value
+
+        return cls(**config_dict)
 
     def diagonalize_bdg(
         self, k_list: npt.NDArray[np.float64], delta: npt.NDArray[np.float64]
@@ -126,70 +150,3 @@ class BaseHamiltonian(ABC):
                 energies[i], bloch[i] = np.linalg.eigh(k_point_matrix[i])
 
         return energies, bloch
-
-    @staticmethod
-    def free_energy(
-        delta_vector: npt.NDArray[np.float64],
-        diagonalize_bdg: Callable[
-            [npt.NDArray[np.float64], npt.NDArray[np.float64]], npt.NDArray[np.float64]
-        ],
-        nonint_hamiltonian_k_space: npt.NDArray[np.float64],
-        coloumb_orbital_basis: npt.NDArray[np.float64],
-        k_points: npt.NDArray[np.float64],
-        beta: float | None = None,
-    ) -> float:
-        number_k_points = len(k_points)
-        bdg_energies, bdg_vectors = diagonalize_bdg(k_points, delta_vector)
-
-        k_array: npt.NDArray[np.float64] = np.real(
-            np.trace(nonint_hamiltonian_k_space, axis1=-2, axis2=-1)
-        ) + np.ones(number_k_points) * np.sum(
-            np.power(np.abs(delta_vector), 2) / coloumb_orbital_basis
-        )
-        if beta is None:
-            k_array -= 0.5 * np.array(
-                [
-                    np.real(
-                        np.trace(
-                            bdg_vectors[k_index]
-                            @ np.diagflat(np.abs(bdg_energies[k_index]))
-                            @ np.conjugate(bdg_vectors[k_index]).T
-                        )
-                    )
-                    for k_index in range(number_k_points)
-                ]
-            )
-        else:
-            k_array -= (
-                np.sum(np.log(1 + np.nan_to_num(np.exp(-beta * bdg_energies))), axis=-1)
-                / beta
-            )
-        integral: float = np.sum(k_array, axis=-1) / (
-            2.5980762113533156 * number_k_points
-        )
-
-        return integral
-
-    def minimize_loop(
-        self, k_points: npt.NDArray[np.float64], beta: float | None = None
-    ) -> npt.NDArray[np.float64]:
-        nonint_hamiltonian_k_space = self.hamiltonian_k_space(k_points)
-        solution = optimize.brute(
-            func=self.free_energy,
-            args=(
-                self.diagonalize_bdg,
-                nonint_hamiltonian_k_space,
-                self.coloumb_orbital_basis,
-                k_points,
-                beta,
-            ),
-            ranges=[(0, 1) for _ in range(self.number_of_bands)],
-            Ns=20,
-            workers=10,
-            finish=optimize.fmin,
-            full_output=True,
-        )
-
-        delta_solution: npt.NDArray[np.float64] = solution[0]
-
-        return delta_solution
