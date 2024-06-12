@@ -1,3 +1,5 @@
+import os.path
+
 import numpy as np
 import numpy.typing as npt
 import pytest
@@ -66,6 +68,18 @@ def test_hamiltonians(sample: hamiltonians.BaseHamiltonian, k: npt.NDArray):
     assert linalg.ishermitian(h_k_space)
 
 
+def test_save_graphene(tmp_path):
+    graphene_h = hamiltonians.GrapheneHamiltonian(
+        t_nn=1, a=np.sqrt(3), mu=-1, coulomb_gr=1
+    )
+    graphene_h.delta_orbital_basis = np.ones(graphene_h.number_of_bands)
+    file_path = os.path.join(tmp_path, "test.hdf5")
+    graphene_h.save(filename=file_path)
+    sample_read = type(graphene_h).from_file(filename=file_path)
+    for key, value in vars(sample_read).items():
+        assert np.allclose(value, graphene_h.__dict__[key])
+
+
 def test_invalid_values():
     with pytest.raises(ValueError):
         print(hamiltonians.GrapheneHamiltonian(t_nn=1, a=-1, mu=1, coulomb_gr=1))
@@ -101,6 +115,10 @@ def test_base_hamiltonian(patch_abstract) -> None:
         print(base_hamiltonian.number_of_bands)
     with pytest.raises(NotImplementedError):
         print(base_hamiltonian.coloumb_orbital_basis)
+    with pytest.raises(NotImplementedError):
+        print(base_hamiltonian.delta_orbital_basis)
+    with pytest.raises(NotImplementedError):
+        base_hamiltonian.delta_orbital_basis = np.array([0])
     with pytest.raises(NotImplementedError):
         print(
             base_hamiltonian._hamiltonian_k_space_one_point(
