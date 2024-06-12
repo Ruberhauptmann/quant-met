@@ -1,3 +1,4 @@
+import pathlib
 from abc import ABC, abstractmethod
 
 import h5py
@@ -8,9 +9,6 @@ import pandas as pd
 
 class BaseHamiltonian(ABC):
     """Base class for Hamiltonians."""
-
-    def __init__(self, *args, **kwargs) -> None:
-        pass
 
     @property
     @abstractmethod
@@ -29,7 +27,7 @@ class BaseHamiltonian(ABC):
 
     @delta_orbital_basis.setter
     @abstractmethod
-    def delta_orbital_basis(self, new_delta: npt.NDArray[np.float64]):
+    def delta_orbital_basis(self, new_delta: npt.NDArray[np.float64]) -> None:
         raise NotImplementedError
 
     @abstractmethod
@@ -49,7 +47,7 @@ class BaseHamiltonian(ABC):
         """
         raise NotImplementedError
 
-    def save(self, filename):
+    def save(self, filename: pathlib.Path) -> None:
         with h5py.File(f"{filename}", "a") as f:
             f.create_dataset("delta", data=self.delta_orbital_basis)
             for key, value in vars(self).items():
@@ -57,7 +55,7 @@ class BaseHamiltonian(ABC):
                     f.attrs[key] = value
 
     @classmethod
-    def from_file(cls, filename):
+    def from_file(cls, filename: pathlib.Path) -> "BaseHamiltonian":
         config_dict = {}
         with h5py.File(f"{filename}", "r") as f:
             config_dict["delta"] = f["delta"][()]

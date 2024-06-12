@@ -8,22 +8,22 @@ from ._utils import _check_valid_float
 class GrapheneHamiltonian(BaseHamiltonian):
     def __init__(
         self,
-        t_nn,
+        t_nn: float,
         a: float,
         mu: float,
         coulomb_gr: float,
         delta: npt.NDArray[np.float64] | None = None,
-        *args,
-        **kwargs
     ):
-        super().__init__(*args, **kwargs)
         self.t_nn = _check_valid_float(t_nn, "Hopping")
         if a <= 0:
             raise ValueError("Lattice constant must be positive")
         self.a = _check_valid_float(a, "Lattice constant")
         self.mu = _check_valid_float(mu, "Chemical potential")
         self.coulomb_gr = _check_valid_float(coulomb_gr, "Coloumb interaction")
-        self._delta_orbital_basis = delta
+        if delta is None:
+            self._delta_orbital_basis = np.zeros(2)
+        else:
+            self._delta_orbital_basis = delta
 
     @property
     def coloumb_orbital_basis(self) -> list[float]:
@@ -34,11 +34,11 @@ class GrapheneHamiltonian(BaseHamiltonian):
         return 2
 
     @property
-    def delta_orbital_basis(self):
+    def delta_orbital_basis(self) -> npt.NDArray[np.float64]:
         return self._delta_orbital_basis
 
     @delta_orbital_basis.setter
-    def delta_orbital_basis(self, new_delta):
+    def delta_orbital_basis(self, new_delta: npt.NDArray[np.float64]) -> None:
         self._delta_orbital_basis = new_delta
 
     def _hamiltonian_k_space_one_point(

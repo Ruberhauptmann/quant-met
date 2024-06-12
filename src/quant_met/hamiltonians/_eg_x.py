@@ -15,6 +15,7 @@ class EGXHamiltonian(BaseHamiltonian):
         mu: float,
         U_gr: float,
         U_x: float,
+        delta: npt.NDArray[np.float64] | None = None,
     ):
         self.t_gr = _check_valid_float(t_gr, "Hopping graphene")
         self.t_x = _check_valid_float(t_x, "Hopping impurity")
@@ -23,6 +24,10 @@ class EGXHamiltonian(BaseHamiltonian):
         self.mu = _check_valid_float(mu, "Chemical potential")
         self.U_gr = _check_valid_float(U_gr, "Coloumb interaction graphene")
         self.U_x = _check_valid_float(U_x, "Coloumb interaction impurity")
+        if delta is None:
+            self._delta_orbital_basis = np.zeros(3)
+        else:
+            self._delta_orbital_basis = delta
 
     @property
     def coloumb_orbital_basis(self) -> list[float]:
@@ -31,6 +36,14 @@ class EGXHamiltonian(BaseHamiltonian):
     @property
     def number_of_bands(self) -> int:
         return 3
+
+    @property
+    def delta_orbital_basis(self) -> npt.NDArray[np.float64]:
+        return self._delta_orbital_basis
+
+    @delta_orbital_basis.setter
+    def delta_orbital_basis(self, new_delta: npt.NDArray[np.float64]) -> None:
+        self._delta_orbital_basis = new_delta
 
     def _hamiltonian_k_space_one_point(
         self, k: npt.NDArray[np.float64], h: npt.NDArray[np.complex64]
