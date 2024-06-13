@@ -55,7 +55,7 @@ class EGXHamiltonian(BaseHamiltonian):
         V = self.V
         mu = self.mu
 
-        h[0, 1] = t_gr * (
+        h[0, 1] = -t_gr * (
             np.exp(1j * k[1] * a / np.sqrt(3))
             + 2 * np.exp(-0.5j * a / np.sqrt(3) * k[1]) * (np.cos(0.5 * a * k[0]))
         )

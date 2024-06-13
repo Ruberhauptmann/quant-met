@@ -12,7 +12,7 @@ Subpackages
 .. toctree::
    :maxdepth: 1
 
-   quant_met.bcs
+   quant_met.hamiltonians
    quant_met.plotting
 
 Submodules
@@ -22,5 +22,4 @@ Submodules
    :maxdepth: 1
 
    quant_met.cli
-   quant_met.configuration
-   quant_met.hamiltonians
+   quant_met.utils

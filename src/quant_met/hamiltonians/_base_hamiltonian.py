@@ -10,6 +10,9 @@ import pandas as pd
 class BaseHamiltonian(ABC):
     """Base class for Hamiltonians."""
 
+    def __init__(self, *args, **kwargs) -> None:
+        pass
+
     @property
     @abstractmethod
     def number_of_bands(self) -> int:

@@ -1,3 +1,5 @@
+"""Command line interface."""
+
 """
 @click.command()
 def cli():

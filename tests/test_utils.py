@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from hypothesis import assume, given
 from hypothesis.extra.numpy import arrays
-from hypothesis.strategies import integers
+from hypothesis.strategies import floats, integers
 
 from quant_met import utils
 
@@ -10,9 +10,21 @@ from quant_met import utils
 @given(
     ncols=integers(min_value=2, max_value=1000),
     nrows=integers(min_value=2, max_value=1000),
-    corner_1=arrays(shape=2, dtype=np.float64),
-    corner_2=arrays(shape=2, dtype=np.float64),
-    origin=arrays(shape=2, dtype=np.float64),
+    corner_1=arrays(
+        shape=2,
+        dtype=np.float64,
+        elements=floats(allow_nan=False, allow_infinity=False),
+    ),
+    corner_2=arrays(
+        shape=2,
+        dtype=np.float64,
+        elements=floats(allow_nan=False, allow_infinity=False),
+    ),
+    origin=arrays(
+        shape=2,
+        dtype=np.float64,
+        elements=floats(allow_nan=False, allow_infinity=False),
+    ),
 )
 def test_generate_uniform_grid_samples(ncols, nrows, corner_1, corner_2, origin):
     assume(np.linalg.norm(corner_1) > 0)

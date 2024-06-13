@@ -1,5 +1,5 @@
-quant\_met.hamiltonians module
-==============================
+quant\_met.hamiltonians package
+===============================
 
 .. automodule:: quant_met.hamiltonians
    :members:
