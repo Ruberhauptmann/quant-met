@@ -14,6 +14,7 @@ def scatter_into_bz(
     bz_corners: List[npt.NDArray[np.float64]],
     k_points: npt.NDArray[np.float64],
     data: npt.NDArray[np.float64] | None = None,
+    data_label: str | None = None,
     fig_in: matplotlib.figure.Figure | None = None,
     ax_in: matplotlib.axes.Axes | None = None,
 ) -> matplotlib.figure.Figure:
@@ -24,12 +25,14 @@ def scatter_into_bz(
 
     if data is not None:
         scatter = ax.scatter(*zip(*k_points), c=data, cmap="viridis")
-        fig.colorbar(scatter, ax=ax, fraction=0.046, pad=0.04)
+        fig.colorbar(scatter, ax=ax, fraction=0.046, pad=0.04, label=data_label)
     else:
         ax.scatter(*zip(*k_points))
 
     ax.scatter(*zip(*bz_corners), alpha=0.8)
     ax.set_aspect("equal", adjustable="box")
+    ax.set_xlabel(r"$k_x\ [1/a_0]$")
+    ax.set_ylabel(r"$k_y\ [1/a_0]$")
 
     return fig
 
@@ -40,6 +43,7 @@ def plot_bandstructure(
     ticks: List[float],
     labels: List[str],
     overlaps: npt.NDArray[np.float64] | None = None,
+    overlap_labels: List[str] | None = None,
     fig_in: matplotlib.figure.Figure | None = None,
     ax_in: matplotlib.axes.Axes | None = None,
 ) -> matplotlib.figure.Figure:
@@ -67,14 +71,14 @@ def plot_bandstructure(
 
         colorbar = fig.colorbar(line, fraction=0.046, pad=0.04, ax=ax)
         color_ticks = [-1, 1]
-        colorbar.set_ticks(ticks=color_ticks, labels=[r"$w_{\mathrm{Gr}_1}$", r"$w_X$"])
+        colorbar.set_ticks(ticks=color_ticks, labels=overlap_labels)
 
+    ax.set_yticks(range(-5, 6))
     ax.set_box_aspect(1)
     ax.set_xticks(ticks, labels)
-    ax.set_yticks(range(-5, 6))
+    ax.set_ylabel(r"$E\ [t]$")
     ax.set_facecolor("lightgray")
     ax.grid(visible=True)
-    # ax.set_ylim([-5, 5])
     ax.tick_params(
         axis="both", direction="in", bottom=True, top=True, left=True, right=True
     )

@@ -3,14 +3,17 @@ import os.path
 import numpy as np
 import numpy.typing as npt
 import pytest
-from hypothesis import given
+from hypothesis import example, given
 from hypothesis.extra.numpy import arrays
 from hypothesis.strategies import (
     builds,
     floats,
     from_type,
+    integers,
+    just,
     one_of,
     register_type_strategy,
+    tuples,
 )
 from scipy import linalg
 
@@ -55,17 +58,83 @@ register_type_strategy(
         from_type(hamiltonians.EGXHamiltonian),
     ),
     k=arrays(
-        shape=(2,),
+        shape=tuples(integers(min_value=1, max_value=int(100)), just(2)),
         dtype=float,
         elements=floats(allow_nan=False, allow_infinity=False),
     ),
 )
 def test_hamiltonians(sample: hamiltonians.BaseHamiltonian, k: npt.NDArray):
-    h_k_space = sample.hamiltonian_k_space(k)[0]
+    bdg_energies = sample.diagonalize_bdg(
+        k_list=k, delta=np.array([0 for _ in range(sample.number_of_bands)])
+    )[0].flatten()
+
+    nonint_energies = np.array(
+        [[+E, -E] for E in sample.generate_bloch(k_points=k)[0].flatten()]
+    ).flatten()
+
+    h_k_space = sample.hamiltonian_k_space(k)
+
+    assert np.allclose(
+        np.sort(np.nan_to_num(bdg_energies.flatten())),
+        np.sort(np.nan_to_num(nonint_energies)),
+    )
     assert len(sample.coloumb_orbital_basis) == sample.number_of_bands
-    assert h_k_space.shape[0] == sample.number_of_bands
-    assert h_k_space.shape[1] == sample.number_of_bands
-    assert linalg.ishermitian(h_k_space)
+    for h in h_k_space:
+        assert h.shape[0] == sample.number_of_bands
+        assert h.shape[1] == sample.number_of_bands
+        assert linalg.ishermitian(h)
+
+
+def test_hamiltonian_k_space_graphene():
+    t_gr = 1
+    mu = 1
+    lattice_constant = np.sqrt(3)
+    Gamma = np.array([0, 0])
+    M = np.pi / lattice_constant * np.array([1, 1 / np.sqrt(3)])
+    K = 4 * np.pi / (3 * lattice_constant) * np.array([1, 0])
+
+    h_at_high_symmetry_points = [
+        (Gamma, np.array([[-mu, -3 * t_gr], [-3 * t_gr, -mu]], dtype=np.complex64)),
+        (K, np.array([[-mu, 0], [0, -mu]], dtype=np.complex64)),
+        # (M, np.array([[-mu, -t_gr * np.exp(1j * np.pi/np.sqrt(3))], [-t_gr * np.exp(-1j * np.pi/np.sqrt(3)), -mu]], dtype=np.complex64))
+    ]
+
+    for k_point, h_compare in h_at_high_symmetry_points:
+        graphene_h = hamiltonians.GrapheneHamiltonian(
+            t_nn=t_gr, a=lattice_constant, mu=mu, coulomb_gr=0
+        )
+        h_generated = graphene_h.hamiltonian_k_space(k_point)
+        assert np.allclose(h_generated, h_compare)
+
+
+def test_hamiltonian_k_space_egx():
+    t_gr = 1
+    t_x = 0.01
+    V = 1
+    mu = 1
+    lattice_constant = np.sqrt(3)
+    Gamma = np.array([0, 0])
+    M = np.pi / lattice_constant * np.array([1, 1 / np.sqrt(3)])
+    K = 4 * np.pi / (3 * lattice_constant) * np.array([1, 0])
+
+    h_at_high_symmetry_points = [
+        (
+            Gamma,
+            np.array(
+                [[-mu, -3 * t_gr, V], [-3 * t_gr, -mu, 0], [V, 0, -mu - 6 * t_x]],
+                dtype=np.complex64,
+            ),
+        ),
+        # (K, np.array([[-mu, 0, V], [0, -mu, 0], [V, 0, -mu + t_x]], dtype=np.complex64)),
+        # (M, np.array([[-mu, -t_gr * np.exp(1j * np.pi/np.sqrt(3)), V], [-t_gr * np.exp(-1j * np.pi/np.sqrt(3)), -mu, 0], [V, 0, -mu + 2*t_x]], dtype=np.complex64))
+    ]
+
+    for k_point, h_compare in h_at_high_symmetry_points:
+        egx_h = hamiltonians.EGXHamiltonian(
+            t_gr=t_gr, t_x=t_x, V=V, a=lattice_constant, mu=mu, U_gr=0, U_x=0
+        )
+        h_generated = egx_h.hamiltonian_k_space(k_point)
+        assert np.allclose(h_generated, h_compare)
 
 
 def test_save_graphene(tmp_path):
@@ -78,6 +147,18 @@ def test_save_graphene(tmp_path):
     sample_read = type(graphene_h).from_file(filename=file_path)
     for key, value in vars(sample_read).items():
         assert np.allclose(value, graphene_h.__dict__[key])
+
+
+def test_save_egx(tmp_path):
+    egx_h = hamiltonians.EGXHamiltonian(
+        t_gr=1, t_x=0.01, V=1, a=np.sqrt(3), mu=-1, U_gr=1, U_x=1
+    )
+    egx_h.delta_orbital_basis = np.ones(egx_h.number_of_bands)
+    file_path = os.path.join(tmp_path, "test.hdf5")
+    egx_h.save(filename=file_path)
+    sample_read = type(egx_h).from_file(filename=file_path)
+    for key, value in vars(sample_read).items():
+        assert np.allclose(value, egx_h.__dict__[key])
 
 
 def test_invalid_values():
@@ -99,6 +180,18 @@ def test_invalid_values():
         print(hamiltonians.GrapheneHamiltonian(t_nn=1, a=1, mu=np.inf, coulomb_gr=1))
     with pytest.raises(ValueError):
         print(hamiltonians.GrapheneHamiltonian(t_nn=1, a=1, mu=1, coulomb_gr=np.nan))
+    with pytest.raises(ValueError):
+        h = hamiltonians.GrapheneHamiltonian(t_nn=1, a=1, mu=1, coulomb_gr=1)
+        h.hamiltonian_k_space(k=np.array([np.nan, np.nan]))
+    with pytest.raises(ValueError):
+        h = hamiltonians.GrapheneHamiltonian(t_nn=1, a=1, mu=1, coulomb_gr=1)
+        h.hamiltonian_k_space(k=np.array([[np.nan, np.nan]]))
+    with pytest.raises(ValueError):
+        h = hamiltonians.GrapheneHamiltonian(t_nn=1, a=1, mu=1, coulomb_gr=1)
+        h.diagonalize_bdg(k_list=np.array([1, 1]), delta=np.array([1, 1]))
+    with pytest.raises(ValueError):
+        h = hamiltonians.GrapheneHamiltonian(t_nn=1, a=1, mu=1, coulomb_gr=1)
+        h.generate_bloch(k_points=np.array([1, 1]))
 
 
 def test_base_hamiltonian(patch_abstract) -> None:
