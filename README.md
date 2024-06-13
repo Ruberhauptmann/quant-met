@@ -5,6 +5,7 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/quant-met)](https://pypi.org/project/quant-met/)
 [![PyPI - Version](https://img.shields.io/pypi/v/quant-met)](https://pypi.org/project/quant-met/)
 
+This is a python package to treat superconductivity in flat-band systems.
 
 * Documentation: [quant-met.readthedocs.io](https://quant-met.readthedocs.io/en/latest/)
 
@@ -17,9 +18,12 @@ pip install quant-met
 
 ## Usage
 
+For usage examples see [documentation](https://quant-met.readthedocs.io/en/latest/examples.html).
+
 ## Contributing
 
-You are welcome to open an issue if you want something changed or added in the software or if there are bugs occuring.
+This is a personal project, very geared to the work I did in my master's thesis.
+If someone is using this and experiencing bugs or want the software extended, feel free to open an issue!
 
 ### Developing
 
@@ -36,12 +40,10 @@ Set up the development environment:
 * run `make environment`
 * now activate the conda environment `conda activate quant-met-dev`
 
-Now you can create a separate branch to work on the project.
-
 You can manually run tests using for example `tox -e py312` (for running against python 3.12).
-After pushing your branch, all tests will also be run via Gitlab Actions.
+After pushing your branch, all tests will also be run via Github Actions.
 
 Using `pre-commit`, automatic linting and formatting is done before every commit, which may cause the first commit to fail.
 A second try should then succeed.
 
-After you are done working on an issue and all tests are running successful, you can add a new piece of changelog via `scriv create` and make a merge request.
+After you are done working on an issue and all tests are running successful, you can add a new piece of changelog via `scriv create` and make a pull request.
