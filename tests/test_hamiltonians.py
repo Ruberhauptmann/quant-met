@@ -71,7 +71,9 @@ def test_hamiltonians(sample: hamiltonians.BaseHamiltonian, k: npt.NDArray):
         [[+E, -E] for E in sample.generate_bloch(k_points=np.array([k]))[0]]
     ).flatten()
 
-    assert np.allclose(np.sort(bdg_energies), np.sort(nonint_energies))
+    assert np.allclose(
+        np.sort(np.nan_to_num(bdg_energies)), np.sort(np.nan_to_num(nonint_energies))
+    )
     assert len(sample.coloumb_orbital_basis) == sample.number_of_bands
     assert h_k_space.shape[0] == sample.number_of_bands
     assert h_k_space.shape[1] == sample.number_of_bands

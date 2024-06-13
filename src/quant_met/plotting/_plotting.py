@@ -14,7 +14,7 @@ def scatter_into_bz(
     bz_corners: List[npt.NDArray[np.float64]],
     k_points: npt.NDArray[np.float64],
     data: npt.NDArray[np.float64] | None = None,
-    data_label: str = None,
+    data_label: str | None = None,
     fig_in: matplotlib.figure.Figure | None = None,
     ax_in: matplotlib.axes.Axes | None = None,
 ) -> matplotlib.figure.Figure:
@@ -43,7 +43,7 @@ def plot_bandstructure(
     ticks: List[float],
     labels: List[str],
     overlaps: npt.NDArray[np.float64] | None = None,
-    overlap_labels: List[str] = None,
+    overlap_labels: List[str] | None = None,
     fig_in: matplotlib.figure.Figure | None = None,
     ax_in: matplotlib.axes.Axes | None = None,
 ) -> matplotlib.figure.Figure:

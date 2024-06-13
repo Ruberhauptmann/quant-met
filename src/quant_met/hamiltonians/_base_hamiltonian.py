@@ -1,5 +1,6 @@
 import pathlib
 from abc import ABC, abstractmethod
+from typing import Any, Tuple
 
 import h5py
 import numpy as np
@@ -10,7 +11,7 @@ import pandas as pd
 class BaseHamiltonian(ABC):
     """Base class for Hamiltonians."""
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Tuple[Any], **kwargs: dict[str, Any]) -> None:
         pass
 
     @property
