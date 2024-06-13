@@ -71,17 +71,19 @@ class BaseHamiltonian(ABC):
     def diagonalize_bdg(
         self, k_list: npt.NDArray[np.float64], delta: npt.NDArray[np.float64]
     ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.complex64]]:
+        if k_list.ndim == 1:
+            raise ValueError("k_list must be a array of k points")
         bdg_matrix = np.array(
             [
                 np.block(
                     [
                         [
-                            self.hamiltonian_k_space(k)[0],
+                            self.hamiltonian_k_space(k),
                             delta * np.eye(self.number_of_bands),
                         ],
                         [
                             np.conjugate(delta * np.eye(self.number_of_bands)),
-                            -np.conjugate(self.hamiltonian_k_space(k)[0]),
+                            -np.conjugate(self.hamiltonian_k_space(k)),
                         ],
                     ]
                 )
@@ -98,8 +100,8 @@ class BaseHamiltonian(ABC):
         if np.isnan(k).any() or np.isinf(k).any():
             raise ValueError("k is NaN or Infinity")
         if k.ndim == 1:
-            h = np.zeros((1, self.number_of_bands, self.number_of_bands), dtype=complex)
-            h[0] = self._hamiltonian_k_space_one_point(k, h[0])
+            h = np.zeros((self.number_of_bands, self.number_of_bands), dtype=complex)
+            h = self._hamiltonian_k_space_one_point(k, h)
         else:
             h = np.zeros(
                 (k.shape[0], self.number_of_bands, self.number_of_bands), dtype=complex
@@ -140,7 +142,7 @@ class BaseHamiltonian(ABC):
         k_point_matrix = self.hamiltonian_k_space(k_points)
 
         if k_points.ndim == 1:
-            energies, bloch = np.linalg.eigh(k_point_matrix[0])
+            raise ValueError("k_points must be a array of k points")
         else:
             bloch = np.zeros(
                 (len(k_points), self.number_of_bands, self.number_of_bands),

@@ -1,34 +1,7 @@
 import numpy as np
 import numpy.typing as npt
-from scipy import optimize
 
 from ._base_hamiltonian import BaseHamiltonian
-
-
-def minimize_loop(
-    hamiltonian: BaseHamiltonian,
-    k_points: npt.NDArray[np.float64],
-    beta: float | None = None,
-) -> npt.NDArray[np.float64]:
-    solution = optimize.brute(
-        func=free_energy,
-        args=(
-            hamiltonian,
-            k_points,
-            beta,
-        ),
-        ranges=[(0, 1) for _ in range(hamiltonian.number_of_bands)],
-        Ns=20,
-        workers=10,
-        finish=optimize.fmin,
-        full_output=True,
-    )
-
-    delta_solution: npt.NDArray[np.float64] = solution[0]
-
-    hamiltonian.delta_orbital_basis = delta_solution
-
-    return delta_solution
 
 
 def free_energy(
