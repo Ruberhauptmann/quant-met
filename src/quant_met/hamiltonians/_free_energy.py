@@ -39,3 +39,16 @@ def free_energy(
     integral: float = np.sum(k_array, axis=-1) / (2.5980762113533156 * number_k_points)
 
     return integral
+
+
+def free_energy_uniform_pairing(
+    delta: float,
+    hamiltonian: BaseHamiltonian,
+    k_points: npt.NDArray[np.float64],
+    beta: float | None = None,
+) -> float:
+    delta_vector = np.ones(hamiltonian.number_of_bands) * delta
+
+    return free_energy(
+        delta_vector=delta_vector, hamiltonian=hamiltonian, k_points=k_points, beta=beta
+    )
