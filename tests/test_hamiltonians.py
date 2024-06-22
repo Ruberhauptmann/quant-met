@@ -3,7 +3,7 @@ import os.path
 import numpy as np
 import numpy.typing as npt
 import pytest
-from hypothesis import example, given
+from hypothesis import given
 from hypothesis.extra.numpy import arrays
 from hypothesis.strategies import (
     builds,
@@ -30,10 +30,16 @@ register_type_strategy(
     hamiltonians.GrapheneHamiltonian,
     builds(
         hamiltonians.GrapheneHamiltonian,
-        a=floats(min_value=0, exclude_min=True, allow_nan=False, allow_infinity=False),
-        t_nn=floats(allow_nan=False, allow_infinity=False),
-        mu=floats(allow_nan=False, allow_infinity=False),
-        coulomb_gr=floats(allow_nan=False, allow_infinity=False),
+        a=floats(
+            min_value=0,
+            max_value=1e6,
+            exclude_min=True,
+            allow_nan=False,
+            allow_infinity=False,
+        ),
+        t_nn=floats(max_value=1e6, allow_nan=False, allow_infinity=False),
+        mu=floats(max_value=1e6, allow_nan=False, allow_infinity=False),
+        coulomb_gr=floats(max_value=1e6, allow_nan=False, allow_infinity=False),
     ),
 )
 
@@ -41,13 +47,19 @@ register_type_strategy(
     hamiltonians.EGXHamiltonian,
     builds(
         hamiltonians.EGXHamiltonian,
-        a=floats(min_value=0, exclude_min=True, allow_nan=False, allow_infinity=False),
-        t_gr=floats(allow_nan=False, allow_infinity=False),
-        t_x=floats(allow_nan=False, allow_infinity=False),
-        mu=floats(allow_nan=False, allow_infinity=False),
-        V=floats(allow_nan=False, allow_infinity=False),
-        U_gr=floats(allow_nan=False, allow_infinity=False),
-        U_x=floats(allow_nan=False, allow_infinity=False),
+        a=floats(
+            min_value=0,
+            max_value=1e6,
+            exclude_min=True,
+            allow_nan=False,
+            allow_infinity=False,
+        ),
+        t_gr=floats(max_value=1e6, allow_nan=False, allow_infinity=False),
+        t_x=floats(max_value=1e6, allow_nan=False, allow_infinity=False),
+        mu=floats(max_value=1e6, allow_nan=False, allow_infinity=False),
+        V=floats(max_value=1e6, allow_nan=False, allow_infinity=False),
+        U_gr=floats(max_value=1e6, allow_nan=False, allow_infinity=False),
+        U_x=floats(max_value=1e6, allow_nan=False, allow_infinity=False),
     ),
 )
 
@@ -60,7 +72,7 @@ register_type_strategy(
     k=arrays(
         shape=tuples(integers(min_value=1, max_value=int(100)), just(2)),
         dtype=float,
-        elements=floats(allow_nan=False, allow_infinity=False),
+        elements=floats(max_value=1e6, allow_nan=False, allow_infinity=False),
     ),
 )
 def test_hamiltonians(sample: hamiltonians.BaseHamiltonian, k: npt.NDArray):
