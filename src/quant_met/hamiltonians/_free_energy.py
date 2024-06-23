@@ -11,7 +11,6 @@ def free_energy(
 ) -> float:
     number_k_points = len(k_points)
     bdg_energies, bdg_vectors = hamiltonian.diagonalize_bdg(k_points, delta_vector)
-    print(bdg_energies)
 
     k_array: npt.NDArray[np.float64] = (
         np.real(np.trace(hamiltonian.hamiltonian_k_space(k_points), axis1=-2, axis2=-1))
@@ -31,8 +30,6 @@ def free_energy(
             ]
         )
     )
-
-    print(k_array)
 
     integral: float = np.sum(k_array, axis=-1) / number_k_points
 
