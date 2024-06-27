@@ -45,6 +45,66 @@ class EGXHamiltonian(BaseHamiltonian):
     def delta_orbital_basis(self, new_delta: npt.NDArray[np.float64]) -> None:
         self._delta_orbital_basis = new_delta
 
+    def hamiltonian_derivative(self, k, direction):
+        assert direction in ["x", "y"]
+
+        k = k[0]
+
+        t_gr = self.t_gr
+        t_x = self.t_x
+        a = self.a
+
+        h = np.zeros((self.number_of_bands, self.number_of_bands), dtype=complex)
+
+        if direction == "x":
+            h[0, 1] = (
+                t_gr
+                * a
+                * np.exp(-0.5j * a / np.sqrt(3) * k[1])
+                * np.sin(0.5 * a * k[0])
+            )
+            h[1, 0] = h[0, 1].conjugate()
+            h[2, 2] = (
+                2
+                * a
+                * t_x
+                * (
+                    np.sin(a * k[0])
+                    + np.sin(0.5 * a * k[0]) * np.cos(0.5 * np.sqrt(3) * a * k[1])
+                )
+            )
+        elif direction == "y":
+            h[0, 1] = (
+                -t_gr
+                * 1j
+                * a
+                / np.sqrt(3)
+                * (
+                    np.exp(1j * a / np.sqrt(3) * k[1])
+                    - np.exp(-0.5j * a / np.sqrt(3) * k[1]) * np.cos(0.5 * a * k[0])
+                )
+            )
+            h[1, 0] = h[0, 1].conjugate()
+            h[2, 2] = np.sqrt(3) * a * t_x * np.cos(0.5 * np.sqrt(3) * a * k[1])
+
+        return h
+
+    def calculate_current_operator(self, direction, k):
+        j = np.zeros(shape=(3, 3), dtype=np.complex64)
+
+        _, bloch = self.generate_bloch(k_points=k)
+        bloch = bloch[0]
+
+        for m in range(3):
+            for n in range(3):
+                j[m, n] = (
+                    np.conjugate(bloch[:, m])
+                    @ self.hamiltonian_derivative(direction=direction, k=k)
+                    @ bloch[:, n]
+                )
+
+        return j
+
     def _hamiltonian_k_space_one_point(
         self, k: npt.NDArray[np.float64], h: npt.NDArray[np.complex64]
     ) -> npt.NDArray[np.complex64]:
