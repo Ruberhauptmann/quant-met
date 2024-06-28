@@ -30,12 +30,8 @@ class EGXHamiltonian(BaseHamiltonian):
             self._delta_orbital_basis = delta
 
     @property
-    def coloumb_orbital_basis(self) -> list[float]:
-        return [self.U_gr, self.U_gr, self.U_x]
-
-    @property
-    def number_of_bands(self) -> int:
-        return 3
+    def coloumb_orbital_basis(self) -> npt.NDArray[np.float64]:
+        return np.array([self.U_gr, self.U_gr, self.U_x])
 
     @property
     def delta_orbital_basis(self) -> npt.NDArray[np.float64]:
@@ -45,16 +41,20 @@ class EGXHamiltonian(BaseHamiltonian):
     def delta_orbital_basis(self, new_delta: npt.NDArray[np.float64]) -> None:
         self._delta_orbital_basis = new_delta
 
-    def hamiltonian_derivative(self, k, direction):
-        assert direction in ["x", "y"]
+    @property
+    def number_of_bands(self) -> int:
+        return 3
 
-        k = k[0]
+    def _hamiltonian_derivative_one_point(
+        self, k: npt.NDArray[np.float64], direction: str
+    ) -> npt.NDArray[np.complex64]:
+        assert direction in ["x", "y"]
 
         t_gr = self.t_gr
         t_x = self.t_x
         a = self.a
 
-        h = np.zeros((self.number_of_bands, self.number_of_bands), dtype=complex)
+        h = np.zeros((self.number_of_bands, self.number_of_bands), dtype=np.complex64)
 
         if direction == "x":
             h[0, 1] = (
@@ -89,24 +89,8 @@ class EGXHamiltonian(BaseHamiltonian):
 
         return h
 
-    def calculate_current_operator(self, direction, k):
-        j = np.zeros(shape=(3, 3), dtype=np.complex64)
-
-        _, bloch = self.generate_bloch(k_points=k)
-        bloch = bloch[0]
-
-        for m in range(3):
-            for n in range(3):
-                j[m, n] = (
-                    np.conjugate(bloch[:, m])
-                    @ self.hamiltonian_derivative(direction=direction, k=k)
-                    @ bloch[:, n]
-                )
-
-        return j
-
-    def _hamiltonian_k_space_one_point(
-        self, k: npt.NDArray[np.float64], h: npt.NDArray[np.complex64]
+    def _hamiltonian_one_point(
+        self, k: npt.NDArray[np.float64]
     ) -> npt.NDArray[np.complex64]:
         t_gr = self.t_gr
         t_x = self.t_x
@@ -114,6 +98,8 @@ class EGXHamiltonian(BaseHamiltonian):
         # a_0 = a / np.sqrt(3)
         V = self.V
         mu = self.mu
+
+        h = np.zeros((self.number_of_bands, self.number_of_bands), dtype=np.complex64)
 
         h[0, 1] = -t_gr * (
             np.exp(1j * k[1] * a / np.sqrt(3))
@@ -133,6 +119,6 @@ class EGXHamiltonian(BaseHamiltonian):
                 + 2 * np.cos(0.5 * a * k[0]) * np.cos(0.5 * np.sqrt(3) * a * k[1])
             )
         )
-        h = h - mu * np.eye(3)
+        h -= mu * np.eye(3, dtype=np.complex64)
 
-        return np.nan_to_num(h)
+        return h

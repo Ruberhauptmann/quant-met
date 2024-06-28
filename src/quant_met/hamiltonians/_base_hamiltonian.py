@@ -1,6 +1,5 @@
 import pathlib
 from abc import ABC, abstractmethod
-from typing import Any, Tuple
 
 import h5py
 import numpy as np
@@ -11,9 +10,6 @@ import pandas as pd
 class BaseHamiltonian(ABC):
     """Base class for Hamiltonians."""
 
-    def __init__(self, *args: Tuple[Any], **kwargs: dict[str, Any]) -> None:
-        pass
-
     @property
     @abstractmethod
     def number_of_bands(self) -> int:
@@ -21,11 +17,10 @@ class BaseHamiltonian(ABC):
 
     @property
     @abstractmethod
-    def coloumb_orbital_basis(self) -> list[float]:
+    def coloumb_orbital_basis(self) -> npt.NDArray[np.float64]:
         raise NotImplementedError
 
     @property
-    @abstractmethod
     def delta_orbital_basis(self) -> npt.NDArray[np.float64]:
         raise NotImplementedError
 
@@ -35,21 +30,33 @@ class BaseHamiltonian(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def _hamiltonian_k_space_one_point(
-        self, k_point: npt.NDArray[np.float64], matrix_in: npt.NDArray[np.complex64]
+    def _hamiltonian_one_point(
+        self, k_point: npt.NDArray[np.float64]
     ) -> npt.NDArray[np.complex64]:
-        """Calculates
-
-        This method is system-specific, so it needs to be implemented in every subclass
-
-        Args:
-            k_point:
-            matrix_in:
-
-        Returns:
-
-        """
         raise NotImplementedError
+
+    @abstractmethod
+    def _hamiltonian_derivative_one_point(
+        self, k_point: npt.NDArray[np.float64], directions: str
+    ) -> npt.NDArray[np.complex64]:
+        raise NotImplementedError
+
+    def _bdg_hamiltonian_one_point(
+        self, k_point: npt.NDArray[np.float64]
+    ) -> npt.NDArray[np.complex64]:
+        h_nonint: npt.NDArray[np.complex64] = self.hamiltonian(k_point)
+        delta_matrix: npt.NDArray[np.complex64] = np.zeros(
+            shape=(self.number_of_bands, self.number_of_bands), dtype=np.complex64
+        )
+        np.fill_diagonal(delta_matrix, self.delta_orbital_basis)
+
+        h = np.block(
+            [
+                [h_nonint, delta_matrix],
+                [np.conjugate(delta_matrix), -np.conjugate(h_nonint)],
+            ]
+        )
+        return h
 
     def save(self, filename: pathlib.Path) -> None:
         with h5py.File(f"{filename}", "a") as f:
@@ -68,61 +75,90 @@ class BaseHamiltonian(ABC):
 
         return cls(**config_dict)
 
-    def diagonalize_bdg(
-        self, k_list: npt.NDArray[np.float64], delta: npt.NDArray[np.float64]
-    ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.complex64]]:
-        if k_list.ndim == 1:
-            raise ValueError("k_list must be a array of k points")
-        bdg_matrix = np.array(
-            [
-                np.block(
-                    [
-                        [
-                            self.hamiltonian_k_space(k),
-                            delta * np.eye(self.number_of_bands),
-                        ],
-                        [
-                            np.conjugate(delta * np.eye(self.number_of_bands)),
-                            -np.conjugate(self.hamiltonian_k_space(k)),
-                        ],
-                    ]
-                )
-                for k in k_list
-            ]
-        )
-        eigenvalues, eigenvectors = np.linalg.eigh(bdg_matrix)
+    def bdg_hamiltonian(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
+        if np.isnan(k).any() or np.isinf(k).any():
+            raise ValueError("k is NaN or Infinity")
+        if k.ndim == 1:
+            h = self._bdg_hamiltonian_one_point(k)
+        else:
+            h = np.array([self._bdg_hamiltonian_one_point(k) for k in k])
+        return h
 
-        return eigenvalues, eigenvectors
+    def hamiltonian(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
+        if np.isnan(k).any() or np.isinf(k).any():
+            raise ValueError("k is NaN or Infinity")
+        if k.ndim == 1:
+            h = self._hamiltonian_one_point(k)
+        else:
+            h = np.array([self._hamiltonian_one_point(k) for k in k])
+        return h
 
-    def hamiltonian_k_space(
-        self, k: npt.NDArray[np.float64]
+    def hamiltonian_derivative(
+        self, k: npt.NDArray[np.float64], direction: str
     ) -> npt.NDArray[np.complex64]:
         if np.isnan(k).any() or np.isinf(k).any():
             raise ValueError("k is NaN or Infinity")
         if k.ndim == 1:
-            h = np.zeros((self.number_of_bands, self.number_of_bands), dtype=complex)
-            h = self._hamiltonian_k_space_one_point(k, h)
+            h = self._hamiltonian_derivative_one_point(k, direction)
         else:
-            h = np.zeros(
-                (k.shape[0], self.number_of_bands, self.number_of_bands), dtype=complex
+            h = np.array(
+                [self._hamiltonian_derivative_one_point(k, direction) for k in k]
             )
-            for k_index, k in enumerate(k):
-                h[k_index] = self._hamiltonian_k_space_one_point(k, h[k_index])
         return h
+
+    def diagonalize_nonint(
+        self, k: npt.NDArray[np.float64]
+    ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
+        k_point_matrix = self.hamiltonian(k)
+
+        if k.ndim == 1:
+            band_energies, bloch_wavefunctions = np.linalg.eigh(k_point_matrix)
+        else:
+            bloch_wavefunctions = np.zeros(
+                (len(k), self.number_of_bands, self.number_of_bands),
+                dtype=complex,
+            )
+            band_energies = np.zeros((len(k), self.number_of_bands))
+
+            for i, k in enumerate(k):
+                band_energies[i], bloch_wavefunctions[i] = np.linalg.eigh(
+                    k_point_matrix[i]
+                )
+
+        return band_energies, bloch_wavefunctions
+
+    def diagonalize_bdg(
+        self, k: npt.NDArray[np.float64]
+    ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.complex64]]:
+        bdg_matrix = self.bdg_hamiltonian(k)
+
+        if k.ndim == 1:
+            bdg_energies, bdg_wavefunctions = np.linalg.eigh(bdg_matrix)
+        else:
+            bdg_wavefunctions = np.zeros(
+                (len(k), 2 * self.number_of_bands, 2 * self.number_of_bands),
+                dtype=np.complex64,
+            )
+            bdg_energies = np.zeros((len(k), 2 * self.number_of_bands))
+
+            for i, k in enumerate(k):
+                bdg_energies[i], bdg_wavefunctions[i] = np.linalg.eigh(bdg_matrix[i])
+
+        return bdg_energies, bdg_wavefunctions
 
     def calculate_bandstructure(
         self,
-        k_point_list: npt.NDArray[np.float64],
+        k: npt.NDArray[np.float64],
         overlaps: tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]] | None = None,
     ) -> pd.DataFrame:
-        k_point_matrix = self.hamiltonian_k_space(k_point_list)
+        k_point_matrix = self.hamiltonian(k)
 
         results = pd.DataFrame(
-            index=range(len(k_point_list)),
+            index=range(len(k)),
             dtype=float,
         )
 
-        for i, k in enumerate(k_point_list):
+        for i, k in enumerate(k):
             energies, eigenvectors = np.linalg.eigh(k_point_matrix[i])
 
             for band_index in range(self.number_of_bands):
@@ -135,22 +171,3 @@ class BaseHamiltonian(ABC):
                     )
 
         return results
-
-    def generate_bloch(
-        self, k_points: npt.NDArray[np.float64]
-    ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
-        k_point_matrix = self.hamiltonian_k_space(k_points)
-
-        if k_points.ndim == 1:
-            raise ValueError("k_points must be a array of k points")
-        else:
-            bloch = np.zeros(
-                (len(k_points), self.number_of_bands, self.number_of_bands),
-                dtype=complex,
-            )
-            energies = np.zeros((len(k_points), self.number_of_bands))
-
-            for i, k in enumerate(k_points):
-                energies[i], bloch[i] = np.linalg.eigh(k_point_matrix[i])
-
-        return energies, bloch

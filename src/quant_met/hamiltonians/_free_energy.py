@@ -10,7 +10,8 @@ def free_energy(
     k_points: npt.NDArray[np.float64],
 ) -> float:
     number_k_points = len(k_points)
-    bdg_energies, _ = hamiltonian.diagonalize_bdg(k_points, delta_vector)
+    hamiltonian.delta_orbital_basis = delta_vector
+    bdg_energies, _ = hamiltonian.diagonalize_bdg(k_points)
 
     k_array = np.array(
         [
