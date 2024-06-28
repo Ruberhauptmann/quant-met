@@ -59,7 +59,7 @@ class GrapheneHamiltonian(BaseHamiltonian):
                 * np.sin(0.5 * a * k[0])
             )
             h[1, 0] = h[0, 1].conjugate()
-        elif direction == "y":
+        else:
             h[0, 1] = (
                 -t_nn
                 * 1j

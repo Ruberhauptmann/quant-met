@@ -73,7 +73,7 @@ class EGXHamiltonian(BaseHamiltonian):
                     + np.sin(0.5 * a * k[0]) * np.cos(0.5 * np.sqrt(3) * a * k[1])
                 )
             )
-        elif direction == "y":
+        else:
             h[0, 1] = (
                 -t_gr
                 * 1j

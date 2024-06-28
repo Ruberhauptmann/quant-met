@@ -18,7 +18,7 @@ from hypothesis.strategies import (
 )
 from scipy import linalg
 
-from quant_met import hamiltonians
+from quant_met import hamiltonians, utils
 
 
 @pytest.fixture()
@@ -170,6 +170,44 @@ def test_hamiltonian_k_space_egx():
         assert np.allclose(h_generated, h_compare)
 
 
+def test_hamiltonian_derivative_graphene(ndarrays_regression):
+    t_nn = 1
+    mu = 0
+    lattice_constant = np.sqrt(3)
+    graphene_h = hamiltonians.GrapheneHamiltonian(
+        t_nn=t_nn,
+        a=lattice_constant,
+        mu=mu,
+        coulomb_gr=1,
+        delta=np.array([1, 1]),
+    )
+    all_K_points = (
+        4
+        * np.pi
+        / (3 * lattice_constant)
+        * np.array(
+            [
+                (np.sin(i * np.pi / 6), np.cos(i * np.pi / 6))
+                for i in [1, 3, 5, 7, 9, 11]
+            ]
+        )
+    )
+    BZ_grid = utils.generate_uniform_grid(
+        10, 10, all_K_points[1], all_K_points[5], origin=np.array([0, 0])
+    )
+
+    h_der_x = graphene_h.hamiltonian_derivative(k=BZ_grid, direction="x")
+    h_der_y = graphene_h.hamiltonian_derivative(k=BZ_grid, direction="y")
+
+    ndarrays_regression.check(
+        {
+            "h_der_x": h_der_x,
+            "h_der_y": h_der_y,
+        },
+        default_tolerance=dict(atol=1e-8, rtol=1e-8),
+    )
+
+
 def test_save_graphene(tmp_path):
     graphene_h = hamiltonians.GrapheneHamiltonian(
         t_nn=1, a=np.sqrt(3), mu=-1, coulomb_gr=1
@@ -218,7 +256,13 @@ def test_invalid_values():
         h.hamiltonian(k=np.array([np.nan, np.nan]))
     with pytest.raises(ValueError):
         h = hamiltonians.GrapheneHamiltonian(t_nn=1, a=1, mu=1, coulomb_gr=1)
-        h.hamiltonian(k=np.array([[np.nan, np.nan]]))
+        h.hamiltonian(k=np.array([[np.nan, np.inf]]))
+    with pytest.raises(ValueError):
+        h = hamiltonians.GrapheneHamiltonian(t_nn=1, a=1, mu=1, coulomb_gr=1)
+        h.bdg_hamiltonian(k=np.array([np.nan, np.nan]))
+    with pytest.raises(ValueError):
+        h = hamiltonians.GrapheneHamiltonian(t_nn=1, a=1, mu=1, coulomb_gr=1)
+        h.hamiltonian_derivative(k=np.array([np.nan, np.nan]), direction="x")
 
 
 def test_base_hamiltonian(patch_abstract) -> None:
@@ -241,3 +285,9 @@ def test_base_hamiltonian(patch_abstract) -> None:
         base_hamiltonian.delta_orbital_basis = np.array([0])
     with pytest.raises(NotImplementedError):
         print(base_hamiltonian._hamiltonian_one_point(k_point=np.array([0, 0])))
+    with pytest.raises(NotImplementedError):
+        print(
+            base_hamiltonian._hamiltonian_derivative_one_point(
+                k_point=np.array([0, 0]), directions="x"
+            )
+        )
