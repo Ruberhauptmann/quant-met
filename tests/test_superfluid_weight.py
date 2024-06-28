@@ -32,7 +32,7 @@ def test_superfluid_weight_egx(ndarrays_regression):
     )
 
     BZ_grid = utils.generate_uniform_grid(
-        10, 10, all_K_points[1], all_K_points[5], origin=np.array([0, 0])
+        20, 20, all_K_points[1], all_K_points[5], origin=np.array([0, 0])
     )
 
     D_S_xx = hamiltonians.calculate_superfluid_weight(
@@ -79,7 +79,7 @@ def test_superfluid_weight_graphene(ndarrays_regression):
     )
 
     BZ_grid = utils.generate_uniform_grid(
-        10, 10, all_K_points[1], all_K_points[5], origin=np.array([0, 0])
+        20, 20, all_K_points[1], all_K_points[5], origin=np.array([0, 0])
     )
 
     D_S_xx = hamiltonians.calculate_superfluid_weight(
