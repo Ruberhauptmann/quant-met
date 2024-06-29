@@ -129,7 +129,6 @@ def test_hamiltonian_k_space_graphene():
     h_at_high_symmetry_points = [
         (Gamma, np.array([[-mu, -3 * t_gr], [-3 * t_gr, -mu]], dtype=np.complex64)),
         (K, np.array([[-mu, 0], [0, -mu]], dtype=np.complex64)),
-        # (M, np.array([[-mu, -t_gr * np.exp(1j * np.pi/np.sqrt(3))], [-t_gr * np.exp(-1j * np.pi/np.sqrt(3)), -mu]], dtype=np.complex64))
     ]
 
     for k_point, h_compare in h_at_high_symmetry_points:
@@ -158,8 +157,6 @@ def test_hamiltonian_k_space_egx():
                 dtype=np.complex64,
             ),
         ),
-        # (K, np.array([[-mu, 0, V], [0, -mu, 0], [V, 0, -mu + t_x]], dtype=np.complex64)),
-        # (M, np.array([[-mu, -t_gr * np.exp(1j * np.pi/np.sqrt(3)), V], [-t_gr * np.exp(-1j * np.pi/np.sqrt(3)), -mu, 0], [V, 0, -mu + 2*t_x]], dtype=np.complex64))
     ]
 
     for k_point, h_compare in h_at_high_symmetry_points:

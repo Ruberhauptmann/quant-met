@@ -28,17 +28,30 @@ def test_free_energy(ndarrays_regression):
         10, 10, all_K_points[1], all_K_points[5], origin=np.array([0, 0])
     )
 
-    free_energy = hamiltonians.free_energy(
-        delta_vector=np.array([1, 1, 1]), hamiltonian=egx_h, k_points=BZ_grid
+    delta_list = np.array([np.array([i, i, i]) for i in np.linspace(0, 4, 10)])
+
+    free_energy = np.array(
+        [
+            hamiltonians.free_energy(
+                delta_vector=delta, hamiltonian=egx_h, k_points=BZ_grid
+            )
+            for delta in delta_list
+        ]
     )
-    free_energy_uniform_pairing = hamiltonians.free_energy_uniform_pairing(
-        delta=1, hamiltonian=egx_h, k_points=BZ_grid
+    free_energy_uniform_pairing = np.array(
+        [
+            hamiltonians.free_energy_uniform_pairing(
+                delta=delta[0], hamiltonian=egx_h, k_points=BZ_grid
+            )
+            for delta in delta_list
+        ]
     )
 
     ndarrays_regression.check(
         {
-            "free_energy": np.array(free_energy),
-            "free_energy_uniform_pairing": np.array(free_energy_uniform_pairing),
+            "delta_list": delta_list,
+            "free_energy": free_energy,
+            "free_energy_uniform_pairing": free_energy_uniform_pairing,
         },
         default_tolerance=dict(atol=1e-8, rtol=1e-8),
     )
