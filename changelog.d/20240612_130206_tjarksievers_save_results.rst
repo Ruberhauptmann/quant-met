@@ -10,7 +10,6 @@
 Added
 ^^^^^
 
-- Self-concistent solution for delta gets written into Hamiltonian
 - Can save and read results for a Hamiltonian, including parameters
 
 .. Changed

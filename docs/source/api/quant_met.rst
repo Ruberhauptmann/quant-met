@@ -21,5 +21,4 @@ Submodules
 .. toctree::
    :maxdepth: 1
 
-   quant_met.cli
    quant_met.utils
