@@ -96,8 +96,10 @@ def fermi_dirac_derivative() -> float:
 
 
 def fermi_dirac(energy: np.float64) -> np.float64:
-    return_value: np.float64 = np.heaviside(energy, 0)
-    return return_value
+    if energy > 0:
+        return np.float64(0)
+    else:
+        return np.float64(1)
 
 
 def calculate_superfluid_weight(
@@ -106,7 +108,7 @@ def calculate_superfluid_weight(
     direction_1: str,
     direction_2: str,
 ) -> tuple[float, float]:
-    number_k_points = len(k_grid)
+    # number_k_points = len(k_grid)
 
     s_weight_conv = 0
     s_weight_geom = 0
@@ -125,4 +127,4 @@ def calculate_superfluid_weight(
                         else:
                             s_weight_geom += s_weight
 
-    return s_weight_conv / number_k_points, s_weight_geom / number_k_points
+    return s_weight_conv, s_weight_geom

@@ -7,16 +7,16 @@
 ..
 .. - A bullet item for the Removed category.
 ..
-.. Added
-.. ^^^^^
-..
-.. - A bullet item for the Added category.
-..
-Changed
-^^^^^^
+Added
+^^^^^
 
-- Implement minimization of the free energy of the BdG hamiltonian to calculate BCS spectrum
+- Calculation of free energy at zero temperature
 
+.. Changed
+.. ^^^^^^^
+..
+.. - A bullet item for the Changed category.
+..
 .. Deprecated
 .. ^^^^^^^^^^
 ..

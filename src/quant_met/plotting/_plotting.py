@@ -73,7 +73,10 @@ def plot_bandstructure(
         color_ticks = [-1, 1]
         colorbar.set_ticks(ticks=color_ticks, labels=overlap_labels)
 
-    ax.set_yticks(range(-5, 6))
+    ax.set_ylim(
+        top=np.max(bands) + 0.1 * np.max(bands),
+        bottom=np.min(bands) - 0.1 * np.abs(np.min(bands)),
+    )
     ax.set_box_aspect(1)
     ax.set_xticks(ticks, labels)
     ax.set_ylabel(r"$E\ [t]$")

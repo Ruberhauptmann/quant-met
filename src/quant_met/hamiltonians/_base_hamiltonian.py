@@ -44,7 +44,6 @@ class BaseHamiltonian(ABC):
     def _bdg_hamiltonian_one_point(
         self, k_point: npt.NDArray[np.float64]
     ) -> npt.NDArray[np.complex64]:
-        h_nonint: npt.NDArray[np.complex64] = self.hamiltonian(k_point)
         delta_matrix: npt.NDArray[np.complex64] = np.zeros(
             shape=(self.number_of_bands, self.number_of_bands), dtype=np.complex64
         )
@@ -52,8 +51,8 @@ class BaseHamiltonian(ABC):
 
         h = np.block(
             [
-                [h_nonint, delta_matrix],
-                [np.conjugate(delta_matrix), -np.conjugate(h_nonint)],
+                [self.hamiltonian(k_point), delta_matrix],
+                [np.conjugate(delta_matrix), -np.conjugate(self.hamiltonian(-k_point))],
             ]
         )
         return h

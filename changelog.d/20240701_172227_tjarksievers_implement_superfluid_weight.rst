@@ -7,16 +7,16 @@
 ..
 .. - A bullet item for the Removed category.
 ..
-.. Added
-.. ^^^^^
-..
-.. - A bullet item for the Added category.
-..
-Changed
-^^^^^^^
+Added
+^^^^^
 
-- Moved minimization of free energy into hamiltonian class
+- Calculation of superfluid weight
 
+.. Changed
+.. ^^^^^^^
+..
+.. - A bullet item for the Changed category.
+..
 .. Deprecated
 .. ^^^^^^^^^^
 ..
