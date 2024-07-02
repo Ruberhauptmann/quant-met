@@ -123,7 +123,6 @@ def test_hamiltonian_k_space_graphene():
     mu = 1
     lattice_constant = np.sqrt(3)
     Gamma = np.array([0, 0])
-    M = np.pi / lattice_constant * np.array([1, 1 / np.sqrt(3)])
     K = 4 * np.pi / (3 * lattice_constant) * np.array([1, 0])
 
     h_at_high_symmetry_points = [
@@ -146,8 +145,6 @@ def test_hamiltonian_k_space_egx():
     mu = 1
     lattice_constant = np.sqrt(3)
     Gamma = np.array([0, 0])
-    M = np.pi / lattice_constant * np.array([1, 1 / np.sqrt(3)])
-    K = 4 * np.pi / (3 * lattice_constant) * np.array([1, 0])
 
     h_at_high_symmetry_points = [
         (

@@ -63,7 +63,7 @@ def test_scatter_into_bz_with_fig_in():
     extensions=["png"],
     style="mpl20",
 )
-def test_scatter_into_bz():
+def test_scatter_into_bz_with_data():
     lattice_constant = np.sqrt(3)
 
     all_K_points = (
