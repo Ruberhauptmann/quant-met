@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 Tjark Sievers
+#
+# SPDX-License-Identifier: MIT
+
 [tool.poetry]
 name = "quant-met"
 version = "0.0.2"

@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 Tjark Sievers
+
+SPDX-License-Identifier: MIT
+-->
+
 # quant-met
 
 [![Test](https://github.com/Ruberhauptmann/quant-met/actions/workflows/test.yml/badge.svg)](https://github.com/Ruberhauptmann/quant-met/actions/workflows/test.yml)

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 Tjark Sievers
+#
+# SPDX-License-Identifier: MIT
+
 import os.path
 from pathlib import Path
 

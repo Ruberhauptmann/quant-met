@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 Tjark Sievers
+#
+# SPDX-License-Identifier: MIT
+
 import numpy as np
 import numpy.typing as npt
 

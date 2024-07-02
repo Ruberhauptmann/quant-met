@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 Tjark Sievers
+#
+# SPDX-License-Identifier: MIT
+
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.testing.decorators import image_comparison

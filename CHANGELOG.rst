@@ -1,3 +1,6 @@
+.. SPDX-FileCopyrightText: 2024 Tjark Sievers
+..
+.. SPDX-License-Identifier: MIT
 
 .. _changelog-0.0.2:
 
