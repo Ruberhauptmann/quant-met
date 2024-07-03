@@ -5,29 +5,31 @@
 import numpy as np
 import numpy.typing as npt
 
-from ._base_hamiltonian import BaseHamiltonian
-from ._utils import _check_valid_float
+from ._utils import _validate_float
+from .base_hamiltonian import BaseHamiltonian
 
 
 class EGXHamiltonian(BaseHamiltonian):
     def __init__(
         self,
-        t_gr: float,
-        t_x: float,
-        V: float,
-        a: float,
+        hopping_gr: float,
+        hopping_x: float,
+        hopping_x_gr_a: float,
+        lattice_constant: float,
         mu: float,
-        U_gr: float,
-        U_x: float,
+        coloumb_gr: float,
+        coloumb_x: float,
         delta: npt.NDArray[np.float64] | None = None,
-    ):
-        self.t_gr = _check_valid_float(t_gr, "Hopping graphene")
-        self.t_x = _check_valid_float(t_x, "Hopping impurity")
-        self.V = _check_valid_float(V, "Hybridisation")
-        self.a = _check_valid_float(a, "Lattice constant")
-        self.mu = _check_valid_float(mu, "Chemical potential")
-        self.U_gr = _check_valid_float(U_gr, "Coloumb interaction graphene")
-        self.U_x = _check_valid_float(U_x, "Coloumb interaction impurity")
+    ) -> None:
+        self.hopping_gr = _validate_float(hopping_gr, "Hopping graphene")
+        self.hopping_x = _validate_float(hopping_x, "Hopping impurity")
+        self.hopping_x_gr_a = _validate_float(hopping_x_gr_a, "Hybridisation")
+        self.lattice_constant = _validate_float(lattice_constant, "Lattice constant")
+        self.mu = _validate_float(mu, "Chemical potential")
+        self.coloumb_gr = _validate_float(coloumb_gr, "Coloumb interaction graphene")
+        self.coloumb_x = _validate_float(coloumb_x, "Coloumb interaction impurity")
+        self._coloumb_orbital_basis = np.array([self.coloumb_gr, self.coloumb_gr, self.coloumb_x])
+        self._number_of_bands = 3
         if delta is None:
             self._delta_orbital_basis = np.zeros(3)
         else:
@@ -35,7 +37,7 @@ class EGXHamiltonian(BaseHamiltonian):
 
     @property
     def coloumb_orbital_basis(self) -> npt.NDArray[np.float64]:
-        return np.array([self.U_gr, self.U_gr, self.U_x])
+        return self._coloumb_orbital_basis
 
     @property
     def delta_orbital_basis(self) -> npt.NDArray[np.float64]:
@@ -47,35 +49,27 @@ class EGXHamiltonian(BaseHamiltonian):
 
     @property
     def number_of_bands(self) -> int:
-        return 3
+        return self._number_of_bands
 
     def _hamiltonian_derivative_one_point(
         self, k: npt.NDArray[np.float64], direction: str
     ) -> npt.NDArray[np.complex64]:
         assert direction in ["x", "y"]
 
-        t_gr = self.t_gr
-        t_x = self.t_x
-        a = self.a
+        t_gr = self.hopping_gr
+        t_x = self.hopping_x
+        a = self.lattice_constant
 
         h = np.zeros((self.number_of_bands, self.number_of_bands), dtype=np.complex64)
 
         if direction == "x":
-            h[0, 1] = (
-                t_gr
-                * a
-                * np.exp(-0.5j * a / np.sqrt(3) * k[1])
-                * np.sin(0.5 * a * k[0])
-            )
+            h[0, 1] = t_gr * a * np.exp(-0.5j * a / np.sqrt(3) * k[1]) * np.sin(0.5 * a * k[0])
             h[1, 0] = h[0, 1].conjugate()
             h[2, 2] = (
                 2
                 * a
                 * t_x
-                * (
-                    np.sin(a * k[0])
-                    + np.sin(0.5 * a * k[0]) * np.cos(0.5 * np.sqrt(3) * a * k[1])
-                )
+                * (np.sin(a * k[0]) + np.sin(0.5 * a * k[0]) * np.cos(0.5 * np.sqrt(3) * a * k[1]))
             )
         else:
             h[0, 1] = (
@@ -93,14 +87,11 @@ class EGXHamiltonian(BaseHamiltonian):
 
         return h
 
-    def _hamiltonian_one_point(
-        self, k: npt.NDArray[np.float64]
-    ) -> npt.NDArray[np.complex64]:
-        t_gr = self.t_gr
-        t_x = self.t_x
-        a = self.a
-        # a_0 = a / np.sqrt(3)
-        V = self.V
+    def _hamiltonian_one_point(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
+        t_gr = self.hopping_gr
+        t_x = self.hopping_x
+        a = self.lattice_constant
+        v = self.hopping_x_gr_a
         mu = self.mu
 
         h = np.zeros((self.number_of_bands, self.number_of_bands), dtype=np.complex64)
@@ -112,16 +103,13 @@ class EGXHamiltonian(BaseHamiltonian):
 
         h[1, 0] = h[0, 1].conjugate()
 
-        h[2, 0] = V
-        h[0, 2] = V
+        h[2, 0] = v
+        h[0, 2] = v
 
         h[2, 2] = (
             -2
             * t_x
-            * (
-                np.cos(a * k[0])
-                + 2 * np.cos(0.5 * a * k[0]) * np.cos(0.5 * np.sqrt(3) * a * k[1])
-            )
+            * (np.cos(a * k[0]) + 2 * np.cos(0.5 * a * k[0]) * np.cos(0.5 * np.sqrt(3) * a * k[1]))
         )
         h -= mu * np.eye(3, dtype=np.complex64)
 

@@ -2,10 +2,9 @@
 ..
 .. SPDX-License-Identifier: MIT
 
-quant\_met.utils module
-=======================
+.. _utils:
 
 .. automodule:: quant_met.utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   :no-members:
+   :no-inherited-members:
+   :no-special-members:

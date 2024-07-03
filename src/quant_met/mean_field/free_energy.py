@@ -5,7 +5,7 @@
 import numpy as np
 import numpy.typing as npt
 
-from ._base_hamiltonian import BaseHamiltonian
+from .base_hamiltonian import BaseHamiltonian
 
 
 def free_energy(
@@ -38,6 +38,4 @@ def free_energy_uniform_pairing(
 ) -> float:
     delta_vector = np.ones(hamiltonian.number_of_bands) * delta
 
-    return free_energy(
-        delta_vector=delta_vector, hamiltonian=hamiltonian, k_points=k_points
-    )
+    return free_energy(delta_vector=delta_vector, hamiltonian=hamiltonian, k_points=k_points)

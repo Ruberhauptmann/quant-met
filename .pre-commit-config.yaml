@@ -14,17 +14,23 @@ repos:
   rev: v3.0.2
   hooks:
     - id: reuse
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  # Ruff version.
+  rev: v0.5.0
+  hooks:
+    # Run the linter.
+    - id: ruff
+      types_or: [ python, pyi, jupyter ]
+      args: [ --fix ]
+    # Run the formatter.
+    - id: ruff-format
+      types_or: [ python, pyi, jupyter ]
 - repo: https://github.com/pycqa/isort
   rev: 5.13.2
   hooks:
    - id: isort
      name: isort (python)
      args: ["--profile", "black", "--filter-files"]
-- repo: https://github.com/psf/black
-  rev: 24.4.2
-  hooks:
-  - id: black
-    args: ["--preview"]
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.6.0
   hooks:

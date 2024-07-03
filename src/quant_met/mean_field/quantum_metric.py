@@ -5,12 +5,12 @@
 import numpy as np
 import numpy.typing as npt
 
-from quant_met.hamiltonians import BaseHamiltonian
+from .base_hamiltonian import BaseHamiltonian
 
 
-def calculate_quantum_metric(
+def quantum_metric(
     h: BaseHamiltonian, k_grid: npt.NDArray[np.float64], band: int
-):
+) -> npt.NDArray[np.float64]:
     energies, bloch = h.diagonalize_nonint(k_grid)
 
     number_k_points = len(k_grid)
@@ -18,14 +18,10 @@ def calculate_quantum_metric(
     quantum_geom_tensor = np.zeros(shape=(2, 2), dtype=np.complex64)
 
     for i, direction_1 in enumerate(["x", "y"]):
-        h_derivative_direction_1 = h.hamiltonian_derivative(
-            k=k_grid, direction=direction_1
-        )
+        h_derivative_direction_1 = h.hamiltonian_derivative(k=k_grid, direction=direction_1)
         for j, direction_2 in enumerate(["x", "y"]):
-            h_derivative_direction_2 = h.hamiltonian_derivative(
-                k=k_grid, direction=direction_2
-            )
-            for k_index, k in enumerate(k_grid):
+            h_derivative_direction_2 = h.hamiltonian_derivative(k=k_grid, direction=direction_2)
+            for k_index in range(len(k_grid)):
                 for n in [i for i in range(h.number_of_bands) if i != band]:
                     quantum_geom_tensor[i, j] += (
                         (

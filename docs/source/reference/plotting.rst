@@ -2,10 +2,9 @@
 ..
 .. SPDX-License-Identifier: MIT
 
-quant\_met.plotting package
-===========================
+.. _plotting:
 
 .. automodule:: quant_met.plotting
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   :no-members:
+   :no-inherited-members:
+   :no-special-members:

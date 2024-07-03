@@ -11,3 +11,4 @@ report.xml
 docs/build
 .hypothesis/
 result_images/
+**/.DS_Store

@@ -2,6 +2,9 @@
 #
 # SPDX-License-Identifier: MIT
 
+[project]
+requires-python = ">=3.11"
+
 [tool.poetry]
 name = "quant-met"
 version = "0.0.2"
@@ -10,7 +13,7 @@ authors = ["Tjark Sievers <tsievers@physnet.uni-hamburg.de>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 numpy = "^1.26.4"
 scipy = "^1.13.0"
 matplotlib = "^3.8.4"
@@ -26,7 +29,6 @@ jupyter = "^1.0.0"
 ipympl = "^0.9.4"
 black = "^24.4.2"
 sphinx = "^7.3.7"
-sphinx-rtd-theme = "^2.0.0"
 myst-parser = "^3.0.1"
 nbsphinx = "^0.9.4"
 sphinx-gallery = "^0.16.0"
@@ -38,7 +40,37 @@ flake8 = "^7.0.0"
 flake8-docstrings = "^1.7.0"
 pytest-regressions = "^2.5.0"
 pydocstyle = "^6.3.0"
+pydata-sphinx-theme = "^0.15.4"
+sphinx-design = "^0.6.0"
+numpydoc = "^1.7.0"
+ruff = "^0.5.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+# Config for ruff
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+#select = []
+#select = ["D", "E", "F", "I", "W"]
+#lint.select = ["ALL"]
+ignore = [
+    "D203", # one-blank-line-before-class
+    "D212", # multi-line-summary-first-line
+    "COM812",
+    "ISC001",
+    "Q000",
+    "Q003",
+    "S101", # This checks against using assert
+    "PLR0913", # This checks against using more than 5 function arguments
+]
+
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+#[format]
+#docstring-code-format = true

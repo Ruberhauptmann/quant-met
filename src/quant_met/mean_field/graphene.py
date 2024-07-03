@@ -5,8 +5,8 @@
 import numpy as np
 import numpy.typing as npt
 
-from ._base_hamiltonian import BaseHamiltonian
-from ._utils import _check_valid_float
+from ._utils import _validate_float
+from .base_hamiltonian import BaseHamiltonian
 
 
 class GrapheneHamiltonian(BaseHamiltonian):
@@ -17,25 +17,28 @@ class GrapheneHamiltonian(BaseHamiltonian):
         mu: float,
         coulomb_gr: float,
         delta: npt.NDArray[np.float64] | None = None,
-    ):
-        self.t_nn = _check_valid_float(t_nn, "Hopping")
+    ) -> None:
+        self.t_nn = _validate_float(t_nn, "Hopping")
         if a <= 0:
-            raise ValueError("Lattice constant must be positive")
-        self.a = _check_valid_float(a, "Lattice constant")
-        self.mu = _check_valid_float(mu, "Chemical potential")
-        self.coulomb_gr = _check_valid_float(coulomb_gr, "Coloumb interaction")
+            msg = "Lattice constant must be positive"
+            raise ValueError(msg)
+        self.a = _validate_float(a, "Lattice constant")
+        self.mu = _validate_float(mu, "Chemical potential")
+        self.coulomb_gr = _validate_float(coulomb_gr, "Coloumb interaction")
+        self._coloumb_orbital_basis = np.array([self.coulomb_gr, self.coulomb_gr])
+        self._number_of_bands = 2
         if delta is None:
             self._delta_orbital_basis = np.zeros(2)
         else:
             self._delta_orbital_basis = delta
 
     @property
-    def coloumb_orbital_basis(self) -> npt.NDArray[np.float64]:
-        return np.array([self.coulomb_gr, self.coulomb_gr])
+    def number_of_bands(self) -> int:
+        return self._number_of_bands
 
     @property
-    def number_of_bands(self) -> int:
-        return 2
+    def coloumb_orbital_basis(self) -> npt.NDArray[np.float64]:
+        return self._coloumb_orbital_basis
 
     @property
     def delta_orbital_basis(self) -> npt.NDArray[np.float64]:
@@ -56,12 +59,7 @@ class GrapheneHamiltonian(BaseHamiltonian):
         h = np.zeros((self.number_of_bands, self.number_of_bands), dtype=np.complex64)
 
         if direction == "x":
-            h[0, 1] = (
-                t_nn
-                * a
-                * np.exp(-0.5j * a / np.sqrt(3) * k[1])
-                * np.sin(0.5 * a * k[0])
-            )
+            h[0, 1] = t_nn * a * np.exp(-0.5j * a / np.sqrt(3) * k[1]) * np.sin(0.5 * a * k[0])
             h[1, 0] = h[0, 1].conjugate()
         else:
             h[0, 1] = (
@@ -78,9 +76,7 @@ class GrapheneHamiltonian(BaseHamiltonian):
 
         return h
 
-    def _hamiltonian_one_point(
-        self, k: npt.NDArray[np.float64]
-    ) -> npt.NDArray[np.complex64]:
+    def _hamiltonian_one_point(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
         t_nn = self.t_nn
         a = self.a
         mu = self.mu
