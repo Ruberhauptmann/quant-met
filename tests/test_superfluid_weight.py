@@ -44,7 +44,7 @@ def test_superfluid_weight_egx(ndarrays_regression):
             "D_S_xy": np.array(D_S_xy),
             "D_S_yy": np.array(D_S_yy),
         },
-        # default_tolerance=dict(atol=1e-4, rtol=1e-4),
+        default_tolerance=dict(atol=1e-4, rtol=1e-4),
     )
 
 
@@ -86,5 +86,5 @@ def test_superfluid_weight_graphene(ndarrays_regression):
             "D_S_xy": np.array(D_S_xy),
             "D_S_yy": np.array(D_S_yy),
         },
-        # default_tolerance=dict(atol=1e-5, rtol=1e-4),
+        default_tolerance=dict(atol=1e-4, rtol=1e-4),
     )
