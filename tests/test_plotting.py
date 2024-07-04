@@ -1,8 +1,12 @@
+# SPDX-FileCopyrightText: 2024 Tjark Sievers
+#
+# SPDX-License-Identifier: MIT
+
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.testing.decorators import image_comparison
 
-from quant_met import hamiltonians, plotting
+from quant_met import mean_field, plotting
 
 
 @image_comparison(
@@ -18,12 +22,7 @@ def test_scatter_into_bz():
         4
         * np.pi
         / (3 * lattice_constant)
-        * np.array(
-            [
-                (np.sin(i * np.pi / 6), np.cos(i * np.pi / 6))
-                for i in [1, 3, 5, 7, 9, 11]
-            ]
-        )
+        * np.array([(np.sin(i * np.pi / 6), np.cos(i * np.pi / 6)) for i in [1, 3, 5, 7, 9, 11]])
     )
 
     plotting.scatter_into_bz(bz_corners=all_K_points, k_points=np.array([[0, 0]]))
@@ -42,12 +41,7 @@ def test_scatter_into_bz_with_fig_in():
         4
         * np.pi
         / (3 * lattice_constant)
-        * np.array(
-            [
-                (np.sin(i * np.pi / 6), np.cos(i * np.pi / 6))
-                for i in [1, 3, 5, 7, 9, 11]
-            ]
-        )
+        * np.array([(np.sin(i * np.pi / 6), np.cos(i * np.pi / 6)) for i in [1, 3, 5, 7, 9, 11]])
     )
 
     fig, ax = plt.subplots()
@@ -63,19 +57,14 @@ def test_scatter_into_bz_with_fig_in():
     extensions=["png"],
     style="mpl20",
 )
-def test_scatter_into_bz():
+def test_scatter_into_bz_with_data():
     lattice_constant = np.sqrt(3)
 
     all_K_points = (
         4
         * np.pi
         / (3 * lattice_constant)
-        * np.array(
-            [
-                (np.sin(i * np.pi / 6), np.cos(i * np.pi / 6))
-                for i in [1, 3, 5, 7, 9, 11]
-            ]
-        )
+        * np.array([(np.sin(i * np.pi / 6), np.cos(i * np.pi / 6)) for i in [1, 3, 5, 7, 9, 11]])
     )
 
     plotting.scatter_into_bz(
@@ -97,17 +86,10 @@ def test_plotting_nonint_bandstructure_graphene():
         4
         * np.pi
         / (3 * lattice_constant)
-        * np.array(
-            [
-                (np.sin(i * np.pi / 6), np.cos(i * np.pi / 6))
-                for i in [1, 3, 5, 7, 9, 11]
-            ]
-        )
+        * np.array([(np.sin(i * np.pi / 6), np.cos(i * np.pi / 6)) for i in [1, 3, 5, 7, 9, 11]])
     )
 
-    graphene_h = hamiltonians.GrapheneHamiltonian(
-        t_nn=1, a=lattice_constant, mu=0, coulomb_gr=0
-    )
+    graphene_h = mean_field.GrapheneHamiltonian(t_nn=1, a=lattice_constant, mu=0, coulomb_gr=0)
 
     Gamma = np.array([0, 0])
     M = np.pi / lattice_constant * np.array([1, 1 / np.sqrt(3)])
@@ -140,17 +122,10 @@ def test_plotting_nonint_bandstructure_graphene_with_fig_in():
         4
         * np.pi
         / (3 * lattice_constant)
-        * np.array(
-            [
-                (np.sin(i * np.pi / 6), np.cos(i * np.pi / 6))
-                for i in [1, 3, 5, 7, 9, 11]
-            ]
-        )
+        * np.array([(np.sin(i * np.pi / 6), np.cos(i * np.pi / 6)) for i in [1, 3, 5, 7, 9, 11]])
     )
 
-    graphene_h = hamiltonians.GrapheneHamiltonian(
-        t_nn=1, a=lattice_constant, mu=0, coulomb_gr=0
-    )
+    graphene_h = mean_field.GrapheneHamiltonian(t_nn=1, a=lattice_constant, mu=0, coulomb_gr=0)
 
     Gamma = np.array([0, 0])
     M = np.pi / lattice_constant * np.array([1, 1 / np.sqrt(3)])
@@ -187,16 +162,17 @@ def test_plotting_nonint_bandstructure_egx():
         4
         * np.pi
         / (3 * lattice_constant)
-        * np.array(
-            [
-                (np.sin(i * np.pi / 6), np.cos(i * np.pi / 6))
-                for i in [1, 3, 5, 7, 9, 11]
-            ]
-        )
+        * np.array([(np.sin(i * np.pi / 6), np.cos(i * np.pi / 6)) for i in [1, 3, 5, 7, 9, 11]])
     )
 
-    egx_h = hamiltonians.EGXHamiltonian(
-        t_gr=1, t_x=0.01, V=1, a=lattice_constant, mu=0, U_gr=0, U_x=0
+    egx_h = mean_field.EGXHamiltonian(
+        hopping_gr=1,
+        hopping_x=0.01,
+        hopping_x_gr_a=1,
+        lattice_constant=lattice_constant,
+        mu=0,
+        coloumb_gr=0,
+        coloumb_x=0,
     )
 
     Gamma = np.array([0, 0])
@@ -233,16 +209,17 @@ def test_plotting_nonint_bandstructure_egx_with_fig_in():
         4
         * np.pi
         / (3 * lattice_constant)
-        * np.array(
-            [
-                (np.sin(i * np.pi / 6), np.cos(i * np.pi / 6))
-                for i in [1, 3, 5, 7, 9, 11]
-            ]
-        )
+        * np.array([(np.sin(i * np.pi / 6), np.cos(i * np.pi / 6)) for i in [1, 3, 5, 7, 9, 11]])
     )
 
-    egx_h = hamiltonians.EGXHamiltonian(
-        t_gr=1, t_x=0.01, V=1, a=lattice_constant, mu=0, U_gr=0, U_x=0
+    egx_h = mean_field.EGXHamiltonian(
+        hopping_gr=1,
+        hopping_x=0.01,
+        hopping_x_gr_a=1,
+        lattice_constant=lattice_constant,
+        mu=0,
+        coloumb_gr=0,
+        coloumb_x=0,
     )
 
     Gamma = np.array([0, 0])
@@ -278,12 +255,7 @@ def test_generate_bz_path():
         4
         * np.pi
         / (3 * lattice_constant)
-        * np.array(
-            [
-                (np.sin(i * np.pi / 6), np.cos(i * np.pi / 6))
-                for i in [1, 3, 5, 7, 9, 11]
-            ]
-        )
+        * np.array([(np.sin(i * np.pi / 6), np.cos(i * np.pi / 6)) for i in [1, 3, 5, 7, 9, 11]])
     )
     Gamma = np.array([0, 0])
     M = np.pi / lattice_constant * np.array([1, 1 / np.sqrt(3)])

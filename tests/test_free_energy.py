@@ -1,6 +1,10 @@
+# SPDX-FileCopyrightText: 2024 Tjark Sievers
+#
+# SPDX-License-Identifier: MIT
+
 import numpy as np
 
-from quant_met import hamiltonians, utils
+from quant_met import mean_field, utils
 
 
 def test_free_energy(ndarrays_regression):
@@ -13,15 +17,16 @@ def test_free_energy(ndarrays_regression):
         4
         * np.pi
         / (3 * lattice_constant)
-        * np.array(
-            [
-                (np.sin(i * np.pi / 6), np.cos(i * np.pi / 6))
-                for i in [1, 3, 5, 7, 9, 11]
-            ]
-        )
+        * np.array([(np.sin(i * np.pi / 6), np.cos(i * np.pi / 6)) for i in [1, 3, 5, 7, 9, 11]])
     )
-    egx_h = hamiltonians.EGXHamiltonian(
-        t_gr=t_gr, t_x=t_x, V=V, a=lattice_constant, mu=mu, U_gr=1, U_x=1
+    egx_h = mean_field.EGXHamiltonian(
+        hopping_gr=t_gr,
+        hopping_x=t_x,
+        hopping_x_gr_a=V,
+        lattice_constant=lattice_constant,
+        mu=mu,
+        coloumb_gr=1,
+        coloumb_x=1,
     )
 
     BZ_grid = utils.generate_uniform_grid(
@@ -32,15 +37,13 @@ def test_free_energy(ndarrays_regression):
 
     free_energy = np.array(
         [
-            hamiltonians.free_energy(
-                delta_vector=delta, hamiltonian=egx_h, k_points=BZ_grid
-            )
+            mean_field.free_energy(delta_vector=delta, hamiltonian=egx_h, k_points=BZ_grid)
             for delta in delta_list
         ]
     )
     free_energy_uniform_pairing = np.array(
         [
-            hamiltonians.free_energy_uniform_pairing(
+            mean_field.free_energy_uniform_pairing(
                 delta=delta[0], hamiltonian=egx_h, k_points=BZ_grid
             )
             for delta in delta_list

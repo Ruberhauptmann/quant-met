@@ -1,38 +1,50 @@
-Documentation
-=============
+.. SPDX-FileCopyrightText: 2024 Tjark Sievers
+..
+.. SPDX-License-Identifier: MIT
 
-:doc:`changelog`
-    Changelog
+Quant-Met
+=========
 
-:doc:`examples`
-    Examples
+.. grid:: 1 1 2 2
 
-Development
------------
+    .. grid-item-card::
+        :text-align: center
 
-:doc:`api`
-    API
+        **Examples**
+        ^^^
 
-.. Versteckte table of contents (werden in der Seitenleiste angezeigt)
+        Some notebooks with examples
 
+        +++
+
+        .. button-ref:: examples
+            :color: primary
+            :click-parent:
+
+            To the examples
+
+    .. grid-item-card::
+        :text-align: center
+
+        **API Reference**
+        ^^^
+
+        API Reference
+
+        +++
+
+        .. button-ref:: examples
+            :color: primary
+            :click-parent:
+
+            To the API reference
+
+
+.. Entries in the top menu bar
 .. toctree::
    :maxdepth: 2
    :hidden:
 
-   changelog
    examples
-
-
-.. toctree::
-   :caption: Development
-   :maxdepth: 2
-   :hidden:
-
-   api
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   reference/index
+   changelog

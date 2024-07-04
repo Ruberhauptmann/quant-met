@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 Tjark Sievers
+#
+# SPDX-License-Identifier: MIT
+
 SHELL:=/bin/bash
 
 CONDA_ENV_NAME := quant-met-dev

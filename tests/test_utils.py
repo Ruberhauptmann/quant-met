@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 Tjark Sievers
+#
+# SPDX-License-Identifier: MIT
+
 import numpy as np
 import pytest
 
@@ -32,7 +36,7 @@ def test_generate_uniform_grid():
 
 
 def test_generate_uniform_grid_errors():
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Number of columns and rows must be greater than 1."):
         utils.generate_uniform_grid(
             ncols=1,
             nrows=10,
@@ -40,7 +44,7 @@ def test_generate_uniform_grid_errors():
             corner_2=np.array([1, 0]),
             origin=np.array([0, 0]),
         )
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Number of columns and rows must be greater than 1."):
         utils.generate_uniform_grid(
             ncols=10,
             nrows=1,
@@ -48,7 +52,7 @@ def test_generate_uniform_grid_errors():
             corner_2=np.array([1, 0]),
             origin=np.array([0, 0]),
         )
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Vectors to the corners cannot be zero."):
         utils.generate_uniform_grid(
             ncols=10,
             nrows=10,
@@ -56,7 +60,7 @@ def test_generate_uniform_grid_errors():
             corner_2=np.array([1, 0]),
             origin=np.array([0, 0]),
         )
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Vectors to the corners cannot be zero."):
         utils.generate_uniform_grid(
             ncols=10,
             nrows=10,
