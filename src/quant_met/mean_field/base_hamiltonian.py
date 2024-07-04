@@ -37,7 +37,7 @@ class BaseHamiltonian(ABC):
         raise NotImplementedError
 
     @property
-    def delta_orbital_basis(self) -> npt.NDArray[np.float64]:
+    def delta_orbital_basis(self) -> npt.NDArray[np.complex64]:
         """
         Order parameter in orbital basis.
 
@@ -50,7 +50,7 @@ class BaseHamiltonian(ABC):
 
     @delta_orbital_basis.setter
     @abstractmethod
-    def delta_orbital_basis(self, new_delta: npt.NDArray[np.float64]) -> None:
+    def delta_orbital_basis(self, new_delta: npt.NDArray[np.complex64]) -> None:
         raise NotImplementedError
 
     @abstractmethod

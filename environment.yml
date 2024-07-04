@@ -7,7 +7,6 @@ channels:
   - defaults
 dependencies:
   - python=3.12.2
-  - pytables=3.9.2
   - pip
   - pip:
     - poetry==1.8.2
