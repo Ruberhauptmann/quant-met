@@ -23,7 +23,7 @@ class EGXHamiltonian(BaseHamiltonian):
         mu: float,
         coloumb_gr: float,
         coloumb_x: float,
-        delta: npt.NDArray[np.float64] | None = None,
+        delta: npt.NDArray[np.complex64] | None = None,
     ) -> None:
         self.hopping_gr = _validate_float(hopping_gr, "Hopping graphene")
         self.hopping_x = _validate_float(hopping_x, "Hopping impurity")
@@ -35,7 +35,7 @@ class EGXHamiltonian(BaseHamiltonian):
         self._coloumb_orbital_basis = np.array([self.coloumb_gr, self.coloumb_gr, self.coloumb_x])
         self._number_of_bands = 3
         if delta is None:
-            self._delta_orbital_basis = np.zeros(3)
+            self._delta_orbital_basis = np.zeros(3, dtype=np.complex64)
         else:
             self._delta_orbital_basis = delta
 
@@ -44,11 +44,11 @@ class EGXHamiltonian(BaseHamiltonian):
         return self._coloumb_orbital_basis
 
     @property
-    def delta_orbital_basis(self) -> npt.NDArray[np.float64]:  # noqa: D102
+    def delta_orbital_basis(self) -> npt.NDArray[np.complex64]:  # noqa: D102
         return self._delta_orbital_basis
 
     @delta_orbital_basis.setter
-    def delta_orbital_basis(self, new_delta: npt.NDArray[np.float64]) -> None:
+    def delta_orbital_basis(self, new_delta: npt.NDArray[np.complex64]) -> None:
         self._delta_orbital_basis = new_delta
 
     @property
