@@ -10,3 +10,4 @@ nbsphinx>=0.9.4
 ipykernel
 sphinx-gallery>=0.16.0
 sphinx-design>=0.6.0
+numpydoc>=1.7.0
