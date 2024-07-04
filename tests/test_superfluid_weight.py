@@ -1,19 +1,21 @@
 # SPDX-FileCopyrightText: 2024 Tjark Sievers
 #
 # SPDX-License-Identifier: MIT
+"""Test superfluid weight."""
 
 import numpy as np
-
+from pytest_regressions.ndarrays_regression import NDArraysRegressionFixture
 from quant_met import mean_field, utils
 
 
-def test_superfluid_weight_egx(ndarrays_regression):
+def test_superfluid_weight_egx(ndarrays_regression: NDArraysRegressionFixture) -> None:
+    """Test superfluid weight for EGX."""
     t_gr = 1
     t_x = 0.01
-    V = 1
+    v = 1
     mu = 1
     lattice_constant = np.sqrt(3)
-    all_K_points = (
+    bz_corners = (
         4
         * np.pi
         / (3 * lattice_constant)
@@ -22,7 +24,7 @@ def test_superfluid_weight_egx(ndarrays_regression):
     egx_h = mean_field.EGXHamiltonian(
         hopping_gr=t_gr,
         hopping_x=t_x,
-        hopping_x_gr_a=V,
+        hopping_x_gr_a=v,
         lattice_constant=lattice_constant,
         mu=mu,
         coloumb_gr=1,
@@ -30,29 +32,27 @@ def test_superfluid_weight_egx(ndarrays_regression):
         delta=np.array([1, 1, 1]),
     )
 
-    BZ_grid = utils.generate_uniform_grid(
-        20, 20, all_K_points[1], all_K_points[5], origin=np.array([0, 0])
+    bz_grid = utils.generate_uniform_grid(
+        10, 10, bz_corners[1], bz_corners[5], origin=np.array([0, 0])
     )
 
-    D_S_xx = mean_field.superfluid_weight(h=egx_h, k_grid=BZ_grid, direction_1="x", direction_2="x")
-    D_S_xy = mean_field.superfluid_weight(h=egx_h, k_grid=BZ_grid, direction_1="x", direction_2="y")
-    D_S_yy = mean_field.superfluid_weight(h=egx_h, k_grid=BZ_grid, direction_1="y", direction_2="y")
+    d_s_conv, d_s_geom = mean_field.superfluid_weight(h=egx_h, k_grid=bz_grid)
 
     ndarrays_regression.check(
         {
-            "D_S_xx": np.array(D_S_xx),
-            "D_S_xy": np.array(D_S_xy),
-            "D_S_yy": np.array(D_S_yy),
+            "D_S_conv": np.array(d_s_conv),
+            "D_S_geom": np.array(d_s_geom),
         },
-        default_tolerance=dict(atol=1e-4, rtol=1e-4),
+        default_tolerance={"atol": 1e-4, "rtol": 1e-4},
     )
 
 
-def test_superfluid_weight_graphene(ndarrays_regression):
+def test_superfluid_weight_graphene(ndarrays_regression: NDArraysRegressionFixture) -> None:
+    """Test superfluid weight for graphene."""
     t_nn = 1
     mu = 1
     lattice_constant = np.sqrt(3)
-    all_K_points = (
+    bz_corners = (
         4
         * np.pi
         / (3 * lattice_constant)
@@ -66,25 +66,16 @@ def test_superfluid_weight_graphene(ndarrays_regression):
         delta=np.array([1, 1]),
     )
 
-    BZ_grid = utils.generate_uniform_grid(
-        20, 20, all_K_points[1], all_K_points[5], origin=np.array([0, 0])
+    bz_grid = utils.generate_uniform_grid(
+        10, 10, bz_corners[1], bz_corners[5], origin=np.array([0, 0])
     )
 
-    D_S_xx = mean_field.superfluid_weight(
-        h=graphene_h, k_grid=BZ_grid, direction_1="x", direction_2="x"
-    )
-    D_S_xy = mean_field.superfluid_weight(
-        h=graphene_h, k_grid=BZ_grid, direction_1="x", direction_2="y"
-    )
-    D_S_yy = mean_field.superfluid_weight(
-        h=graphene_h, k_grid=BZ_grid, direction_1="y", direction_2="y"
-    )
+    d_s_conv, d_s_geom = mean_field.superfluid_weight(h=graphene_h, k_grid=bz_grid)
 
     ndarrays_regression.check(
         {
-            "D_S_xx": np.array(D_S_xx),
-            "D_S_xy": np.array(D_S_xy),
-            "D_S_yy": np.array(D_S_yy),
+            "D_S_conv": np.array(d_s_conv),
+            "D_S_geom": np.array(d_s_geom),
         },
-        default_tolerance=dict(atol=1e-3, rtol=1e-4),
+        default_tolerance={"atol": 1e-3, "rtol": 1e-4},
     )
