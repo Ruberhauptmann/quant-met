@@ -17,7 +17,7 @@ Functions
     scatter_into_bz
     plot_bandstructure
     generate_bz_path
-"""  # noqa: D205, D415, D400
+"""  # noqa: D205, D400
 
 from .plotting import generate_bz_path, plot_bandstructure, scatter_into_bz
 

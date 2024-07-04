@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2024 Tjark Sievers
 #
 # SPDX-License-Identifier: MIT
+
 from typing import Any
 
 import numpy as np

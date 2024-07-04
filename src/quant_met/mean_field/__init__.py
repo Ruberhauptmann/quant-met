@@ -33,7 +33,7 @@ Functions
    quantum_metric
    free_energy
    free_energy_uniform_pairing
-"""  # noqa: D205, D415, D400
+"""  # noqa: D205, D400
 
 from .base_hamiltonian import BaseHamiltonian
 from .eg_x import EGXHamiltonian

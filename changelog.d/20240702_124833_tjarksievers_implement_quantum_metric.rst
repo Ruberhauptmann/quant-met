@@ -14,7 +14,7 @@
 Added
 ^^^^^
 
-- Add formula to calculate superfluid weight
+- Add formula to calculate quantum metric
 
 .. Changed
 .. ^^^^^^^

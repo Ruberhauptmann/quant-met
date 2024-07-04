@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
+"""Provides the base class for Hamiltonians."""
+
 import pathlib
 from abc import ABC, abstractmethod
 

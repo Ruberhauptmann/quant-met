@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
+"""Methods for plotting data."""
+
 from typing import Any
 
 import matplotlib.axes
@@ -22,6 +24,29 @@ def scatter_into_bz(
     fig_in: matplotlib.figure.Figure | None = None,
     ax_in: matplotlib.axes.Axes | None = None,
 ) -> matplotlib.figure.Figure:
+    """Scatter a list of points into the brillouin zone.
+
+    Parameters
+    ----------
+    bz_corners : list[:class:`numpy.ndarray`]
+        Corner points defining the brillouin zone.
+    k_points : :class:`numpy.ndarray`
+        List of k points.
+    data : :class:`numpy.ndarray`, optional
+        Data to put on the k points.
+    data_label : :class:`str`, optional
+        Label for the data.
+    fig_in : :class:`matplotlib.figure.Figure`, optional
+        Figure that holds the axes. If not provided, a new figure and ax is created.
+    ax_in : :class:`matplotlib.axes.Axes`, optional
+        Ax to plot the data in. If not provided, a new figure and ax is created.
+
+    Returns
+    -------
+    :obj:`matplotlib.figure.Figure`
+        Figure with the data plotted onto the axis.
+
+    """
     if fig_in is None or ax_in is None:
         fig, ax = plt.subplots()
     else:
@@ -51,6 +76,36 @@ def plot_bandstructure(
     fig_in: matplotlib.figure.Figure | None = None,
     ax_in: matplotlib.axes.Axes | None = None,
 ) -> matplotlib.figure.Figure:
+    """Plot bands along a k space path.
+
+    To have a plot that respects the distances in k space and generate everything that is needed for
+    plotting, use the function :func:`~quant_met.plotting.generate_bz_path`.
+
+    Parameters
+    ----------
+    bands : :class:`numpy.ndarray`
+    k_point_list : :class:`numpy.ndarray`
+        List of points to plot against. This is not a list of two-dimensional k-points!
+    ticks : list(float)
+        Position for ticks.
+    labels : list(str)
+        Labels on ticks.
+    overlaps : :class:`numpy.ndarray`, optional
+        Overlaps.
+    overlap_labels : list(str), optional
+        Labels to put on overlaps.
+    fig_in : :class:`matplotlib.figure.Figure`, optional
+        Figure that holds the axes. If not provided, a new figure and ax is created.
+    ax_in : :class:`matplotlib.axes.Axes`, optional
+        Ax to plot the data in. If not provided, a new figure and ax is created.
+
+    Returns
+    -------
+    :obj:`matplotlib.figure.Figure`
+        Figure with the data plotted onto the axis.
+
+
+    """
     if fig_in is None or ax_in is None:
         fig, ax = plt.subplots()
     else:
@@ -116,22 +171,25 @@ def generate_bz_path(
     list[int | Any],
     list[str],
 ]:
-    """
-    Generate a path through high symmetry points.
+    """Generate a path through high symmetry points.
 
     Parameters
     ----------
     points : :class:`numpy.ndarray`
         Test
     number_of_points: int
-        Number of points
+        Number of point in the whole path.
 
     Returns
     -------
-    path : :class:`numpy.ndarray`
-        Path
-    path_plot : :class:`numpy.ndarray`
-        Path for plotting purposes
+    :class:`numpy.ndarray`
+        List of two-dimensional k points.
+    :class:`numpy.ndarray`
+        Path for plotting purposes: points between 0 and 1, with appropiate spacing.
+    list[float]
+        A list of ticks for the plotting path.
+    list[str]
+        A list of labels for the plotting path.
 
     """
     n = number_of_points

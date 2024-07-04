@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
+"""Functions to calculate the free energy of a BdG Hamiltonian."""
+
 import numpy as np
 import numpy.typing as npt
 
@@ -13,6 +15,23 @@ def free_energy(
     hamiltonian: BaseHamiltonian,
     k_points: npt.NDArray[np.float64],
 ) -> float:
+    """Calculate the free energy of a BdG Hamiltonian.
+
+    Parameters
+    ----------
+    delta_vector : :class:`numpy.ndarray`
+        Delta in orbital basis.
+    hamiltonian : :class:`BaseHamiltonian`
+        Hamiltonian to be evaluated.
+    k_points : :class:`numpy.ndarray`
+        List of k points
+
+    Returns
+    -------
+    float
+        Free energy from the BdG Hamiltonian.
+
+    """
     number_k_points = len(k_points)
     hamiltonian.delta_orbital_basis = delta_vector
     bdg_energies, _ = hamiltonian.diagonalize_bdg(k_points)
@@ -36,6 +55,23 @@ def free_energy_uniform_pairing(
     hamiltonian: BaseHamiltonian,
     k_points: npt.NDArray[np.float64],
 ) -> float:
+    """Calculate the free energy of a BdG Hamiltonian, with uniform pairing.
+
+    Parameters
+    ----------
+    delta : float
+        Delta.
+    hamiltonian : :class:`BaseHamiltonian`
+        Hamiltonian to be evaluated.
+    k_points : :class:`numpy.ndarray`
+        List of k points
+
+    Returns
+    -------
+    float
+        Free energy from the BdG Hamiltonian.
+
+    """
     delta_vector = np.ones(hamiltonian.number_of_bands) * delta
 
     return free_energy(delta_vector=delta_vector, hamiltonian=hamiltonian, k_points=k_points)

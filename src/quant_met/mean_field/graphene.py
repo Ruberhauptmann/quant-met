@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
+"""Provides the implementation for Graphene."""
+
 import numpy as np
 import numpy.typing as npt
 
@@ -10,6 +12,8 @@ from .base_hamiltonian import BaseHamiltonian
 
 
 class GrapheneHamiltonian(BaseHamiltonian):
+    """Hamiltonian for Graphene."""
+
     def __init__(
         self,
         t_nn: float,
@@ -33,15 +37,15 @@ class GrapheneHamiltonian(BaseHamiltonian):
             self._delta_orbital_basis = delta
 
     @property
-    def number_of_bands(self) -> int:
+    def number_of_bands(self) -> int:  # noqa: D102
         return self._number_of_bands
 
     @property
-    def coloumb_orbital_basis(self) -> npt.NDArray[np.float64]:
+    def coloumb_orbital_basis(self) -> npt.NDArray[np.float64]:  # noqa: D102
         return self._coloumb_orbital_basis
 
     @property
-    def delta_orbital_basis(self) -> npt.NDArray[np.float64]:
+    def delta_orbital_basis(self) -> npt.NDArray[np.float64]:  # noqa: D102
         return self._delta_orbital_basis
 
     @delta_orbital_basis.setter

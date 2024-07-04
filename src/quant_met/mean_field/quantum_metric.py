@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
+"""Functions to calculate the quantum metric."""
+
 import numpy as np
 import numpy.typing as npt
 
@@ -11,6 +13,23 @@ from .base_hamiltonian import BaseHamiltonian
 def quantum_metric(
     h: BaseHamiltonian, k_grid: npt.NDArray[np.float64], band: int
 ) -> npt.NDArray[np.float64]:
+    """Calculate the quantum metric in the normal state.
+
+    Parameters
+    ----------
+    h : :class:`~quant_met.BaseHamiltonian`
+        Hamiltonian object.
+    k_grid : :class:`numpy.ndarray`
+        List of k points.
+    band : int
+        Index of band for which the quantum metric is calculated.
+
+    Returns
+    -------
+    :class:`numpy.ndarray`
+        Quantum metric in the normal state.
+
+    """
     energies, bloch = h.diagonalize_nonint(k_grid)
 
     number_k_points = len(k_grid)

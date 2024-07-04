@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
+"""Provides the implementation for the EG-X model."""
+
 import numpy as np
 import numpy.typing as npt
 
@@ -10,6 +12,8 @@ from .base_hamiltonian import BaseHamiltonian
 
 
 class EGXHamiltonian(BaseHamiltonian):
+    """Hamiltonian for the EG-X model."""
+
     def __init__(
         self,
         hopping_gr: float,
@@ -36,11 +40,11 @@ class EGXHamiltonian(BaseHamiltonian):
             self._delta_orbital_basis = delta
 
     @property
-    def coloumb_orbital_basis(self) -> npt.NDArray[np.float64]:
+    def coloumb_orbital_basis(self) -> npt.NDArray[np.float64]:  # noqa: D102
         return self._coloumb_orbital_basis
 
     @property
-    def delta_orbital_basis(self) -> npt.NDArray[np.float64]:
+    def delta_orbital_basis(self) -> npt.NDArray[np.float64]:  # noqa: D102
         return self._delta_orbital_basis
 
     @delta_orbital_basis.setter
@@ -48,7 +52,7 @@ class EGXHamiltonian(BaseHamiltonian):
         self._delta_orbital_basis = new_delta
 
     @property
-    def number_of_bands(self) -> int:
+    def number_of_bands(self) -> int:  # noqa: D102
         return self._number_of_bands
 
     def _hamiltonian_derivative_one_point(
