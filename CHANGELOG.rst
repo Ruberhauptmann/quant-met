@@ -1,3 +1,6 @@
+.. SPDX-FileCopyrightText: 2024 Tjark Sievers
+..
+.. SPDX-License-Identifier: MIT
 
 .. _changelog-0.0.3:
 
@@ -17,9 +20,6 @@ Changed
 - Implemented wrappers around the free energy calculation to calculate with a complex, real or uniform (in the orbitals) order parameter
 
 - Calculate and return all components of the superfluid weight
-.. SPDX-FileCopyrightText: 2024 Tjark Sievers
-..
-.. SPDX-License-Identifier: MIT
 
 .. _changelog-0.0.2:
 
