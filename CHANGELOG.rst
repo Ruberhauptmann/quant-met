@@ -1,3 +1,22 @@
+
+.. _changelog-0.0.3:
+
+0.0.3 — 2024-07-05
+------------------
+
+Added
+^^^^^
+
+- Add formula to calculate quantum metric
+
+Changed
+^^^^^^^
+
+- Rename hamiltonians namespace to mean_field
+
+- Implemented wrappers around the free energy calculation to calculate with a complex, real or uniform (in the orbitals) order parameter
+
+- Calculate and return all components of the superfluid weight
 .. SPDX-FileCopyrightText: 2024 Tjark Sievers
 ..
 .. SPDX-License-Identifier: MIT
