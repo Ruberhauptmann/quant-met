@@ -20,9 +20,8 @@ from hypothesis.strategies import (
     register_type_strategy,
     tuples,
 )
-from scipy import linalg
-
 from quant_met import mean_field, utils
+from scipy import linalg
 
 
 @pytest.fixture()
@@ -79,7 +78,7 @@ register_type_strategy(
             allow_nan=False,
             allow_infinity=False,
         ),
-        mu=floats(max_value=1e6, allow_nan=False, allow_infinity=False),
+        mu=floats(min_value=-1e6, max_value=1e6, allow_nan=False, allow_infinity=False),
         hopping_x_gr_a=floats(min_value=-1e6, max_value=1e6, allow_nan=False, allow_infinity=False),
         coloumb_gr=floats(max_value=1e6, allow_nan=False, allow_infinity=False),
         coloumb_x=floats(max_value=1e6, allow_nan=False, allow_infinity=False),

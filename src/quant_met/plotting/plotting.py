@@ -12,7 +12,7 @@ import matplotlib.figure
 import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
-from matplotlib.collections import LineCollection
+from matplotlib.collections import Collection, LineCollection
 from numpy import dtype, generic, ndarray
 
 
@@ -53,12 +53,15 @@ def scatter_into_bz(
         fig, ax = fig_in, ax_in
 
     if data is not None:
-        scatter = ax.scatter(*zip(*k_points, strict=False), c=data, cmap="viridis")
+        x_coords, y_coords = zip(*k_points, strict=True)
+        scatter = ax.scatter(x=x_coords, y=y_coords, c=data, cmap="viridis")
         fig.colorbar(scatter, ax=ax, fraction=0.046, pad=0.04, label=data_label)
     else:
-        ax.scatter(*zip(*k_points, strict=False))
+        x_coords, y_coords = zip(*k_points, strict=True)
+        ax.scatter(x=x_coords, y=y_coords)
 
-    ax.scatter(*zip(*bz_corners, strict=False), alpha=0.8)
+    bz_corner_x, bz_corners_y = zip(*bz_corners, strict=True)
+    ax.scatter(x=bz_corner_x, y=bz_corners_y, alpha=0.8)
     ax.set_aspect("equal", adjustable="box")
     ax.set_xlabel(r"$k_x\ [1/a_0]$")
     ax.set_ylabel(r"$k_y\ [1/a_0]$")
@@ -117,8 +120,8 @@ def plot_bandstructure(
         for band in bands:
             ax.plot(k_point_list, band)
     else:
-        line = LineCollection(segments=[np.array([(0, 0)])])
-        for band, wx in zip(bands, overlaps, strict=False):
+        line = Collection()
+        for band, wx in zip(bands, overlaps, strict=True):
             points = np.array([k_point_list, band]).T.reshape(-1, 1, 2)
             segments = np.concatenate([points[:-1], points[1:]], axis=1)
 
@@ -133,8 +136,8 @@ def plot_bandstructure(
         colorbar.set_ticks(ticks=color_ticks, labels=overlap_labels)
 
     ax.set_ylim(
-        top=np.max(bands) + 0.1 * np.max(bands),
-        bottom=np.min(bands) - 0.1 * np.abs(np.min(bands)),
+        top=float(np.max(bands) + 0.1 * np.max(bands)),
+        bottom=float(np.min(bands) - 0.1 * np.abs(np.min(bands))),
     )
     ax.set_box_aspect(1)
     ax.set_xticks(ticks, labels)

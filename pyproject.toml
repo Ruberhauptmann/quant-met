@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 [project]
+name = "quant-met"
 requires-python = ">=3.11"
 
 [tool.poetry]
@@ -47,6 +48,8 @@ build-backend = "poetry.core.masonry.api"
 # Config for ruff
 [tool.ruff]
 line-length = 100
+force-exclude = true
+extend-exclude = ["tests", "docs/source/conf.py"]
 
 [tool.ruff.lint]
 #select = []
