@@ -56,7 +56,7 @@ class EGXHamiltonian(BaseHamiltonian):
         return self._number_of_bands
 
     def _hamiltonian_derivative_one_point(
-        self, k: npt.NDArray[np.float64], direction: str
+        self, k_point: npt.NDArray[np.float64], direction: str
     ) -> npt.NDArray[np.complex64]:
         assert direction in ["x", "y"]
 
@@ -67,13 +67,21 @@ class EGXHamiltonian(BaseHamiltonian):
         h = np.zeros((self.number_of_bands, self.number_of_bands), dtype=np.complex64)
 
         if direction == "x":
-            h[0, 1] = t_gr * a * np.exp(-0.5j * a / np.sqrt(3) * k[1]) * np.sin(0.5 * a * k[0])
+            h[0, 1] = (
+                t_gr
+                * a
+                * np.exp(-0.5j * a / np.sqrt(3) * k_point[1])
+                * np.sin(0.5 * a * k_point[0])
+            )
             h[1, 0] = h[0, 1].conjugate()
             h[2, 2] = (
                 2
                 * a
                 * t_x
-                * (np.sin(a * k[0]) + np.sin(0.5 * a * k[0]) * np.cos(0.5 * np.sqrt(3) * a * k[1]))
+                * (
+                    np.sin(a * k_point[0])
+                    + np.sin(0.5 * a * k_point[0]) * np.cos(0.5 * np.sqrt(3) * a * k_point[1])
+                )
             )
         else:
             h[0, 1] = (
@@ -82,16 +90,16 @@ class EGXHamiltonian(BaseHamiltonian):
                 * a
                 / np.sqrt(3)
                 * (
-                    np.exp(1j * a / np.sqrt(3) * k[1])
-                    - np.exp(-0.5j * a / np.sqrt(3) * k[1]) * np.cos(0.5 * a * k[0])
+                    np.exp(1j * a / np.sqrt(3) * k_point[1])
+                    - np.exp(-0.5j * a / np.sqrt(3) * k_point[1]) * np.cos(0.5 * a * k_point[0])
                 )
             )
             h[1, 0] = h[0, 1].conjugate()
-            h[2, 2] = np.sqrt(3) * a * t_x * np.cos(0.5 * np.sqrt(3) * a * k[1])
+            h[2, 2] = np.sqrt(3) * a * t_x * np.cos(0.5 * np.sqrt(3) * a * k_point[1])
 
         return h
 
-    def _hamiltonian_one_point(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
+    def _hamiltonian_one_point(self, k_point: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
         t_gr = self.hopping_gr
         t_x = self.hopping_x
         a = self.lattice_constant
@@ -101,8 +109,8 @@ class EGXHamiltonian(BaseHamiltonian):
         h = np.zeros((self.number_of_bands, self.number_of_bands), dtype=np.complex64)
 
         h[0, 1] = -t_gr * (
-            np.exp(1j * k[1] * a / np.sqrt(3))
-            + 2 * np.exp(-0.5j * a / np.sqrt(3) * k[1]) * (np.cos(0.5 * a * k[0]))
+            np.exp(1j * k_point[1] * a / np.sqrt(3))
+            + 2 * np.exp(-0.5j * a / np.sqrt(3) * k_point[1]) * (np.cos(0.5 * a * k_point[0]))
         )
 
         h[1, 0] = h[0, 1].conjugate()
@@ -113,7 +121,10 @@ class EGXHamiltonian(BaseHamiltonian):
         h[2, 2] = (
             -2
             * t_x
-            * (np.cos(a * k[0]) + 2 * np.cos(0.5 * a * k[0]) * np.cos(0.5 * np.sqrt(3) * a * k[1]))
+            * (
+                np.cos(a * k_point[0])
+                + 2 * np.cos(0.5 * a * k_point[0]) * np.cos(0.5 * np.sqrt(3) * a * k_point[1])
+            )
         )
         h -= mu * np.eye(3, dtype=np.complex64)
 

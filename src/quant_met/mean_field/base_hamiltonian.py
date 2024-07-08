@@ -59,9 +59,33 @@ class BaseHamiltonian(ABC):
 
     @abstractmethod
     def _hamiltonian_derivative_one_point(
-        self, k_point: npt.NDArray[np.float64], directions: str
+        self, k_point: npt.NDArray[np.float64], direction: str
     ) -> npt.NDArray[np.complex64]:
         raise NotImplementedError
+
+    def _bdg_hamiltonian_derivative_one_point(
+        self, k_point: npt.NDArray[np.float64], direction: str
+    ) -> npt.NDArray[np.complex64]:
+        delta_matrix: npt.NDArray[np.complex64] = np.zeros(
+            shape=(self.number_of_bands, self.number_of_bands), dtype=np.complex64
+        )
+
+        return np.block(
+            [
+                [
+                    self._hamiltonian_derivative_one_point(k_point=k_point, direction=direction),
+                    delta_matrix,
+                ],
+                [
+                    np.conjugate(delta_matrix),
+                    -np.conjugate(
+                        self._hamiltonian_derivative_one_point(
+                            k_point=-k_point, direction=direction
+                        )
+                    ),
+                ],
+            ]
+        )
 
     def _bdg_hamiltonian_one_point(
         self, k_point: npt.NDArray[np.float64]
@@ -73,8 +97,11 @@ class BaseHamiltonian(ABC):
 
         return np.block(
             [
-                [self.hamiltonian(k_point), delta_matrix],
-                [np.conjugate(delta_matrix), -np.conjugate(self.hamiltonian(-k_point))],
+                [self._hamiltonian_one_point(k_point=k_point), delta_matrix],
+                [
+                    np.conjugate(delta_matrix),
+                    -np.conjugate(self._hamiltonian_one_point(k_point=-k_point)),
+                ],
             ]
         )
 
@@ -135,6 +162,37 @@ class BaseHamiltonian(ABC):
             h = np.array([self._bdg_hamiltonian_one_point(k) for k in k])
         return h
 
+    def bdg_hamiltonian_derivative(
+        self, k: npt.NDArray[np.float64], direction: str
+    ) -> npt.NDArray[np.complex64]:
+        """
+        Deriative of the BdG Hamiltonian.
+
+        Parameters
+        ----------
+        k: :class:`numpy.ndarray`
+            List of k points.
+        direction: str
+            Direction for derivative, either 'x' oder 'y'.
+
+        Returns
+        -------
+        :class:`numpy.ndarray`
+            Derivative of Hamiltonian.
+
+        """
+        assert _check_valid_array(k)
+        if k.ndim == 1:
+            h = self._bdg_hamiltonian_derivative_one_point(k_point=k, direction=direction)
+        else:
+            h = np.array(
+                [
+                    self._bdg_hamiltonian_derivative_one_point(k_point=k, direction=direction)
+                    for k in k
+                ]
+            )
+        return h
+
     def hamiltonian(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
         """
         Return the normal state Hamiltonian in orbital basis.
@@ -178,9 +236,11 @@ class BaseHamiltonian(ABC):
         """
         assert _check_valid_array(k)
         if k.ndim == 1:
-            h = self._hamiltonian_derivative_one_point(k, direction)
+            h = self._hamiltonian_derivative_one_point(k_point=k, direction=direction)
         else:
-            h = np.array([self._hamiltonian_derivative_one_point(k, direction) for k in k])
+            h = np.array(
+                [self._hamiltonian_derivative_one_point(k_point=k, direction=direction) for k in k]
+            )
         return h
 
     def diagonalize_nonint(
