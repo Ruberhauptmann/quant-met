@@ -53,7 +53,7 @@ class GrapheneHamiltonian(BaseHamiltonian):
         self._delta_orbital_basis = new_delta
 
     def _hamiltonian_derivative_one_point(
-        self, k: npt.NDArray[np.float64], direction: str
+        self, k_point: npt.NDArray[np.float64], direction: str
     ) -> npt.NDArray[np.complex64]:
         assert direction in ["x", "y"]
 
@@ -63,7 +63,12 @@ class GrapheneHamiltonian(BaseHamiltonian):
         h = np.zeros((self.number_of_bands, self.number_of_bands), dtype=np.complex64)
 
         if direction == "x":
-            h[0, 1] = t_nn * a * np.exp(-0.5j * a / np.sqrt(3) * k[1]) * np.sin(0.5 * a * k[0])
+            h[0, 1] = (
+                t_nn
+                * a
+                * np.exp(-0.5j * a / np.sqrt(3) * k_point[1])
+                * np.sin(0.5 * a * k_point[0])
+            )
             h[1, 0] = h[0, 1].conjugate()
         else:
             h[0, 1] = (
@@ -72,15 +77,15 @@ class GrapheneHamiltonian(BaseHamiltonian):
                 * a
                 / np.sqrt(3)
                 * (
-                    np.exp(1j * a / np.sqrt(3) * k[1])
-                    - np.exp(-0.5j * a / np.sqrt(3) * k[1]) * np.cos(0.5 * a * k[0])
+                    np.exp(1j * a / np.sqrt(3) * k_point[1])
+                    - np.exp(-0.5j * a / np.sqrt(3) * k_point[1]) * np.cos(0.5 * a * k_point[0])
                 )
             )
             h[1, 0] = h[0, 1].conjugate()
 
         return h
 
-    def _hamiltonian_one_point(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
+    def _hamiltonian_one_point(self, k_point: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
         t_nn = self.t_nn
         a = self.a
         mu = self.mu
@@ -88,8 +93,8 @@ class GrapheneHamiltonian(BaseHamiltonian):
         h = np.zeros((self.number_of_bands, self.number_of_bands), dtype=np.complex64)
 
         h[0, 1] = -t_nn * (
-            np.exp(1j * k[1] * a / np.sqrt(3))
-            + 2 * np.exp(-0.5j * a / np.sqrt(3) * k[1]) * (np.cos(0.5 * a * k[0]))
+            np.exp(1j * k_point[1] * a / np.sqrt(3))
+            + 2 * np.exp(-0.5j * a / np.sqrt(3) * k_point[1]) * (np.cos(0.5 * a * k_point[0]))
         )
         h[1, 0] = h[0, 1].conjugate()
         h -= mu * np.eye(2)

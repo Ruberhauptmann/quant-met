@@ -212,7 +212,7 @@ class BaseHamiltonian(ABC):
         if k.ndim == 1:
             h = self._hamiltonian_one_point(k)
         else:
-            h = np.array([self._hamiltonian_one_point(k) for k in k])
+            h = np.array([self._hamiltonian_one_point(k_point=k) for k in k])
         return h
 
     def hamiltonian_derivative(
