@@ -204,6 +204,43 @@ def test_hamiltonian_derivative_graphene(ndarrays_regression):
     )
 
 
+def test_bdg_hamiltonian_derivative_graphene(ndarrays_regression):
+    t_nn = 1
+    mu = 0
+    lattice_constant = np.sqrt(3)
+    graphene_h = mean_field.GrapheneHamiltonian(
+        t_nn=t_nn,
+        a=lattice_constant,
+        mu=mu,
+        coulomb_gr=1,
+        delta=np.array([1, 1]),
+    )
+    all_K_points = (
+            4
+            * np.pi
+            / (3 * lattice_constant)
+            * np.array([(np.sin(i * np.pi / 6), np.cos(i * np.pi / 6)) for i in [1, 3, 5, 7, 9, 11]])
+    )
+    BZ_grid = utils.generate_uniform_grid(
+        10, 10, all_K_points[1], all_K_points[5], origin=np.array([0, 0])
+    )
+
+    h_der_x = graphene_h.bdg_hamiltonian_derivative(k=BZ_grid, direction="x")
+    h_der_y = graphene_h.bdg_hamiltonian_derivative(k=BZ_grid, direction="y")
+    h_der_x_one_point = graphene_h.bdg_hamiltonian_derivative(k=np.array([1, 1]), direction="x")
+    h_der_y_one_point = graphene_h.bdg_hamiltonian_derivative(k=np.array([1, 1]), direction="y")
+
+    ndarrays_regression.check(
+        {
+            "h_der_x": h_der_x,
+            "h_der_y": h_der_y,
+            "h_der_x_one_point": h_der_x_one_point,
+            "h_der_y_one_point": h_der_y_one_point,
+        },
+        default_tolerance=dict(atol=1e-8, rtol=1e-8),
+    )
+
+
 def test_save_graphene(tmp_path):
     graphene_h = mean_field.GrapheneHamiltonian(t_nn=1, a=np.sqrt(3), mu=-1, coulomb_gr=1)
     graphene_h.delta_orbital_basis = np.ones(graphene_h.number_of_bands)
@@ -291,6 +328,6 @@ def test_base_hamiltonian(patch_abstract) -> None:
     with pytest.raises(NotImplementedError):
         print(
             base_hamiltonian._hamiltonian_derivative_one_point(
-                k_point=np.array([0, 0]), directions="x"
+                k_point=np.array([0, 0]), direction="x"
             )
         )
