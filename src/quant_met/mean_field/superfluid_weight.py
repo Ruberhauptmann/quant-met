@@ -63,7 +63,7 @@ def _current_operator(
     for m in range(h.number_of_bands):
         for n in range(h.number_of_bands):
             j[m, n] = (
-                np.conjugate(bloch[:, m])
+                bloch[:, m].conjugate()
                 @ h.hamiltonian_derivative(direction=direction, k=k)
                 @ bloch[:, n]
             )
@@ -89,7 +89,7 @@ def _w_matrix(
     for i in range(2 * h.number_of_bands):
         for m in range(h.number_of_bands):
             w_minus[i, m] = (
-                np.tensordot(np.conjugate(bloch[:, m]), np.array([0, 1]), axes=0).reshape(-1)
+                np.tensordot(bloch[:, m].conjugate(), np.array([0, 1]), axes=0).reshape(-1)
                 @ bdg_functions[:, i]
             )
 
@@ -124,9 +124,9 @@ def _c_factor(h: BaseHamiltonian, k: npt.NDArray[np.float64]) -> npt.NDArray[np.
                                 c_tmp -= _fermi_dirac_derivative()
 
                             c_tmp *= (
-                                np.conjugate(w_minus[i, m])
+                                w_minus[i, m].conjugate()
                                 * w_plus[j, n]
-                                * np.conjugate(w_minus[j, p])
+                                * w_minus[j, p].conjugate()
                                 * w_minus[i, q]
                             )
 

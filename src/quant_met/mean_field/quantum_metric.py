@@ -44,12 +44,12 @@ def quantum_metric(
                 for n in [i for i in range(h.number_of_bands) if i != band]:
                     quantum_geom_tensor[i, j] += (
                         (
-                            np.conjugate(bloch[k_index][:, band])
+                            bloch[k_index][:, band].conjugate()
                             @ h_derivative_direction_1[k_index]
                             @ bloch[k_index][:, n]
                         )
                         * (
-                            np.conjugate(bloch[k_index][:, n])
+                            bloch[k_index][:, n].conjugate()
                             @ h_derivative_direction_2[k_index]
                             @ bloch[k_index][:, band]
                         )
@@ -93,12 +93,12 @@ def quantum_metric_bdg(
                 for n in [i for i in range(h.number_of_bands) if i != band]:
                     quantum_geom_tensor[i, j] += (
                         (
-                            np.conjugate(bdg_functions[k_index][:, band])
+                            bdg_functions[k_index][:, band].conjugate()
                             @ h_derivative_direction_1[k_index]
                             @ bdg_functions[k_index][:, n]
                         )
                         * (
-                            np.conjugate(bdg_functions[k_index][:, n])
+                            bdg_functions[k_index][:, n].conjugate()
                             @ h_derivative_direction_2[k_index]
                             @ bdg_functions[k_index][:, band]
                         )
