@@ -61,7 +61,6 @@ def test_free_energy(ndarrays_regression: NDArraysRegressionFixture) -> None:
             for delta in delta_list_complex
         ]
     )
-
     ndarrays_regression.check(
         {
             "delta_list": delta_list,

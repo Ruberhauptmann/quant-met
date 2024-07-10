@@ -107,6 +107,8 @@ def test_hamiltonians(sample: mean_field.BaseHamiltonian, k: npt.NDArray):
     ).flatten()
 
     h_k_space = sample.hamiltonian(k)
+    if h_k_space.ndim == 2:
+        h_k_space = np.expand_dims(h_k_space, axis=0)
 
     assert np.allclose(
         np.sort(np.nan_to_num(bdg_energies.flatten())),
@@ -168,6 +170,8 @@ def test_hamiltonian_k_space_egx():
             coloumb_x=0,
         )
         h_generated = egx_h.hamiltonian(k_point)
+        print(h_generated)
+        print(h_compare)
         assert np.allclose(h_generated, h_compare)
 
 
@@ -322,12 +326,8 @@ def test_base_hamiltonian(patch_abstract) -> None:
     with pytest.raises(NotImplementedError):
         print(base_hamiltonian.delta_orbital_basis)
     with pytest.raises(NotImplementedError):
+        print(base_hamiltonian.hamiltonian(np.array([1, 2, 3])))
+    with pytest.raises(NotImplementedError):
+        print(base_hamiltonian.hamiltonian_derivative(np.array([1, 2, 3]), direction='x'))
+    with pytest.raises(NotImplementedError):
         base_hamiltonian.delta_orbital_basis = np.array([0])
-    with pytest.raises(NotImplementedError):
-        print(base_hamiltonian._hamiltonian_one_point(k_point=np.array([0, 0])))
-    with pytest.raises(NotImplementedError):
-        print(
-            base_hamiltonian._hamiltonian_derivative_one_point(
-                k_point=np.array([0, 0]), direction="x"
-            )
-        )
