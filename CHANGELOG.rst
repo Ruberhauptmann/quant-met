@@ -2,6 +2,21 @@
 ..
 .. SPDX-License-Identifier: MIT
 
+.. _changelog-0.0.4:
+
+0.0.4 — 2024-07-10
+------------------
+
+Added
+^^^^^
+
+- Implemented calculation of quantum metric for BdG states
+
+Changed
+^^^^^^^
+
+- Hamiltonian methods now construct matrices in one turn from the whole k point list, this should significantly speed up calculations
+
 .. _changelog-0.0.3:
 
 0.0.3 — 2024-07-05
