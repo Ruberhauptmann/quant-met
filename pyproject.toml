@@ -64,6 +64,8 @@ ignore = [
     "Q003",
     "S101", # This checks against using assert
     "PLR0913", # This checks against using more than 5 function arguments
+    "PLR2004", # Check against "magic values"
+    "T201", # Warn about print statements
 ]
 
 
