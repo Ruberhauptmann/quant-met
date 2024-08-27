@@ -2,6 +2,16 @@
 ..
 .. SPDX-License-Identifier: MIT
 
+.. _changelog-0.0.5:
+
+0.0.5 — 2024-08-27
+------------------
+
+Fixed
+^^^^^
+
+- Correct calculation of superfluid weight using the unitary matrix diagonalising the BdG Hamiltonian
+
 .. _changelog-0.0.4:
 
 0.0.4 — 2024-07-10
