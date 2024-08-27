@@ -60,7 +60,7 @@ def quantum_metric(
 
 
 def quantum_metric_bdg(
-    h: BaseHamiltonian, k_grid: npt.NDArray[np.float64], band: int
+    h: BaseHamiltonian, k_grid: npt.NDArray[np.float64], bands: list[int]
 ) -> npt.NDArray[np.float64]:
     """Calculate the quantum metric in the BdG state.
 
@@ -85,24 +85,25 @@ def quantum_metric_bdg(
 
     quantum_geom_tensor = np.zeros(shape=(2, 2), dtype=np.complex64)
 
-    for i, direction_1 in enumerate(["x", "y"]):
-        h_derivative_direction_1 = h.bdg_hamiltonian_derivative(k=k_grid, direction=direction_1)
-        for j, direction_2 in enumerate(["x", "y"]):
-            h_derivative_direction_2 = h.bdg_hamiltonian_derivative(k=k_grid, direction=direction_2)
-            for k_index in range(len(k_grid)):
-                for n in [i for i in range(h.number_of_bands) if i != band]:
-                    quantum_geom_tensor[i, j] += (
-                        (
-                            bdg_functions[k_index][:, band].conjugate()
-                            @ h_derivative_direction_1[k_index]
-                            @ bdg_functions[k_index][:, n]
+    for band in bands:
+        for i, direction_1 in enumerate(["x", "y"]):
+            h_derivative_dir_1 = h.bdg_hamiltonian_derivative(k=k_grid, direction=direction_1)
+            for j, direction_2 in enumerate(["x", "y"]):
+                h_derivative_dir_2 = h.bdg_hamiltonian_derivative(k=k_grid, direction=direction_2)
+                for k_index in range(len(k_grid)):
+                    for n in [i for i in range(h.number_of_bands) if i != band]:
+                        quantum_geom_tensor[i, j] += (
+                            (
+                                bdg_functions[k_index][:, band].conjugate()
+                                @ h_derivative_dir_1[k_index]
+                                @ bdg_functions[k_index][:, n]
+                            )
+                            * (
+                                bdg_functions[k_index][:, n].conjugate()
+                                @ h_derivative_dir_2[k_index]
+                                @ bdg_functions[k_index][:, band]
+                            )
+                            / (energies[k_index][band] - energies[k_index][n]) ** 2
                         )
-                        * (
-                            bdg_functions[k_index][:, n].conjugate()
-                            @ h_derivative_direction_2[k_index]
-                            @ bdg_functions[k_index][:, band]
-                        )
-                        / (energies[k_index][band] - energies[k_index][n]) ** 2
-                    )
 
     return np.real(quantum_geom_tensor) / number_k_points

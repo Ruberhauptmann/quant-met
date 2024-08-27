@@ -112,9 +112,9 @@ def test_quantum_metric_bdg_egx(ndarrays_regression: NDArraysRegressionFixture) 
         20, 20, bz_corner_points[1], bz_corner_points[5], origin=np.array([0, 0])
     )
 
-    quantum_metric_0 = mean_field.quantum_metric_bdg(h=egx_h, k_grid=bz_grid, band=0)
-    quantum_metric_1 = mean_field.quantum_metric_bdg(h=egx_h, k_grid=bz_grid, band=1)
-    quantum_metric_2 = mean_field.quantum_metric_bdg(h=egx_h, k_grid=bz_grid, band=2)
+    quantum_metric_0 = mean_field.quantum_metric_bdg(h=egx_h, k_grid=bz_grid, bands=[0])
+    quantum_metric_1 = mean_field.quantum_metric_bdg(h=egx_h, k_grid=bz_grid, bands=[1])
+    quantum_metric_2 = mean_field.quantum_metric_bdg(h=egx_h, k_grid=bz_grid, bands=[2])
 
     ndarrays_regression.check(
         {
@@ -148,8 +148,8 @@ def test_quantum_metric_bdg_graphene(ndarrays_regression: NDArraysRegressionFixt
         20, 20, bz_corners[1], bz_corners[5], origin=np.array([0, 0])
     )
 
-    quantum_metric_0 = mean_field.quantum_metric_bdg(h=graphene_h, k_grid=bz_grid, band=0)
-    quantum_metric_1 = mean_field.quantum_metric_bdg(h=graphene_h, k_grid=bz_grid, band=1)
+    quantum_metric_0 = mean_field.quantum_metric_bdg(h=graphene_h, k_grid=bz_grid, bands=[0])
+    quantum_metric_1 = mean_field.quantum_metric_bdg(h=graphene_h, k_grid=bz_grid, bands=[1])
 
     ndarrays_regression.check(
         {
