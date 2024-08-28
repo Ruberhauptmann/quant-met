@@ -20,7 +20,7 @@ from hypothesis.strategies import (
     register_type_strategy,
     tuples,
 )
-from quant_met import mean_field, utils
+from quant_met import mean_field, utils, geometry
 from scipy import linalg
 
 
@@ -124,18 +124,15 @@ def test_hamiltonians(sample: mean_field.BaseHamiltonian, k: npt.NDArray):
 def test_hamiltonian_k_space_graphene():
     t_gr = 1
     mu = 1
-    lattice_constant = np.sqrt(3)
-    Gamma = np.array([0, 0])
-    K = 4 * np.pi / (3 * lattice_constant) * np.array([1, 0])
-
+    graphene_lattice = geometry.Graphene()
     h_at_high_symmetry_points = [
-        (Gamma, np.array([[-mu, -3 * t_gr], [-3 * t_gr, -mu]], dtype=np.complex64)),
-        (K, np.array([[-mu, 0], [0, -mu]], dtype=np.complex64)),
+        (graphene_lattice.Gamma, np.array([[-mu, -3 * t_gr], [-3 * t_gr, -mu]], dtype=np.complex64)),
+        (graphene_lattice.K, np.array([[-mu, 0], [0, -mu]], dtype=np.complex64)),
     ]
 
     for k_point, h_compare in h_at_high_symmetry_points:
         graphene_h = mean_field.GrapheneHamiltonian(
-            t_nn=t_gr, a=lattice_constant, mu=mu, coulomb_gr=0
+            t_nn=t_gr, a=graphene_lattice.lattice_constant, mu=mu, coulomb_gr=0
         )
         h_generated = graphene_h.hamiltonian(k_point)
         assert np.allclose(h_generated, h_compare)
@@ -146,12 +143,11 @@ def test_hamiltonian_k_space_egx():
     t_x = 0.01
     V = 1
     mu = 1
-    lattice_constant = np.sqrt(3)
-    Gamma = np.array([0, 0])
 
+    graphene_lattice = geometry.Graphene()
     h_at_high_symmetry_points = [
         (
-            Gamma,
+            graphene_lattice.Gamma,
             np.array(
                 [[-mu, -3 * t_gr, V], [-3 * t_gr, -mu, 0], [V, 0, -mu - 6 * t_x]],
                 dtype=np.complex64,
@@ -164,40 +160,31 @@ def test_hamiltonian_k_space_egx():
             hopping_gr=t_gr,
             hopping_x=t_x,
             hopping_x_gr_a=V,
-            lattice_constant=lattice_constant,
+            lattice_constant=graphene_lattice.lattice_constant,
             mu=mu,
             coloumb_gr=0,
             coloumb_x=0,
         )
         h_generated = egx_h.hamiltonian(k_point)
-        print(h_generated)
-        print(h_compare)
         assert np.allclose(h_generated, h_compare)
 
 
 def test_hamiltonian_derivative_graphene(ndarrays_regression):
     t_nn = 1
     mu = 0
-    lattice_constant = np.sqrt(3)
+
+    graphene_lattice = geometry.Graphene()
+    bz_grid = graphene_lattice.generate_bz_grid(10, 10)
     graphene_h = mean_field.GrapheneHamiltonian(
         t_nn=t_nn,
-        a=lattice_constant,
+        a=graphene_lattice.lattice_constant,
         mu=mu,
         coulomb_gr=1,
         delta=np.array([1, 1]),
     )
-    all_K_points = (
-        4
-        * np.pi
-        / (3 * lattice_constant)
-        * np.array([(np.sin(i * np.pi / 6), np.cos(i * np.pi / 6)) for i in [1, 3, 5, 7, 9, 11]])
-    )
-    BZ_grid = utils.generate_uniform_grid(
-        10, 10, all_K_points[1], all_K_points[5], origin=np.array([0, 0])
-    )
 
-    h_der_x = graphene_h.hamiltonian_derivative(k=BZ_grid, direction="x")
-    h_der_y = graphene_h.hamiltonian_derivative(k=BZ_grid, direction="y")
+    h_der_x = graphene_h.hamiltonian_derivative(k=bz_grid, direction="x")
+    h_der_y = graphene_h.hamiltonian_derivative(k=bz_grid, direction="y")
 
     ndarrays_regression.check(
         {
@@ -211,26 +198,19 @@ def test_hamiltonian_derivative_graphene(ndarrays_regression):
 def test_bdg_hamiltonian_derivative_graphene(ndarrays_regression):
     t_nn = 1
     mu = 0
-    lattice_constant = np.sqrt(3)
+
+    graphene_lattice = geometry.Graphene()
+    bz_grid = graphene_lattice.generate_bz_grid(10, 10)
     graphene_h = mean_field.GrapheneHamiltonian(
         t_nn=t_nn,
-        a=lattice_constant,
+        a=graphene_lattice.lattice_constant,
         mu=mu,
         coulomb_gr=1,
         delta=np.array([1, 1]),
     )
-    all_K_points = (
-            4
-            * np.pi
-            / (3 * lattice_constant)
-            * np.array([(np.sin(i * np.pi / 6), np.cos(i * np.pi / 6)) for i in [1, 3, 5, 7, 9, 11]])
-    )
-    BZ_grid = utils.generate_uniform_grid(
-        10, 10, all_K_points[1], all_K_points[5], origin=np.array([0, 0])
-    )
 
-    h_der_x = graphene_h.bdg_hamiltonian_derivative(k=BZ_grid, direction="x")
-    h_der_y = graphene_h.bdg_hamiltonian_derivative(k=BZ_grid, direction="y")
+    h_der_x = graphene_h.bdg_hamiltonian_derivative(k=bz_grid, direction="x")
+    h_der_y = graphene_h.bdg_hamiltonian_derivative(k=bz_grid, direction="y")
     h_der_x_one_point = graphene_h.bdg_hamiltonian_derivative(k=np.array([1, 1]), direction="x")
     h_der_y_one_point = graphene_h.bdg_hamiltonian_derivative(k=np.array([1, 1]), direction="y")
 

@@ -6,7 +6,7 @@
 
 import numpy as np
 from pytest_regressions.ndarrays_regression import NDArraysRegressionFixture
-from quant_met import mean_field, utils
+from quant_met import mean_field, utils, geometry
 
 
 def test_free_energy(ndarrays_regression: NDArraysRegressionFixture) -> None:
@@ -15,25 +15,17 @@ def test_free_energy(ndarrays_regression: NDArraysRegressionFixture) -> None:
     t_x = 0.01
     v = 1
     mu = 1
-    lattice_constant = np.sqrt(3)
-    bz_corner_points = (
-        4
-        * np.pi
-        / (3 * lattice_constant)
-        * np.array([(np.sin(i * np.pi / 6), np.cos(i * np.pi / 6)) for i in [1, 3, 5, 7, 9, 11]])
-    )
+    graphene_lattice = geometry.Graphene()
+    bz_grid = graphene_lattice.generate_bz_grid(10, 10)
+
     egx_h = mean_field.EGXHamiltonian(
         hopping_gr=t_gr,
         hopping_x=t_x,
         hopping_x_gr_a=v,
-        lattice_constant=lattice_constant,
+        lattice_constant=graphene_lattice.lattice_constant,
         mu=mu,
         coloumb_gr=1,
         coloumb_x=1,
-    )
-
-    bz_grid = utils.generate_uniform_grid(
-        10, 10, bz_corner_points[1], bz_corner_points[5], origin=np.array([0, 0])
     )
 
     delta_list = np.array([np.array([i, i, i]) for i in np.linspace(0, 4, 10)])
