@@ -7,9 +7,9 @@
    <div class="prename">quant_met.plotting.</div>
    <div class="empty"></div>
 
-scatter_into_bz
-==================================
+plot_superfluid_weight
+=========================================
 
 .. currentmodule:: quant_met.plotting
 
-.. autofunction:: scatter_into_bz
+.. autofunction:: plot_superfluid_weight

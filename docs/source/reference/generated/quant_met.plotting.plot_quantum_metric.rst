@@ -1,6 +1,4 @@
 ﻿.. SPDX-FileCopyrightText: 2024 Tjark Sievers
-
-.. SPDX-FileCopyrightText: 2024 Tjark Sievers
 ..
 .. SPDX-License-Identifier: MIT
 
@@ -9,9 +7,9 @@
    <div class="prename">quant_met.plotting.</div>
    <div class="empty"></div>
 
-generate_bz_path
-===================================
+plot_quantum_metric
+======================================
 
 .. currentmodule:: quant_met.plotting
 
-.. autofunction:: generate_bz_path
+.. autofunction:: plot_quantum_metric

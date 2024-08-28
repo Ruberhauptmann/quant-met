@@ -13,7 +13,7 @@ SPDX-License-Identifier: MIT
 
 This is a python package to treat superconductivity in flat-band systems.
 
-* Documentation: [quant-met.readthedocs.io](https://quant-met.readthedocs.io/en/latest/)
+* Documentation: [quant-met.tjarksievers.de](https://quant-met.tjarksievers.de)
 
 ## Installation
 
@@ -24,7 +24,7 @@ pip install quant-met
 
 ## Usage
 
-For usage examples see [documentation](https://quant-met.readthedocs.io/en/latest/examples.html).
+For usage examples see [documentation](https://quant-met.tjarksievers.de/en/latest/examples.html).
 
 ## Contributing
 
