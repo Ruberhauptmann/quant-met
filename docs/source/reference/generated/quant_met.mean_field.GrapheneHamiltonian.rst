@@ -1,6 +1,4 @@
 ﻿.. SPDX-FileCopyrightText: 2024 Tjark Sievers
-
-.. SPDX-FileCopyrightText: 2024 Tjark Sievers
 ..
 .. SPDX-License-Identifier: MIT
 
@@ -25,6 +23,7 @@ GrapheneHamiltonian
          :toctree:
 
          GrapheneHamiltonian.bdg_hamiltonian
+         GrapheneHamiltonian.bdg_hamiltonian_derivative
          GrapheneHamiltonian.calculate_bandstructure
          GrapheneHamiltonian.diagonalize_bdg
          GrapheneHamiltonian.diagonalize_nonint

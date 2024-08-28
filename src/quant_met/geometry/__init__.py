@@ -1,5 +1,5 @@
 """
-Geometry
+Geometry (:mod:`quant_met.geometry`)
 ========
 
 .. currentmodule:: quant_met.geometry

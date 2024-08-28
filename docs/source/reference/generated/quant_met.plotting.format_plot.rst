@@ -7,9 +7,9 @@
    <div class="prename">quant_met.plotting.</div>
    <div class="empty"></div>
 
-scatter_into_bz
-==================================
+format_plot
+==============================
 
 .. currentmodule:: quant_met.plotting
 
-.. autofunction:: scatter_into_bz
+.. autofunction:: format_plot

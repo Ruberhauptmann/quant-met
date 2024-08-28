@@ -1,6 +1,4 @@
 ﻿.. SPDX-FileCopyrightText: 2024 Tjark Sievers
-
-.. SPDX-FileCopyrightText: 2024 Tjark Sievers
 ..
 .. SPDX-License-Identifier: MIT
 
@@ -25,6 +23,7 @@ EGXHamiltonian
          :toctree:
 
          EGXHamiltonian.bdg_hamiltonian
+         EGXHamiltonian.bdg_hamiltonian_derivative
          EGXHamiltonian.calculate_bandstructure
          EGXHamiltonian.diagonalize_bdg
          EGXHamiltonian.diagonalize_nonint
