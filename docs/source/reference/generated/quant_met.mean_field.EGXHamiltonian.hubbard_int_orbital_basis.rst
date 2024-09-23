@@ -9,9 +9,9 @@
    <div class="prename">quant_met.mean_field.EGXHamiltonian.</div>
    <div class="empty"></div>
 
-quant_met.mean_field.EGXHamiltonian.coloumb_orbital_basis
-=========================================================
+quant_met.mean_field.EGXHamiltonian.hubbard_int_orbital_basis
+=============================================================
 
 .. currentmodule:: quant_met.mean_field
 
-.. autoproperty:: EGXHamiltonian.coloumb_orbital_basis
+.. autoproperty:: EGXHamiltonian.hubbard_int_orbital_basis

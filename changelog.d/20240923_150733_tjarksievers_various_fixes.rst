@@ -11,16 +11,16 @@
 ..
 .. - A bullet item for the Removed category.
 ..
-Added
-^^^^^
-
-- Plotting methods for superfluid weight and quantum metric
-
-.. Changed
-.. ^^^^^^^
+.. Added
+.. ^^^^^
 ..
-.. - A bullet item for the Changed category.
+.. - A bullet item for the Added category.
 ..
+Changed
+^^^^^^^
+
+- Renamed variables in classes to be consistent and clearer
+
 .. Deprecated
 .. ^^^^^^^^^^
 ..

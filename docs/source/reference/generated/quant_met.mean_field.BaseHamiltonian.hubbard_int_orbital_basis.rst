@@ -6,12 +6,12 @@
 
 .. raw:: html
 
-   <div class="prename">quant_met.mean_field.GrapheneHamiltonian.</div>
+   <div class="prename">quant_met.mean_field.BaseHamiltonian.</div>
    <div class="empty"></div>
 
-quant_met.mean_field.GrapheneHamiltonian.coloumb_orbital_basis
+quant_met.mean_field.BaseHamiltonian.hubbard_int_orbital_basis
 ==============================================================
 
 .. currentmodule:: quant_met.mean_field
 
-.. autoproperty:: GrapheneHamiltonian.coloumb_orbital_basis
+.. autoproperty:: BaseHamiltonian.hubbard_int_orbital_basis

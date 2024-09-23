@@ -40,6 +40,6 @@ BaseHamiltonian
       .. autosummary::
          :toctree:
 
-         BaseHamiltonian.coloumb_orbital_basis
          BaseHamiltonian.delta_orbital_basis
+         BaseHamiltonian.hubbard_int_orbital_basis
          BaseHamiltonian.number_of_bands

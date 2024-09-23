@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2024 Tjark Sievers
 #
 # SPDX-License-Identifier: MIT
+
 """Test superfluid weight."""
 
 import numpy as np
@@ -13,7 +14,7 @@ def test_superfluid_weight_egx(ndarrays_regression: NDArraysRegressionFixture) -
     t_gr = 1
     t_x = 0.01
     v = 1
-    mu = 1
+    chemical_potential = 1
 
     graphene_lattice = geometry.Graphene()
     bz_grid = graphene_lattice.generate_bz_grid(10, 10)
@@ -23,9 +24,9 @@ def test_superfluid_weight_egx(ndarrays_regression: NDArraysRegressionFixture) -
         hopping_x=t_x,
         hopping_x_gr_a=v,
         lattice_constant=graphene_lattice.lattice_constant,
-        mu=mu,
-        coloumb_gr=1,
-        coloumb_x=1,
+        chemical_potential=chemical_potential,
+        hubbard_int_gr=1,
+        hubbard_int_x=1,
         delta=np.array([1, 1, 1]),
     )
 
@@ -42,17 +43,17 @@ def test_superfluid_weight_egx(ndarrays_regression: NDArraysRegressionFixture) -
 
 def test_superfluid_weight_graphene(ndarrays_regression: NDArraysRegressionFixture) -> None:
     """Test superfluid weight for graphene."""
-    t_nn = 1
-    mu = 1
+    hopping = 1
+    chemical_potential = 1
 
     graphene_lattice = geometry.Graphene()
     bz_grid = graphene_lattice.generate_bz_grid(10, 10)
 
     graphene_h = mean_field.GrapheneHamiltonian(
-        t_nn=t_nn,
-        a=graphene_lattice.lattice_constant,
-        mu=mu,
-        coulomb_gr=1,
+        hopping=hopping,
+       lattice_constant=graphene_lattice.lattice_constant,
+        chemical_potential=chemical_potential,
+        hubbard_int_gr=1,
         delta=np.array([1, 1]),
     )
 

@@ -25,9 +25,9 @@ class BaseHamiltonian(ABC):
         raise NotImplementedError
 
     @property
-    def coloumb_orbital_basis(self) -> npt.NDArray[np.float64]:
+    def hubbard_int_orbital_basis(self) -> npt.NDArray[np.float64]:
         """
-        Coloumb interaction split up in orbitals.
+        hubbard_int interaction split up in orbitals.
 
         Returns
         -------

@@ -14,7 +14,7 @@ def test_free_energy(ndarrays_regression: NDArraysRegressionFixture) -> None:
     t_gr = 1
     t_x = 0.01
     v = 1
-    mu = 1
+    chemical_potential = 1
     graphene_lattice = geometry.Graphene()
     bz_grid = graphene_lattice.generate_bz_grid(10, 10)
 
@@ -23,9 +23,9 @@ def test_free_energy(ndarrays_regression: NDArraysRegressionFixture) -> None:
         hopping_x=t_x,
         hopping_x_gr_a=v,
         lattice_constant=graphene_lattice.lattice_constant,
-        mu=mu,
-        coloumb_gr=1,
-        coloumb_x=1,
+        chemical_potential=chemical_potential,
+        hubbard_int_gr=1,
+        hubbard_int_x=1,
     )
 
     delta_list = np.array([np.array([i, i, i]) for i in np.linspace(0, 4, 10)])

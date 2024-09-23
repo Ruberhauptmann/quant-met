@@ -40,7 +40,7 @@ def free_energy(
     )
 
     integral: float = -np.sum(k_array, axis=-1) / number_k_points + np.sum(
-        np.power(np.abs(hamiltonian.delta_orbital_basis), 2) / hamiltonian.coloumb_orbital_basis
+        np.power(np.abs(hamiltonian.delta_orbital_basis), 2) / hamiltonian.hubbard_int_orbital_basis
     )
 
     return integral
