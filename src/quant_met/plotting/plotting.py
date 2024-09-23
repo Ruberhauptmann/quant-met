@@ -194,12 +194,17 @@ def plot_superfluid_weight(
     else:
         fig, ax = fig_in, ax_in
 
-    ax.fill_between(x_data, 0, np.abs(sf_weight_geom), color="blue")
+    ax.fill_between(
+        x_data, 0, np.abs(sf_weight_geom), color="black", fc="#0271BB", label="geometric", hatch="-"
+    )
     ax.fill_between(
         x_data,
         np.abs(sf_weight_geom),
         np.abs(sf_weight_geom) + np.abs(sf_weight_conv),
-        color="orange",
+        color="black",
+        fc="#E2001A",
+        label="conventional",
+        hatch="//",
     )
     ax.plot(x_data, np.abs(sf_weight_geom) + np.abs(sf_weight_conv), "x--", color="black")
 
