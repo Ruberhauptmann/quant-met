@@ -284,6 +284,19 @@ def test_invalid_values():
     with pytest.raises(ValueError):
         h = mean_field.GrapheneHamiltonian(hopping=1,lattice_constant=1, chemical_potential=1, hubbard_int_gr=1)
         h.hamiltonian_derivative(k=np.array([np.nan, np.nan]), direction="x")
+    with pytest.raises(ValueError):
+        print(mean_field.GrapheneHamiltonian(hopping=1,lattice_constant=1, chemical_potential=1, hubbard_int_gr=1, delta=np.array([0, 0, 0, 0])))
+    with pytest.raises(ValueError):
+        print(mean_field.EGXHamiltonian(
+            hopping_gr=1,
+            hopping_x=0.01,
+            hopping_x_gr_a=1,
+            lattice_constant=np.sqrt(3),
+            chemical_potential=0,
+            hubbard_int_gr=1,
+            hubbard_int_x=1,
+            delta=np.array([0, 0, 0, 0])
+        ))
 
 
 def test_base_hamiltonian(patch_abstract) -> None:

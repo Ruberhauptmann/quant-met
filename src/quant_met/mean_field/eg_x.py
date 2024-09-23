@@ -43,9 +43,12 @@ class EGXHamiltonian(BaseHamiltonian):
         )
         self._number_of_bands = 3
         if delta is None:
-            self._delta_orbital_basis = np.zeros(3, dtype=np.complex64)
+            self._delta_orbital_basis = np.zeros(self.number_of_bands, dtype=np.complex64)
         else:
-            self._delta_orbital_basis = delta
+            if delta.shape != (self.number_of_bands,):
+                msg = "Invalid input value for gaps."
+                raise ValueError(msg)
+            self._delta_orbital_basis = np.astype(delta, np.complex64)
 
     @property
     def hubbard_int_orbital_basis(self) -> npt.NDArray[np.float64]:  # noqa: D102
