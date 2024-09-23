@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 Tjark Sievers
+#
+# SPDX-License-Identifier: MIT
+
 """Lattice geometry for Graphene."""
 
 from typing import Any

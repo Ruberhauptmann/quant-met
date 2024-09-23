@@ -1,3 +1,7 @@
+.. SPDX-FileCopyrightText: 2024 Tjark Sievers
+..
+.. SPDX-License-Identifier: MIT
+
 .. A new scriv changelog fragment.
 ..
 .. Uncomment the header that is right (remove the leading dots).

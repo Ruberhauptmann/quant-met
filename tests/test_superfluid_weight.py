@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2024 Tjark Sievers
 #
 # SPDX-License-Identifier: MIT
+
 """Test superfluid weight."""
 
 import numpy as np
