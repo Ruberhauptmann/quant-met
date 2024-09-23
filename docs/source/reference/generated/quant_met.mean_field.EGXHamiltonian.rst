@@ -42,6 +42,6 @@ EGXHamiltonian
       .. autosummary::
          :toctree:
 
-         EGXHamiltonian.coloumb_orbital_basis
+         EGXHamiltonian.hubbard_int_orbital_basis
          EGXHamiltonian.delta_orbital_basis
          EGXHamiltonian.number_of_bands

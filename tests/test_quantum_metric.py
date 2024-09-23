@@ -14,7 +14,7 @@ def test_quantum_metric_egx(ndarrays_regression: NDArraysRegressionFixture) -> N
     t_gr = 1
     t_x = 0.01
     v = 1
-    mu = 1
+    chemical_potential = 1
 
     graphene_lattice = geometry.Graphene()
     bz_grid = graphene_lattice.generate_bz_grid(20, 20)
@@ -24,9 +24,9 @@ def test_quantum_metric_egx(ndarrays_regression: NDArraysRegressionFixture) -> N
         hopping_x=t_x,
         hopping_x_gr_a=v,
         lattice_constant=graphene_lattice.lattice_constant,
-        mu=mu,
-        coloumb_gr=1,
-        coloumb_x=1,
+        chemical_potential=chemical_potential,
+        hubbard_int_gr=1,
+        hubbard_int_x=1,
         delta=np.array([1, 1, 1]),
     )
 
@@ -45,17 +45,17 @@ def test_quantum_metric_egx(ndarrays_regression: NDArraysRegressionFixture) -> N
 
 def test_quantum_metric_graphene(ndarrays_regression: NDArraysRegressionFixture) -> None:
     """Regression test for calculating the quantum metric."""
-    t_nn = 1
-    mu = 1
+    hopping = 1
+    chemical_potential = 1
 
     graphene_lattice = geometry.Graphene()
     bz_grid = graphene_lattice.generate_bz_grid(20, 20)
 
     graphene_h = mean_field.GrapheneHamiltonian(
-        t_nn=t_nn,
-        a=graphene_lattice.lattice_constant,
-        mu=mu,
-        coulomb_gr=1,
+        hopping=hopping,
+       lattice_constant=graphene_lattice.lattice_constant,
+        chemical_potential=chemical_potential,
+        hubbard_int_gr=1,
         delta=np.array([1, 1]),
     )
 
@@ -75,7 +75,7 @@ def test_quantum_metric_bdg_egx(ndarrays_regression: NDArraysRegressionFixture) 
     t_gr = 1
     t_x = 0.01
     v = 1
-    mu = 1
+    chemical_potential = 1
 
     graphene_lattice = geometry.Graphene()
     bz_grid = graphene_lattice.generate_bz_grid(20, 20)
@@ -85,9 +85,9 @@ def test_quantum_metric_bdg_egx(ndarrays_regression: NDArraysRegressionFixture) 
         hopping_x=t_x,
         hopping_x_gr_a=v,
         lattice_constant=graphene_lattice.lattice_constant,
-        mu=mu,
-        coloumb_gr=1,
-        coloumb_x=1,
+        chemical_potential=chemical_potential,
+        hubbard_int_gr=1,
+        hubbard_int_x=1,
         delta=np.array([1, 1, 1]),
     )
 
@@ -106,17 +106,17 @@ def test_quantum_metric_bdg_egx(ndarrays_regression: NDArraysRegressionFixture) 
 
 def test_quantum_metric_bdg_graphene(ndarrays_regression: NDArraysRegressionFixture) -> None:
     """Regression test for calculating the quantum metric."""
-    t_nn = 1
-    mu = 1
+    hopping = 1
+    chemical_potential = 1
 
     graphene_lattice = geometry.Graphene()
     bz_grid = graphene_lattice.generate_bz_grid(20, 20)
 
     graphene_h = mean_field.GrapheneHamiltonian(
-        t_nn=t_nn,
-        a=graphene_lattice.lattice_constant,
-        mu=mu,
-        coulomb_gr=1,
+        hopping=hopping,
+       lattice_constant=graphene_lattice.lattice_constant,
+        chemical_potential=chemical_potential,
+        hubbard_int_gr=1,
         delta=np.array([1, 1]),
     )
 

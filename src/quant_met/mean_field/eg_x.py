@@ -22,9 +22,9 @@ class EGXHamiltonian(BaseHamiltonian):
         hopping_x: float,
         hopping_x_gr_a: float,
         lattice_constant: float,
-        mu: float,
-        coloumb_gr: float,
-        coloumb_x: float,
+        chemical_potential: float,
+        hubbard_int_gr: float,
+        hubbard_int_x: float,
         delta: npt.NDArray[np.complex64] | None = None,
         *args: tuple[Any, ...],
         **kwargs: tuple[dict[str, Any], ...],
@@ -35,10 +35,12 @@ class EGXHamiltonian(BaseHamiltonian):
         self.hopping_x = _validate_float(hopping_x, "Hopping impurity")
         self.hopping_x_gr_a = _validate_float(hopping_x_gr_a, "Hybridisation")
         self.lattice_constant = _validate_float(lattice_constant, "Lattice constant")
-        self.mu = _validate_float(mu, "Chemical potential")
-        self.coloumb_gr = _validate_float(coloumb_gr, "Coloumb interaction graphene")
-        self.coloumb_x = _validate_float(coloumb_x, "Coloumb interaction impurity")
-        self._coloumb_orbital_basis = np.array([self.coloumb_gr, self.coloumb_gr, self.coloumb_x])
+        self.chemical_potential = _validate_float(chemical_potential, "Chemical potential")
+        self.hubbard_int_gr = _validate_float(hubbard_int_gr, "hubbard_int interaction graphene")
+        self.hubbard_int_x = _validate_float(hubbard_int_x, "hubbard_int interaction impurity")
+        self._hubbard_int_orbital_basis = np.array(
+            [self.hubbard_int_gr, self.hubbard_int_gr, self.hubbard_int_x]
+        )
         self._number_of_bands = 3
         if delta is None:
             self._delta_orbital_basis = np.zeros(3, dtype=np.complex64)
@@ -46,8 +48,8 @@ class EGXHamiltonian(BaseHamiltonian):
             self._delta_orbital_basis = delta
 
     @property
-    def coloumb_orbital_basis(self) -> npt.NDArray[np.float64]:  # noqa: D102
-        return self._coloumb_orbital_basis
+    def hubbard_int_orbital_basis(self) -> npt.NDArray[np.float64]:  # noqa: D102
+        return self._hubbard_int_orbital_basis
 
     @property
     def delta_orbital_basis(self) -> npt.NDArray[np.complex64]:  # noqa: D102
@@ -82,7 +84,7 @@ class EGXHamiltonian(BaseHamiltonian):
         t_x = self.hopping_x
         a = self.lattice_constant
         v = self.hopping_x_gr_a
-        mu = self.mu
+        chemical_potential = self.chemical_potential
         if k.ndim == 1:
             k = np.expand_dims(k, axis=0)
 
@@ -106,9 +108,9 @@ class EGXHamiltonian(BaseHamiltonian):
                 + 2 * np.cos(0.5 * a * k[:, 0]) * np.cos(0.5 * np.sqrt(3) * a * k[:, 1])
             )
         )
-        h[:, 0, 0] -= mu
-        h[:, 1, 1] -= mu
-        h[:, 2, 2] -= mu
+        h[:, 0, 0] -= chemical_potential
+        h[:, 1, 1] -= chemical_potential
+        h[:, 2, 2] -= chemical_potential
 
         return h.squeeze()
 

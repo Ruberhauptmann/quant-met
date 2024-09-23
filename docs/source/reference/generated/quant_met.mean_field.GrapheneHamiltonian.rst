@@ -42,6 +42,6 @@ GrapheneHamiltonian
       .. autosummary::
          :toctree:
 
-         GrapheneHamiltonian.coloumb_orbital_basis
+         GrapheneHamiltonian.hubbard_int_orbital_basis
          GrapheneHamiltonian.delta_orbital_basis
          GrapheneHamiltonian.number_of_bands

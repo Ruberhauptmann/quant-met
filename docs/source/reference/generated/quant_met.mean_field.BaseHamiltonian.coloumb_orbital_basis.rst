@@ -9,9 +9,9 @@
    <div class="prename">quant_met.mean_field.BaseHamiltonian.</div>
    <div class="empty"></div>
 
-quant_met.mean_field.BaseHamiltonian.coloumb_orbital_basis
+quant_met.mean_field.BaseHamiltonian.hubbard_int_orbital_basis
 ==========================================================
 
 .. currentmodule:: quant_met.mean_field
 
-.. autoproperty:: BaseHamiltonian.coloumb_orbital_basis
+.. autoproperty:: BaseHamiltonian.hubbard_int_orbital_basis

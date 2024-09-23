@@ -18,24 +18,24 @@ class GrapheneHamiltonian(BaseHamiltonian):
 
     def __init__(
         self,
-        t_nn: float,
-        a: float,
-        mu: float,
-        coulomb_gr: float,
+        hopping: float,
+        lattice_constant: float,
+        chemical_potential: float,
+        hubbard_int_gr: float,
         delta: npt.NDArray[np.float64] | None = None,
         *args: tuple[Any, ...],
         **kwargs: tuple[dict[str, Any], ...],
     ) -> None:
         del args
         del kwargs
-        self.t_nn = _validate_float(t_nn, "Hopping")
-        if a <= 0:
+        self.hopping = _validate_float(hopping, "Hopping")
+        if lattice_constant <= 0:
             msg = "Lattice constant must be positive"
             raise ValueError(msg)
-        self.a = _validate_float(a, "Lattice constant")
-        self.mu = _validate_float(mu, "Chemical potential")
-        self.coulomb_gr = _validate_float(coulomb_gr, "Coloumb interaction")
-        self._coloumb_orbital_basis = np.array([self.coulomb_gr, self.coulomb_gr])
+        self.lattice_constant = _validate_float(lattice_constant, "Lattice constant")
+        self.chemical_potential = _validate_float(chemical_potential, "Chemical potential")
+        self.hubbard_int_gr = _validate_float(hubbard_int_gr, "hubbard_int interaction")
+        self._hubbard_int_orbital_basis = np.array([self.hubbard_int_gr, self.hubbard_int_gr])
         self._number_of_bands = 2
         if delta is None:
             self._delta_orbital_basis = np.zeros(2)
@@ -47,8 +47,8 @@ class GrapheneHamiltonian(BaseHamiltonian):
         return self._number_of_bands
 
     @property
-    def coloumb_orbital_basis(self) -> npt.NDArray[np.float64]:  # noqa: D102
-        return self._coloumb_orbital_basis
+    def hubbard_int_orbital_basis(self) -> npt.NDArray[np.float64]:  # noqa: D102
+        return self._hubbard_int_orbital_basis
 
     @property
     def delta_orbital_basis(self) -> npt.NDArray[np.float64]:  # noqa: D102
@@ -74,21 +74,23 @@ class GrapheneHamiltonian(BaseHamiltonian):
 
         """
         assert _check_valid_array(k)
-        t_nn = self.t_nn
-        a = self.a
-        mu = self.mu
+        hopping = self.hopping
+        lattice_constant = self.lattice_constant
+        chemical_potential = self.chemical_potential
         if k.ndim == 1:
             k = np.expand_dims(k, axis=0)
 
         h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complex64)
 
-        h[:, 0, 1] = -t_nn * (
-            np.exp(1j * k[:, 1] * a / np.sqrt(3))
-            + 2 * np.exp(-0.5j * a / np.sqrt(3) * k[:, 1]) * (np.cos(0.5 * a * k[:, 0]))
+        h[:, 0, 1] = -hopping * (
+            np.exp(1j * k[:, 1] * lattice_constant / np.sqrt(3))
+            + 2
+            * np.exp(-0.5j * lattice_constant / np.sqrt(3) * k[:, 1])
+            * (np.cos(0.5 * lattice_constant * k[:, 0]))
         )
         h[:, 1, 0] = h[:, 0, 1].conjugate()
-        h[:, 0, 0] -= mu
-        h[:, 1, 1] -= mu
+        h[:, 0, 0] -= chemical_potential
+        h[:, 1, 1] -= chemical_potential
 
         return h.squeeze()
 
@@ -114,8 +116,8 @@ class GrapheneHamiltonian(BaseHamiltonian):
         assert _check_valid_array(k)
         assert direction in ["x", "y"]
 
-        t_nn = self.t_nn
-        a = self.a
+        hopping = self.hopping
+        lattice_constant = self.lattice_constant
         if k.ndim == 1:
             k = np.expand_dims(k, axis=0)
 
@@ -123,18 +125,22 @@ class GrapheneHamiltonian(BaseHamiltonian):
 
         if direction == "x":
             h[:, 0, 1] = (
-                t_nn * a * np.exp(-0.5j * a / np.sqrt(3) * k[:, 1]) * np.sin(0.5 * a * k[:, 0])
+                hopping
+                * lattice_constant
+                * np.exp(-0.5j * lattice_constant / np.sqrt(3) * k[:, 1])
+                * np.sin(0.5 * lattice_constant * k[:, 0])
             )
             h[:, 1, 0] = h[:, 0, 1].conjugate()
         else:
             h[:, 0, 1] = (
-                -t_nn
+                -hopping
                 * 1j
-                * a
+                * lattice_constant
                 / np.sqrt(3)
                 * (
-                    np.exp(1j * a / np.sqrt(3) * k[:, 1])
-                    - np.exp(-0.5j * a / np.sqrt(3) * k[:, 1]) * np.cos(0.5 * a * k[:, 0])
+                    np.exp(1j * lattice_constant / np.sqrt(3) * k[:, 1])
+                    - np.exp(-0.5j * lattice_constant / np.sqrt(3) * k[:, 1])
+                    * np.cos(0.5 * lattice_constant * k[:, 0])
                 )
             )
             h[:, 1, 0] = h[:, 0, 1].conjugate()

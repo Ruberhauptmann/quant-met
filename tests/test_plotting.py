@@ -57,7 +57,7 @@ def test_scatter_into_bz_with_data():
 )
 def test_plotting_nonint_bandstructure_graphene():
     graphene_lattice = geometry.Graphene()
-    graphene_h = mean_field.GrapheneHamiltonian(t_nn=1, a=graphene_lattice.lattice_constant, mu=0, coulomb_gr=0)
+    graphene_h = mean_field.GrapheneHamiltonian(hopping=1,lattice_constant=graphene_lattice.lattice_constant, chemical_potential=0, hubbard_int_gr=0)
 
     points = [(graphene_lattice.M, "M"), (graphene_lattice.Gamma, r"\Gamma"), (graphene_lattice.K, "K")]
     band_path, band_path_plot, ticks, labels = geometry.generate_bz_path(
@@ -83,7 +83,7 @@ def test_plotting_nonint_bandstructure_graphene():
 def test_plotting_nonint_bandstructure_graphene_with_fig_in():
     graphene_lattice = geometry.Graphene()
 
-    graphene_h = mean_field.GrapheneHamiltonian(t_nn=1, a=graphene_lattice.lattice_constant, mu=0, coulomb_gr=0)
+    graphene_h = mean_field.GrapheneHamiltonian(hopping=1,lattice_constant=graphene_lattice.lattice_constant, chemical_potential=0, hubbard_int_gr=0)
     points = [(graphene_lattice.M, "M"), (graphene_lattice.Gamma, r"\Gamma"), (graphene_lattice.K, "K")]
 
     band_path, band_path_plot, ticks, labels = geometry.generate_bz_path(
@@ -117,9 +117,9 @@ def test_plotting_nonint_bandstructure_egx():
         hopping_x=0.01,
         hopping_x_gr_a=1,
         lattice_constant=graphene_lattice.lattice_constant,
-        mu=0,
-        coloumb_gr=0,
-        coloumb_x=0,
+        chemical_potential=0,
+        hubbard_int_gr=0,
+        hubbard_int_x=0,
     )
     points = [(graphene_lattice.M, "M"), (graphene_lattice.Gamma, r"\Gamma"), (graphene_lattice.K, "K")]
     band_path, band_path_plot, ticks, labels = geometry.generate_bz_path(
@@ -152,9 +152,9 @@ def test_plotting_nonint_bandstructure_egx_with_fig_in():
         hopping_x=0.01,
         hopping_x_gr_a=1,
         lattice_constant=graphene_lattice.lattice_constant,
-        mu=0,
-        coloumb_gr=0,
-        coloumb_x=0,
+        chemical_potential=0,
+        hubbard_int_gr=0,
+        hubbard_int_x=0,
     )
 
     points = [(graphene_lattice.M, "M"), (graphene_lattice.Gamma, r"\Gamma"), (graphene_lattice.K, "K")]
@@ -193,9 +193,9 @@ def test_plotting_nonint_bandstructure_egx_with_fig_in():
         hopping_x=0.01,
         hopping_x_gr_a=1,
         lattice_constant=graphene_lattice.lattice_constant,
-        mu=0,
-        coloumb_gr=0,
-        coloumb_x=0,
+        chemical_potential=0,
+        hubbard_int_gr=0,
+        hubbard_int_x=0,
     )
 
     points = [(graphene_lattice.M, "M"), (graphene_lattice.Gamma, r"\Gamma"), (graphene_lattice.K, "K")]

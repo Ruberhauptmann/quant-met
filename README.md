@@ -52,4 +52,9 @@ After pushing your branch, all tests will also be run via Github Actions.
 Using `pre-commit`, automatic linting and formatting is done before every commit, which may cause the first commit to fail.
 A second try should then succeed.
 
+To fix the reuse copyright:
+```bash
+  reuse annotate --license=MIT --copyright="Tjark Sievers" --skip-unrecognised -r .
+```
+
 After you are done working on an issue and all tests are running successful, you can add a new piece of changelog via `scriv create` and make a pull request.
