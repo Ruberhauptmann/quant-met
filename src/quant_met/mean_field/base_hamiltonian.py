@@ -270,6 +270,31 @@ class BaseHamiltonian(ABC):
 
         return bdg_energies.squeeze(), bdg_wavefunctions.squeeze()
 
+    def gap_equation(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
+        """Gap equation.
+
+        Parameters
+        ----------
+        k
+
+        Returns
+        -------
+        :class:`numpy.ndarray`
+            New gap in orbital basis.
+
+
+        """
+        bdg_energies, bdg_wavefunctions = self.diagonalize_bdg(k)
+        del bdg_energies
+        del bdg_wavefunctions
+        delta = np.zeros(self.number_of_bands, dtype=np.complex64)
+
+        for _beta in range(self.number_of_bands):
+            for _k_point in k:
+                pass
+
+        return delta
+
     def calculate_bandstructure(
         self,
         k: npt.NDArray[np.float64],
