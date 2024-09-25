@@ -18,13 +18,16 @@ def self_consistency_loop(
 
     Parameters
     ----------
+    number_of_k_points
     h
     epsilon
     """
     lattice = geometry.Graphene()
     k_space_grid = lattice.generate_bz_grid(ncols=number_of_k_points, nrows=number_of_k_points)
     rng = np.random.default_rng()
-    h.delta_orbital_basis = rng.random(size=h.delta_orbital_basis.shape) * 100
+    delta_init = np.zeros(shape=h.delta_orbital_basis.shape, dtype=np.float64)
+    rng.random(size=h.delta_orbital_basis.shape, out=delta_init)
+    h.delta_orbital_basis = delta_init.astype(np.complex64)
 
     while True:
         new_gap = h.gap_equation(k=k_space_grid)
