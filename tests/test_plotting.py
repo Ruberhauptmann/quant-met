@@ -16,7 +16,7 @@ from quant_met import mean_field, plotting, geometry
     style="mpl20",
 )
 def test_scatter_into_bz():
-    graphene_lattice = geometry.Graphene()
+    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     plotting.scatter_into_bz(bz_corners=graphene_lattice.bz_corners, k_points=np.array([[0, 0]]))
 
 
@@ -27,7 +27,7 @@ def test_scatter_into_bz():
     style="mpl20",
 )
 def test_scatter_into_bz_with_fig_in():
-    graphene_lattice = geometry.Graphene()
+    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     fig, ax = plt.subplots()
     plotting.scatter_into_bz(
         bz_corners=graphene_lattice.bz_corners, k_points=np.array([[0, 0]]), fig_in=fig, ax_in=ax
@@ -41,7 +41,7 @@ def test_scatter_into_bz_with_fig_in():
     style="mpl20",
 )
 def test_scatter_into_bz_with_data():
-    graphene_lattice = geometry.Graphene()
+    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     plotting.scatter_into_bz(
         bz_corners=graphene_lattice.bz_corners,
         k_points=np.array([[0, 0], [1, 1]]),
@@ -56,7 +56,7 @@ def test_scatter_into_bz_with_data():
     style="mpl20",
 )
 def test_plotting_nonint_bandstructure_graphene():
-    graphene_lattice = geometry.Graphene()
+    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     graphene_h = mean_field.GrapheneHamiltonian(hopping=1,lattice_constant=graphene_lattice.lattice_constant, chemical_potential=0, hubbard_int_gr=0)
 
     points = [(graphene_lattice.M, "M"), (graphene_lattice.Gamma, r"\Gamma"), (graphene_lattice.K, "K")]
@@ -81,7 +81,7 @@ def test_plotting_nonint_bandstructure_graphene():
     style="mpl20",
 )
 def test_plotting_nonint_bandstructure_graphene_with_fig_in():
-    graphene_lattice = geometry.Graphene()
+    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
 
     graphene_h = mean_field.GrapheneHamiltonian(hopping=1,lattice_constant=graphene_lattice.lattice_constant, chemical_potential=0, hubbard_int_gr=0)
     points = [(graphene_lattice.M, "M"), (graphene_lattice.Gamma, r"\Gamma"), (graphene_lattice.K, "K")]
@@ -111,7 +111,7 @@ def test_plotting_nonint_bandstructure_graphene_with_fig_in():
     style="mpl20",
 )
 def test_plotting_nonint_bandstructure_egx():
-    graphene_lattice = geometry.Graphene()
+    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     egx_h = mean_field.EGXHamiltonian(
         hopping_gr=1,
         hopping_x=0.01,
@@ -187,7 +187,7 @@ def test_plotting_nonint_bandstructure_egx_with_fig_in():
     style="mpl20",
 )
 def test_plotting_nonint_bandstructure_egx_with_fig_in():
-    graphene_lattice = geometry.Graphene()
+    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     egx_h = mean_field.EGXHamiltonian(
         hopping_gr=1,
         hopping_x=0.01,

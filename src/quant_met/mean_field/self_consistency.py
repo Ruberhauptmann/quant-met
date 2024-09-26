@@ -22,7 +22,7 @@ def self_consistency_loop(
     h
     epsilon
     """
-    lattice = geometry.Graphene()
+    lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     k_space_grid = lattice.generate_bz_grid(ncols=number_of_k_points, nrows=number_of_k_points)
     rng = np.random.default_rng()
     delta_init = np.zeros(shape=h.delta_orbital_basis.shape, dtype=np.float64)

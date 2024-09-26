@@ -124,7 +124,7 @@ def test_hamiltonians(sample: mean_field.BaseHamiltonian, k: npt.NDArray):
 def test_hamiltonian_k_space_graphene():
     t_gr = 1
     chemical_potential = 1
-    graphene_lattice = geometry.Graphene()
+    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     h_at_high_symmetry_points = [
         (graphene_lattice.Gamma, np.array([[-chemical_potential, -3 * t_gr], [-3 * t_gr, -chemical_potential]], dtype=np.complex64)),
         (graphene_lattice.K, np.array([[-chemical_potential, 0], [0, -chemical_potential]], dtype=np.complex64)),
@@ -144,7 +144,7 @@ def test_hamiltonian_k_space_egx():
     V = 1
     chemical_potential = 1
 
-    graphene_lattice = geometry.Graphene()
+    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     h_at_high_symmetry_points = [
         (
             graphene_lattice.Gamma,
@@ -173,7 +173,7 @@ def test_hamiltonian_derivative_graphene(ndarrays_regression):
     hopping = 1
     chemical_potential = 0
 
-    graphene_lattice = geometry.Graphene()
+    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     bz_grid = graphene_lattice.generate_bz_grid(10, 10)
     graphene_h = mean_field.GrapheneHamiltonian(
         hopping=hopping,
@@ -199,7 +199,7 @@ def test_bdg_hamiltonian_derivative_graphene(ndarrays_regression):
     hopping = 1
     chemical_potential = 0
 
-    graphene_lattice = geometry.Graphene()
+    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     bz_grid = graphene_lattice.generate_bz_grid(10, 10)
     graphene_h = mean_field.GrapheneHamiltonian(
         hopping=hopping,

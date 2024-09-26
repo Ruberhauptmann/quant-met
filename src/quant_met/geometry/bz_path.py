@@ -4,11 +4,8 @@
 
 """Methods to generate paths through the BZ."""
 
-from typing import Any
-
 import numpy as np
 import numpy.typing as npt
-from numpy import dtype, generic, ndarray
 
 
 def _generate_part_of_path(
@@ -31,9 +28,9 @@ def _generate_part_of_path(
 def generate_bz_path(
     points: list[tuple[npt.NDArray[np.float64], str]], number_of_points: int = 1000
 ) -> tuple[
-    ndarray[Any, dtype[generic | Any]],
-    ndarray[Any, dtype[generic | Any]],
-    list[int | Any],
+    npt.NDArray[np.float64],
+    npt.NDArray[np.float64],
+    list[float],
     list[str],
 ]:
     """Generate a path through high symmetry points.
@@ -64,9 +61,9 @@ def generate_bz_path(
 
     length_whole_path = np.sum(np.array([cycle]))
 
-    ticks = [0]
+    ticks = [0.0]
     ticks.extend([np.sum(cycle[0 : i + 1]) / length_whole_path for i in range(len(cycle) - 1)])
-    ticks.append(1)
+    ticks.append(1.0)
     labels = [rf"${points[i][1]}$" for i in range(len(points))]
     labels.append(rf"${points[0][1]}$")
 
