@@ -34,8 +34,8 @@ class OneBandTightBindingHamiltonian(BaseHamiltonian):
             raise ValueError(msg)
         self.lattice_constant = _validate_float(lattice_constant, "Lattice constant")
         self.chemical_potential = _validate_float(chemical_potential, "Chemical potential")
-        self.hubbard_int_gr = _validate_float(hubbard_int, "hubbard_int interaction")
-        self._hubbard_int_orbital_basis = np.array([self.hubbard_int_gr, self.hubbard_int_gr])
+        self.hubbard_int = _validate_float(hubbard_int, "hubbard_int interaction")
+        self._hubbard_int_orbital_basis = np.array([self.hubbard_int])
         self._number_of_bands = 1
         if delta is None:
             self._delta_orbital_basis = np.zeros(self.number_of_bands, dtype=np.complex64)
@@ -122,25 +122,8 @@ class OneBandTightBindingHamiltonian(BaseHamiltonian):
         h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complex64)
 
         if direction == "x":
-            h[:, 0, 1] = (
-                hopping
-                * lattice_constant
-                * np.exp(-0.5j * lattice_constant / np.sqrt(3) * k[:, 1])
-                * np.sin(0.5 * lattice_constant * k[:, 0])
-            )
-            h[:, 1, 0] = h[:, 0, 1].conjugate()
+            h[:, 0, 0] = -2 * hopping * lattice_constant * np.sin(lattice_constant * k[:, 0])
         else:
-            h[:, 0, 1] = (
-                -hopping
-                * 1j
-                * lattice_constant
-                / np.sqrt(3)
-                * (
-                    np.exp(1j * lattice_constant / np.sqrt(3) * k[:, 1])
-                    - np.exp(-0.5j * lattice_constant / np.sqrt(3) * k[:, 1])
-                    * np.cos(0.5 * lattice_constant * k[:, 0])
-                )
-            )
-            h[:, 1, 0] = h[:, 0, 1].conjugate()
+            h[:, 0, 0] = -2 * hopping * lattice_constant * np.sin(lattice_constant * k[:, 0])
 
         return h.squeeze()

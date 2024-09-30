@@ -9,8 +9,9 @@ from abc import ABC, abstractmethod
 import numpy as np
 import numpy.typing as npt
 
-from quant_met.geometry import generate_bz_path
 from quant_met.utils import generate_uniform_grid
+
+from .bz_path import generate_bz_path
 
 
 class BaseLattice(ABC):

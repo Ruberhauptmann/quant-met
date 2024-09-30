@@ -34,6 +34,9 @@ class EGXHamiltonian(BaseHamiltonian):
         self.hopping_gr = _validate_float(hopping_gr, "Hopping graphene")
         self.hopping_x = _validate_float(hopping_x, "Hopping impurity")
         self.hopping_x_gr_a = _validate_float(hopping_x_gr_a, "Hybridisation")
+        if lattice_constant <= 0:
+            msg = "Lattice constant must be positive"
+            raise ValueError(msg)
         self.lattice_constant = _validate_float(lattice_constant, "Lattice constant")
         self.chemical_potential = _validate_float(chemical_potential, "Chemical potential")
         self.hubbard_int_gr = _validate_float(hubbard_int_gr, "hubbard_int interaction graphene")

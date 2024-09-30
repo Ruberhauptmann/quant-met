@@ -18,8 +18,9 @@ Functions
     Graphene
 """  # noqa: D205, D400
 
+from .base_lattice import BaseLattice
 from .bz_path import generate_bz_path
 from .graphene import Graphene
 from .square import SquareLattice
 
-__all__ = ["generate_bz_path", "Graphene", "SquareLattice"]
+__all__ = ["generate_bz_path", "BaseLattice", "Graphene", "SquareLattice"]

@@ -5,20 +5,34 @@
 """Lattice geometry for Square Lattice."""
 
 import numpy as np
+import numpy.typing as npt
+
+from .base_lattice import BaseLattice
 
 
-class SquareLattice:
+class SquareLattice(BaseLattice):
     """Lattice geometry for Square Lattice."""
 
-    lattice_constant = 1
-    bz_corners = (
-        np.pi
-        / lattice_constant
-        * np.array([np.array([1, 1]), np.array([-1, 1]), np.array([1, -1]), np.array([-1, -1])])
-    )
+    def __init__(self, lattice_constant: np.float64) -> None:
+        self._lattice_constant = lattice_constant
+        self._bz_corners = (
+            np.pi
+            / lattice_constant
+            * np.array([np.array([1, 1]), np.array([-1, 1]), np.array([1, -1]), np.array([-1, -1])])
+        )
+        self.Gamma = np.array([0, 0])
+        self.M = np.pi / lattice_constant * np.array([1, 1])
+        self.X = np.pi / lattice_constant * np.array([1, 0])
+        self._high_symmetry_points = ((self.Gamma, r"\Gamma"), (self.M, "M"))
 
-    Gamma = np.array([0, 0])
-    M = np.pi / lattice_constant * np.array([1, 1])
-    X = np.pi / lattice_constant * np.array([1, 0])
+    @property
+    def lattice_constant(self) -> np.float64:  # noqa: D102
+        return self._lattice_constant
 
-    high_symmetry_points = ((Gamma, r"\Gamma"), (M, "M"))
+    @property
+    def bz_corners(self) -> npt.NDArray[np.float64]:  # noqa: D102
+        return self._bz_corners
+
+    @property
+    def high_symmetry_points(self) -> tuple[tuple[npt.NDArray[np.float64], str], ...]:  # noqa: D102
+        return self._high_symmetry_points

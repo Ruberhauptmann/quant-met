@@ -6,6 +6,8 @@
 
 import numpy as np
 from pytest_regressions.ndarrays_regression import NDArraysRegressionFixture
+from scipy.signal import square
+
 from quant_met import mean_field, utils, geometry
 
 
