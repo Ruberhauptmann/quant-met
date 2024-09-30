@@ -275,8 +275,8 @@ def test_hamiltonian_derivative_one_band(ndarrays_regression):
 
     h_der_x = one_band_h.hamiltonian_derivative(k=bz_grid, direction="x")
     h_der_y = one_band_h.hamiltonian_derivative(k=bz_grid, direction="y")
-    h_der_x_one_point = one_band_h.bdg_hamiltonian_derivative(k=np.array([1, 1]), direction="x")
-    h_der_y_one_point = one_band_h.bdg_hamiltonian_derivative(k=np.array([1, 1]), direction="y")
+    h_der_x_one_point = one_band_h.hamiltonian_derivative(k=np.array([1, 1]), direction="x")
+    h_der_y_one_point = one_band_h.hamiltonian_derivative(k=np.array([1, 1]), direction="y")
 
     ndarrays_regression.check(
         {
