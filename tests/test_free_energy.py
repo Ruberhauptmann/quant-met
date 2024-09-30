@@ -15,7 +15,7 @@ def test_free_energy(ndarrays_regression: NDArraysRegressionFixture) -> None:
     t_x = 0.01
     v = 1
     chemical_potential = 1
-    graphene_lattice = geometry.Graphene()
+    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     bz_grid = graphene_lattice.generate_bz_grid(10, 10)
 
     egx_h = mean_field.EGXHamiltonian(

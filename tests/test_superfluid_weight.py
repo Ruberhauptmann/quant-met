@@ -6,6 +6,8 @@
 
 import numpy as np
 from pytest_regressions.ndarrays_regression import NDArraysRegressionFixture
+from scipy.signal import square
+
 from quant_met import mean_field, utils, geometry
 
 
@@ -16,7 +18,7 @@ def test_superfluid_weight_egx(ndarrays_regression: NDArraysRegressionFixture) -
     v = 1
     chemical_potential = 1
 
-    graphene_lattice = geometry.Graphene()
+    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     bz_grid = graphene_lattice.generate_bz_grid(10, 10)
 
     egx_h = mean_field.EGXHamiltonian(
@@ -46,7 +48,7 @@ def test_superfluid_weight_graphene(ndarrays_regression: NDArraysRegressionFixtu
     hopping = 1
     chemical_potential = 1
 
-    graphene_lattice = geometry.Graphene()
+    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     bz_grid = graphene_lattice.generate_bz_grid(10, 10)
 
     graphene_h = mean_field.GrapheneHamiltonian(

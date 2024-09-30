@@ -44,7 +44,9 @@ from .free_energy import (
     free_energy_uniform_pairing,
 )
 from .graphene import GrapheneHamiltonian
+from .one_band_tight_binding import OneBandTightBindingHamiltonian
 from .quantum_metric import quantum_metric, quantum_metric_bdg
+from .self_consistency import self_consistency_loop
 from .superfluid_weight import superfluid_weight
 
 __all__ = [
@@ -55,7 +57,9 @@ __all__ = [
     "free_energy_complex_gap",
     "free_energy_real_gap",
     "free_energy_uniform_pairing",
+    "self_consistency_loop",
     "BaseHamiltonian",
     "GrapheneHamiltonian",
     "EGXHamiltonian",
+    "OneBandTightBindingHamiltonian",
 ]

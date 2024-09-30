@@ -158,7 +158,11 @@ class BaseHamiltonian(ABC):
 
         for i in range(self.number_of_bands):
             h[:, self.number_of_bands + i, i] = self.delta_orbital_basis[i]
-        h[:, 0:2, 2:4] = h[:, 2:4, 0:2].copy().conjugate()
+        h[:, 0 : self.number_of_bands, self.number_of_bands : self.number_of_bands * 2] = (
+            h[:, self.number_of_bands : self.number_of_bands * 2, 0 : self.number_of_bands]
+            .copy()
+            .conjugate()
+        )
 
         return h.squeeze()
 
@@ -270,6 +274,45 @@ class BaseHamiltonian(ABC):
 
         return bdg_energies.squeeze(), bdg_wavefunctions.squeeze()
 
+    def gap_equation(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
+        """Gap equation.
+
+        Parameters
+        ----------
+        k
+
+        Returns
+        -------
+        :class:`numpy.ndarray`
+            New gap in orbital basis.
+
+
+        """
+        bdg_energies, bdg_wavefunctions = self.diagonalize_bdg(k)
+        bdg_energies_minus_k, _ = self.diagonalize_bdg(-k)
+        delta = np.zeros(self.number_of_bands, dtype=np.complex64)
+
+        for alpha in range(self.number_of_bands):
+            sum_tmp = 0
+            for beta in range(self.number_of_bands):
+                for k_index in range(len(k)):
+                    sum_tmp += np.conjugate(
+                        bdg_wavefunctions[k_index, alpha, beta]
+                    ) * bdg_wavefunctions[
+                        k_index, alpha + self.number_of_bands, beta
+                    ] * _fermi_dirac(
+                        bdg_energies[k_index, beta + self.number_of_bands].item()
+                    ) + np.conjugate(
+                        bdg_wavefunctions[k_index, alpha, beta + self.number_of_bands]
+                    ) * bdg_wavefunctions[
+                        k_index, alpha + self.number_of_bands, beta + self.number_of_bands
+                    ] * _fermi_dirac(
+                        -bdg_energies_minus_k[k_index, beta + self.number_of_bands].item()
+                    )
+            delta[alpha] = (-self.hubbard_int_orbital_basis[alpha] * sum_tmp / len(k)).conjugate()
+
+        return delta
+
     def calculate_bandstructure(
         self,
         k: npt.NDArray[np.float64],
@@ -298,13 +341,23 @@ class BaseHamiltonian(ABC):
         energies, wavefunctions = self.diagonalize_nonint(k)
 
         for i, (energy_k, wavefunction_k) in enumerate(zip(energies, wavefunctions, strict=False)):
-            for band_index in range(self.number_of_bands):
-                results.loc[i, f"band_{band_index}"] = energy_k[band_index]
+            if self.number_of_bands == 1:
+                results.loc[i, "band"] = energy_k
+            else:
+                for band_index in range(self.number_of_bands):
+                    results.loc[i, f"band_{band_index}"] = energy_k[band_index]
 
-                if overlaps is not None:
-                    results.loc[i, f"wx_{band_index}"] = (
-                        np.abs(np.dot(wavefunction_k[:, band_index], overlaps[0])) ** 2
-                        - np.abs(np.dot(wavefunction_k[:, band_index], overlaps[1])) ** 2
-                    )
+                    if overlaps is not None:
+                        results.loc[i, f"wx_{band_index}"] = (
+                            np.abs(np.dot(wavefunction_k[:, band_index], overlaps[0])) ** 2
+                            - np.abs(np.dot(wavefunction_k[:, band_index], overlaps[1])) ** 2
+                        )
 
         return results
+
+
+def _fermi_dirac(energy: np.float64) -> np.float64:
+    if energy > 0:
+        return np.float64(0)
+
+    return np.float64(1)

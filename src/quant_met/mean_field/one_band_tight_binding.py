@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""Provides the implementation for the EG-X model."""
+"""Provides the implementation for Graphene."""
 
 from typing import Any
 
@@ -13,38 +13,30 @@ from ._utils import _check_valid_array, _validate_float
 from .base_hamiltonian import BaseHamiltonian
 
 
-class EGXHamiltonian(BaseHamiltonian):
-    """Hamiltonian for the EG-X model."""
+class OneBandTightBindingHamiltonian(BaseHamiltonian):
+    """Hamiltonian for Graphene."""
 
     def __init__(
         self,
-        hopping_gr: float,
-        hopping_x: float,
-        hopping_x_gr_a: float,
+        hopping: float,
         lattice_constant: float,
         chemical_potential: float,
-        hubbard_int_gr: float,
-        hubbard_int_x: float,
-        delta: npt.NDArray[np.complex64] | None = None,
+        hubbard_int: float,
+        delta: npt.NDArray[np.float64] | None = None,
         *args: tuple[Any, ...],
         **kwargs: tuple[dict[str, Any], ...],
     ) -> None:
         del args
         del kwargs
-        self.hopping_gr = _validate_float(hopping_gr, "Hopping graphene")
-        self.hopping_x = _validate_float(hopping_x, "Hopping impurity")
-        self.hopping_x_gr_a = _validate_float(hopping_x_gr_a, "Hybridisation")
+        self.hopping = _validate_float(hopping, "Hopping")
         if lattice_constant <= 0:
             msg = "Lattice constant must be positive"
             raise ValueError(msg)
         self.lattice_constant = _validate_float(lattice_constant, "Lattice constant")
         self.chemical_potential = _validate_float(chemical_potential, "Chemical potential")
-        self.hubbard_int_gr = _validate_float(hubbard_int_gr, "hubbard_int interaction graphene")
-        self.hubbard_int_x = _validate_float(hubbard_int_x, "hubbard_int interaction impurity")
-        self._hubbard_int_orbital_basis = np.array(
-            [self.hubbard_int_gr, self.hubbard_int_gr, self.hubbard_int_x]
-        )
-        self._number_of_bands = 3
+        self.hubbard_int = _validate_float(hubbard_int, "hubbard_int interaction")
+        self._hubbard_int_orbital_basis = np.array([self.hubbard_int])
+        self._number_of_bands = 1
         if delta is None:
             self._delta_orbital_basis = np.zeros(self.number_of_bands, dtype=np.complex64)
         else:
@@ -52,6 +44,10 @@ class EGXHamiltonian(BaseHamiltonian):
                 msg = "Invalid input value for gaps."
                 raise ValueError(msg)
             self._delta_orbital_basis = np.astype(delta, np.complex64)
+
+    @property
+    def number_of_bands(self) -> int:  # noqa: D102
+        return self._number_of_bands
 
     @property
     def hubbard_int_orbital_basis(self) -> npt.NDArray[np.float64]:  # noqa: D102
@@ -64,10 +60,6 @@ class EGXHamiltonian(BaseHamiltonian):
     @delta_orbital_basis.setter
     def delta_orbital_basis(self, new_delta: npt.NDArray[np.complex64]) -> None:
         self._delta_orbital_basis = new_delta
-
-    @property
-    def number_of_bands(self) -> int:  # noqa: D102
-        return self._number_of_bands
 
     def hamiltonian(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
         """
@@ -85,40 +77,20 @@ class EGXHamiltonian(BaseHamiltonian):
 
         """
         assert _check_valid_array(k)
-
-        t_gr = self.hopping_gr
-        t_x = self.hopping_x
-        a = self.lattice_constant
-        v = self.hopping_x_gr_a
+        hopping = self.hopping
+        lattice_constant = self.lattice_constant
         chemical_potential = self.chemical_potential
         if k.ndim == 1:
             k = np.expand_dims(k, axis=0)
 
         h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complex64)
 
-        h[:, 0, 1] = -t_gr * (
-            np.exp(1j * k[:, 1] * a / np.sqrt(3))
-            + 2 * np.exp(-0.5j * a / np.sqrt(3) * k[:, 1]) * (np.cos(0.5 * a * k[:, 0]))
-        )
-
-        h[:, 1, 0] = h[:, 0, 1].conjugate()
-
-        h[:, 2, 0] = v
-        h[:, 0, 2] = v
-
-        h[:, 2, 2] = (
-            -2
-            * t_x
-            * (
-                np.cos(a * k[:, 0])
-                + 2 * np.cos(0.5 * a * k[:, 0]) * np.cos(0.5 * np.sqrt(3) * a * k[:, 1])
-            )
+        h[:, 0, 0] = (
+            -2 * hopping * (np.cos(k[:, 1] * lattice_constant) + np.cos(k[:, 0] * lattice_constant))
         )
         h[:, 0, 0] -= chemical_potential
-        h[:, 1, 1] -= chemical_potential
-        h[:, 2, 2] -= chemical_potential
 
-        return h.squeeze()
+        return h
 
     def hamiltonian_derivative(
         self, k: npt.NDArray[np.float64], direction: str
@@ -142,40 +114,16 @@ class EGXHamiltonian(BaseHamiltonian):
         assert _check_valid_array(k)
         assert direction in ["x", "y"]
 
-        t_gr = self.hopping_gr
-        t_x = self.hopping_x
-        a = self.lattice_constant
+        hopping = self.hopping
+        lattice_constant = self.lattice_constant
         if k.ndim == 1:
             k = np.expand_dims(k, axis=0)
 
         h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complex64)
 
         if direction == "x":
-            h[:, 0, 1] = (
-                t_gr * a * np.exp(-0.5j * a / np.sqrt(3) * k[:, 1]) * np.sin(0.5 * a * k[:, 0])
-            )
-            h[:, 1, 0] = h[:, 0, 1].conjugate()
-            h[:, 2, 2] = (
-                2
-                * a
-                * t_x
-                * (
-                    np.sin(a * k[:, 0])
-                    + np.sin(0.5 * a * k[:, 0]) * np.cos(0.5 * np.sqrt(3) * a * k[:, 1])
-                )
-            )
+            h[:, 0, 0] = -2 * hopping * lattice_constant * np.sin(lattice_constant * k[:, 0])
         else:
-            h[:, 0, 1] = (
-                -t_gr
-                * 1j
-                * a
-                / np.sqrt(3)
-                * (
-                    np.exp(1j * a / np.sqrt(3) * k[:, 1])
-                    - np.exp(-0.5j * a / np.sqrt(3) * k[:, 1]) * np.cos(0.5 * a * k[:, 0])
-                )
-            )
-            h[:, 1, 0] = h[:, 0, 1].conjugate()
-            h[:, 2, 2] = np.sqrt(3) * a * t_x * np.cos(0.5 * np.sqrt(3) * a * k[:, 1])
+            h[:, 0, 0] = -2 * hopping * lattice_constant * np.sin(lattice_constant * k[:, 0])
 
         return h.squeeze()
