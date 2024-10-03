@@ -69,7 +69,9 @@ class EGXHamiltonian(BaseHamiltonian):
     def number_of_bands(self) -> int:  # noqa: D102
         return self._number_of_bands
 
-    def hamiltonian(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
+    def hamiltonian(
+        self, k: npt.NDArray[np.float64], q: npt.NDArray[np.float64]
+    ) -> npt.NDArray[np.complex64]:
         """
         Return the normal state Hamiltonian in orbital basis.
 
@@ -77,6 +79,8 @@ class EGXHamiltonian(BaseHamiltonian):
         ----------
         k : :class:`numpy.ndarray`
             List of k points.
+        q : :class:`numpy.ndarray`
+            q vector.
 
         Returns
         -------
@@ -94,6 +98,7 @@ class EGXHamiltonian(BaseHamiltonian):
         if k.ndim == 1:
             k = np.expand_dims(k, axis=0)
 
+        k -= q
         h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complex64)
 
         h[:, 0, 1] = -t_gr * (
