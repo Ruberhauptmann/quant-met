@@ -2,6 +2,31 @@
 ..
 .. SPDX-License-Identifier: MIT
 
+.. _changelog-0.0.6:
+
+0.0.6 — 2024-10-07
+------------------
+
+Added
+^^^^^
+
+- Class bundling all aspects concerning lattice geometry
+
+- Plotting methods for superfluid weight and quantum metric
+
+- Proper self-consistent calculation of gap
+
+- Implemented finite temperature into self-consistency calculation
+
+- One band tight binding Hamiltonian
+
+Changed
+^^^^^^^
+
+- Moved formatting of plots into a separate method
+
+- Renamed variables in classes to be consistent and clearer
+
 .. _changelog-0.0.5:
 
 0.0.5 — 2024-08-27
