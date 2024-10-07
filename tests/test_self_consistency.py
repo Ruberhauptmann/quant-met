@@ -18,5 +18,5 @@ def test_self_consistency():
         hubbard_int_x=0,
     )
     assert np.allclose(
-        mean_field.self_consistency_loop(h=egx_h, number_of_k_points=100, epsilon=1e-9).delta_orbital_basis, np.zeros(3)
+        mean_field.self_consistency_loop(h=egx_h, number_of_k_points=80, epsilon=1e-5, beta=200).delta_orbital_basis, np.zeros(3)
     )

@@ -12,12 +12,13 @@ from .base_hamiltonian import BaseHamiltonian
 
 
 def self_consistency_loop(
-    h: BaseHamiltonian, number_of_k_points: int, epsilon: float
+    h: BaseHamiltonian, beta: np.float64, number_of_k_points: int, epsilon: float
 ) -> BaseHamiltonian:
     """Self-consistency loop.
 
     Parameters
     ----------
+    beta
     number_of_k_points
     h
     epsilon
@@ -27,15 +28,18 @@ def self_consistency_loop(
     rng = np.random.default_rng()
     delta_init = np.zeros(shape=h.delta_orbital_basis.shape, dtype=np.float64)
     rng.random(size=h.delta_orbital_basis.shape, out=delta_init)
-    h.delta_orbital_basis = delta_init.astype(np.complex64)
+    h.delta_orbital_basis = delta_init.astype(np.float64)
 
     while True:
-        new_gap = h.gap_equation(k=k_space_grid)
-        if (np.abs(h.delta_orbital_basis) - np.abs(new_gap) < epsilon).all():
+        new_gap = h.gap_equation(k=k_space_grid, beta=beta)
+        if (np.abs(h.delta_orbital_basis - np.abs(new_gap)) < epsilon).all():
             h.delta_orbital_basis = new_gap
             print("Finished")
             return h
+        """
         print(f"Old: {h.delta_orbital_basis}")
         print(f"New: {new_gap}")
         print(f"Difference {np.abs(h.delta_orbital_basis) - np.abs(new_gap)}")
-        h.delta_orbital_basis = new_gap
+        """
+        mixing_greed = 0.2
+        h.delta_orbital_basis = mixing_greed * new_gap + (1 - mixing_greed) * h.delta_orbital_basis
