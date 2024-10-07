@@ -358,4 +358,5 @@ class BaseHamiltonian(ABC):
 
 
 def _fermi_dirac(energy: np.float64, beta: np.float64) -> np.float64:
-    return 1 / (1 + np.exp(beta * energy))
+    fermi_dirac: np.float64 = 1 / (1 + np.exp(beta * energy))
+    return fermi_dirac

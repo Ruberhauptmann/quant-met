@@ -230,7 +230,7 @@ def test_gap_equation_egx_nonint():
         hubbard_int_x=0,
     )
     assert np.allclose(
-        egx_h.gap_equation(k=graphene_lattice.generate_bz_grid(ncols=30, nrows=30)), np.zeros(3, dtype=np.complex64)
+        egx_h.gap_equation(k=graphene_lattice.generate_bz_grid(ncols=30, nrows=30), beta=200), np.zeros(3, dtype=np.complex64)
     )
 
 
