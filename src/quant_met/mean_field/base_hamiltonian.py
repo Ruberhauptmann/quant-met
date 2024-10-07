@@ -274,11 +274,14 @@ class BaseHamiltonian(ABC):
 
         return bdg_energies.squeeze(), bdg_wavefunctions.squeeze()
 
-    def gap_equation(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
+    def gap_equation(
+        self, k: npt.NDArray[np.float64], beta: np.float64
+    ) -> npt.NDArray[np.complex64]:
         """Gap equation.
 
         Parameters
         ----------
+        beta
         k
 
         Returns
@@ -292,26 +295,24 @@ class BaseHamiltonian(ABC):
         bdg_energies_minus_k, _ = self.diagonalize_bdg(-k)
         delta = np.zeros(self.number_of_bands, dtype=np.complex64)
 
-        for alpha in range(self.number_of_bands):
+        for i in range(self.number_of_bands):
             sum_tmp = 0
-            for beta in range(self.number_of_bands):
+            for j in range(self.number_of_bands):
                 for k_index in range(len(k)):
-                    sum_tmp += np.conjugate(
-                        bdg_wavefunctions[k_index, alpha, beta]
-                    ) * bdg_wavefunctions[
-                        k_index, alpha + self.number_of_bands, beta
+                    sum_tmp += np.conjugate(bdg_wavefunctions[k_index, i, j]) * bdg_wavefunctions[
+                        k_index, i + self.number_of_bands, j
                     ] * _fermi_dirac(
-                        bdg_energies[k_index, beta + self.number_of_bands].item()
+                        bdg_energies[k_index, j + self.number_of_bands].item(), beta
                     ) + np.conjugate(
-                        bdg_wavefunctions[k_index, alpha, beta + self.number_of_bands]
+                        bdg_wavefunctions[k_index, i, j + self.number_of_bands]
                     ) * bdg_wavefunctions[
-                        k_index, alpha + self.number_of_bands, beta + self.number_of_bands
+                        k_index, i + self.number_of_bands, j + self.number_of_bands
                     ] * _fermi_dirac(
-                        -bdg_energies_minus_k[k_index, beta + self.number_of_bands].item()
+                        -bdg_energies_minus_k[k_index, j + self.number_of_bands].item(), beta
                     )
-            delta[alpha] = (-self.hubbard_int_orbital_basis[alpha] * sum_tmp / len(k)).conjugate()
+            delta[i] = (-self.hubbard_int_orbital_basis[i] * sum_tmp / len(k)).conjugate()
 
-        return delta
+        return np.abs(delta)
 
     def calculate_bandstructure(
         self,
@@ -356,8 +357,5 @@ class BaseHamiltonian(ABC):
         return results
 
 
-def _fermi_dirac(energy: np.float64) -> np.float64:
-    if energy > 0:
-        return np.float64(0)
-
-    return np.float64(1)
+def _fermi_dirac(energy: np.float64, beta: np.float64) -> np.float64:
+    return 1 / (1 + np.exp(beta * energy))
