@@ -56,7 +56,7 @@ html_theme_options = {
     "logo": {
         "text": "Quant-Met",
     },
-    "navbar_end": ["theme-switcher", "navbar-icon-links"],
+    "navbar_end": ["theme-switcher", "version-switcher", "navbar-icon-links"],
     "navbar_persistent": [],
 }
 
