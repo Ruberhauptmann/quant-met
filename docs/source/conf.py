@@ -60,6 +60,7 @@ html_theme_options = {
     "navbar_persistent": [],
 }
 
+html_show_sourcelink = False
 
 # add_module_names = False
 napoleon_numpy_docstring = True
