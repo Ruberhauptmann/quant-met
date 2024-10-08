@@ -1,6 +1,4 @@
 ﻿.. SPDX-FileCopyrightText: 2024 Tjark Sievers
-
-.. SPDX-FileCopyrightText: 2024 Tjark Sievers
 ..
 .. SPDX-License-Identifier: MIT
 
@@ -30,6 +28,7 @@ EGXHamiltonian
          EGXHamiltonian.diagonalize_bdg
          EGXHamiltonian.diagonalize_nonint
          EGXHamiltonian.from_file
+         EGXHamiltonian.gap_equation
          EGXHamiltonian.hamiltonian
          EGXHamiltonian.hamiltonian_derivative
          EGXHamiltonian.save
