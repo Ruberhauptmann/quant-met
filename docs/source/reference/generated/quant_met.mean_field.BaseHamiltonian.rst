@@ -1,6 +1,4 @@
 ﻿.. SPDX-FileCopyrightText: 2024 Tjark Sievers
-
-.. SPDX-FileCopyrightText: 2024 Tjark Sievers
 ..
 .. SPDX-License-Identifier: MIT
 
@@ -30,6 +28,7 @@ BaseHamiltonian
          BaseHamiltonian.diagonalize_bdg
          BaseHamiltonian.diagonalize_nonint
          BaseHamiltonian.from_file
+         BaseHamiltonian.gap_equation
          BaseHamiltonian.hamiltonian
          BaseHamiltonian.hamiltonian_derivative
          BaseHamiltonian.save

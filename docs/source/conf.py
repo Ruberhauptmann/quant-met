@@ -37,7 +37,7 @@ extensions = [
 
 intersphinx_mapping = {
     "h5py": ("https://docs.h5py.org/en/latest/", None),
-    "matplotlib": ("https://matplotlib.org/stable/", None),
+    #"matplotlib": ("https://matplotlib.org/stable/", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
     "pandas": ("https://pandas.pydata.org/docs/", None),
 }
@@ -56,10 +56,16 @@ html_theme_options = {
     "logo": {
         "text": "Quant-Met",
     },
-    "navbar_end": ["theme-switcher", "navbar-icon-links"],
+    "navbar_end": ["theme-switcher", "version-switcher", "navbar-icon-links"],
     "navbar_persistent": [],
+    "switcher": {
+        "version_match": version,
+        "json_url": "https://quant-met.tjarksievers.de/en/latest/versions.json",
+    },
+    "check_switcher": False,
 }
 
+html_show_sourcelink = False
 
 # add_module_names = False
 napoleon_numpy_docstring = True
@@ -74,3 +80,4 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
+html_extra_path = ["extra"]

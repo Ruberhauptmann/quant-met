@@ -1,0 +1,13 @@
+[
+    {
+        "name": "dev",
+        "version": "latest",
+        "url": "https://quant-met.tjarksievers.de/en/latest/"
+    },
+    {
+        "name": "stable",
+        "version": "0.0.6",
+        "url": "https://quant-met.tjarksievers.de/en/stable/",
+        "preferred": true
+    }
+]
