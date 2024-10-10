@@ -36,8 +36,8 @@ extensions = [
 ]
 
 intersphinx_mapping = {
-    "h5py": ("https://docs.h5py.org/en/latest/", None),
-    "matplotlib": ("https://matplotlib.org/stable/", None),
+    "h5py": ("https://docs.h5py.org/en/latest", None),
+    "matplotlib": ("https://matplotlib.org/", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
     "pandas": ("https://pandas.pydata.org/docs/", None),
 }
@@ -58,11 +58,11 @@ html_theme_options = {
     },
     "navbar_end": ["theme-switcher", "version-switcher", "navbar-icon-links"],
     "navbar_persistent": [],
-    "check_switcher": False,
     "switcher": {
         "version_match": version,
         "json_url": "https://quant-met.tjarksievers.de/en/docs-visuals/versions.json",
     },
+    "check_switcher": False,
 }
 
 html_show_sourcelink = False
