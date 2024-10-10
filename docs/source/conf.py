@@ -60,7 +60,7 @@ html_theme_options = {
     "navbar_persistent": [],
     "switcher": {
         "version_match": version,
-        "json_url": "https://quant-met.tjarksievers.de/en/docs-visuals/_static/versions.json",
+        "json_url": "https://quant-met.tjarksievers.de/en/docs-visuals/versions.json",
     },
 }
 
