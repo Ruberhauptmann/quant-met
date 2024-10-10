@@ -58,6 +58,7 @@ html_theme_options = {
     },
     "navbar_end": ["theme-switcher", "version-switcher", "navbar-icon-links"],
     "navbar_persistent": [],
+    "check_switcher": False,
     "switcher": {
         "version_match": version,
         "json_url": "https://quant-met.tjarksievers.de/en/docs-visuals/versions.json",
