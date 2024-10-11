@@ -312,7 +312,7 @@ class BaseHamiltonian(ABC):
                     )
             delta[i] = (-self.hubbard_int_orbital_basis[i] * sum_tmp / len(k)).conjugate()
 
-        return np.abs(delta)
+        return delta * np.exp(-1j * np.angle(delta[0]))
 
     def calculate_bandstructure(
         self,
