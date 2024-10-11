@@ -234,6 +234,32 @@ def test_gap_equation_egx_nonint():
     )
 
 
+def test_density_of_states(ndarrays_regression):
+    hopping = 1
+    chemical_potential = 0
+
+    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
+    bz_grid = graphene_lattice.generate_bz_grid(10, 10)
+    graphene_h = mean_field.GrapheneHamiltonian(
+        hopping=hopping,
+        lattice_constant=graphene_lattice.lattice_constant,
+        chemical_potential=chemical_potential,
+        hubbard_int_gr=1,
+        delta=np.array([1, 1]),
+    )
+
+    energies = np.linspace(-4, 4, num=200)
+
+    dos = graphene_h.calculate_density_of_states(k=bz_grid, energies=energies)
+
+    ndarrays_regression.check(
+        {
+            "DOS": dos,
+        },
+        default_tolerance=dict(atol=1e-8, rtol=1e-8),
+    )
+
+
 def test_hamiltonian_derivative_graphene(ndarrays_regression):
     hopping = 1
     chemical_potential = 0
@@ -414,17 +440,6 @@ def test_invalid_values():
 
 
 def test_base_hamiltonian(patch_abstract) -> None:
-    """Test whether the Hamiltonian Base class fullfills relevant promises.
-
-    Args:
-    ----
-        patch_abstract: Fixture to be able to initialise BaseHamiltonian.
-
-    Returns
-    -------
-        None
-
-    """
     base_hamiltonian = mean_field.BaseHamiltonian()
     with pytest.raises(NotImplementedError):
         print(base_hamiltonian.number_of_bands)

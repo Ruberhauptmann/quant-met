@@ -356,6 +356,36 @@ class BaseHamiltonian(ABC):
 
         return results
 
+    def calculate_density_of_states(
+        self, k: npt.NDArray[np.float64], energies: npt.NDArray[np.float64]
+    ) -> npt.NDArray[np.float64]:
+        """Calculate the density of states.
+
+        Parameters
+        ----------
+        k
+        energies
+
+        Returns
+        -------
+        Density of states.
+
+        """
+        density_of_states = np.zeros(shape=energies.shape, dtype=np.float64)
+        bands, _ = self.diagonalize_bdg(k=k)
+        for i, energy in enumerate(energies):
+            density_of_states[i] = np.sum(
+                _gaussian(x=(energy - bands.flatten()), sigma=1e-2)
+            ) / len(k)
+        return density_of_states
+
+
+def _gaussian(x: npt.NDArray[np.float64], sigma: float) -> npt.NDArray[np.float64]:
+    gaussian: npt.NDArray[np.float64] = np.exp(-(x**2) / (2 * sigma**2)) / np.sqrt(
+        2 * np.pi * sigma**2
+    )
+    return gaussian
+
 
 def _fermi_dirac(energy: np.float64, beta: np.float64) -> np.float64:
     fermi_dirac: np.float64 = 1 / (1 + np.exp(beta * energy))
