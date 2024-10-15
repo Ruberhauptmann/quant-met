@@ -13,6 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ startsWith(github.head_ref, 'release') }}
     steps:
+      - uses: getsentry/action-setup-venv@v2.1.0
+        id: venv
+        with:
+          python-version: 3.12.2
+        install-cmd: pip install quant-met poetry
       - uses: actions/checkout@v4
       - name: check version
         run: ./check_version.sh
