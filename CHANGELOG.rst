@@ -2,6 +2,26 @@
 ..
 .. SPDX-License-Identifier: MIT
 
+.. _changelog-0.0.7:
+
+0.0.7 — 2024-10-15
+------------------
+
+Added
+^^^^^
+
+- Function to calculate density of states from bands
+
+Changed
+^^^^^^^
+
+- Multiply out phase factor of first entry in gap equation
+
+Fixed
+^^^^^
+
+- Sum over bands for calculation of quantum metric in normal state as well
+
 .. _changelog-0.0.6:
 
 0.0.6 — 2024-10-07
