@@ -30,9 +30,9 @@ def test_quantum_metric_egx(ndarrays_regression: NDArraysRegressionFixture) -> N
         delta=np.array([1, 1, 1]),
     )
 
-    quantum_metric_0 = mean_field.quantum_metric(h=egx_h, k_grid=bz_grid, band=0)
-    quantum_metric_1 = mean_field.quantum_metric(h=egx_h, k_grid=bz_grid, band=1)
-    quantum_metric_2 = mean_field.quantum_metric(h=egx_h, k_grid=bz_grid, band=2)
+    quantum_metric_0 = mean_field.quantum_metric(h=egx_h, k_grid=bz_grid, bands=[0])
+    quantum_metric_1 = mean_field.quantum_metric(h=egx_h, k_grid=bz_grid, bands=[1])
+    quantum_metric_2 = mean_field.quantum_metric(h=egx_h, k_grid=bz_grid, bands=[2])
 
     ndarrays_regression.check(
         {
@@ -59,8 +59,8 @@ def test_quantum_metric_graphene(ndarrays_regression: NDArraysRegressionFixture)
         delta=np.array([1, 1]),
     )
 
-    quantum_metric_0 = mean_field.quantum_metric(h=graphene_h, k_grid=bz_grid, band=0)
-    quantum_metric_1 = mean_field.quantum_metric(h=graphene_h, k_grid=bz_grid, band=1)
+    quantum_metric_0 = mean_field.quantum_metric(h=graphene_h, k_grid=bz_grid, bands=[0])
+    quantum_metric_1 = mean_field.quantum_metric(h=graphene_h, k_grid=bz_grid, bands=[1])
 
     ndarrays_regression.check(
         {
