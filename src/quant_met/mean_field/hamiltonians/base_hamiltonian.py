@@ -370,9 +370,8 @@ class BaseHamiltonian(ABC):
     def calculate_density_of_states(
         self,
         k: npt.NDArray[np.float64],
-        energies: npt.NDArray[np.float64],
         q: npt.NDArray[np.float64] | None = None,
-    ) -> npt.NDArray[np.float64]:
+    ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
         """Calculate the density of states.
 
         Parameters
@@ -386,13 +385,48 @@ class BaseHamiltonian(ABC):
         Density of states.
 
         """
-        density_of_states = np.zeros(shape=energies.shape, dtype=np.float64)
         bands, _ = self.diagonalize_bdg(k=k, q=q)
+        energies = np.linspace(start=np.min(bands), stop=np.max(bands), num=5000)
+        density_of_states = np.zeros(shape=energies.shape, dtype=np.float64)
+
         for i, energy in enumerate(energies):
             density_of_states[i] = np.sum(
                 _gaussian(x=(energy - bands.flatten()), sigma=1e-2)
             ) / len(k)
-        return density_of_states
+        return energies, density_of_states
+
+    def calculate_spectral_gap(
+        self, k: npt.NDArray[np.float64], q: npt.NDArray[np.float64] | None = None
+    ) -> float:
+        """Calculate the spectral gap.
+
+        Parameters
+        ----------
+        k
+        q
+
+        Returns
+        -------
+        Spectral gap
+
+        """
+        energies, density_of_states = self.calculate_density_of_states(k=k, q=q)
+
+        coherence_peaks = np.where(np.isclose(density_of_states, np.max(density_of_states)))[0]
+
+        gap_region = density_of_states[coherence_peaks[0] : coherence_peaks[1] + 1] / np.max(
+            density_of_states
+        )
+        energies_gap_region = energies[coherence_peaks[0] : coherence_peaks[1] + 1]
+        zero_indeces = np.where(gap_region <= 1e-10)[0]
+        if len(zero_indeces) == 0:
+            gap = 0
+        else:
+            gap = (
+                energies_gap_region[zero_indeces[-1]] - energies_gap_region[zero_indeces[0]]
+            ).item()
+
+        return gap
 
 
 def _gaussian(x: npt.NDArray[np.float64], sigma: float) -> npt.NDArray[np.float64]:
