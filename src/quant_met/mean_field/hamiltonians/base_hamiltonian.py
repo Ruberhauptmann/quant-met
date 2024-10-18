@@ -12,7 +12,7 @@ import numpy as np
 import numpy.typing as npt
 import pandas as pd
 
-from ._utils import _check_valid_array
+from quant_met.mean_field._utils import _check_valid_array
 
 
 class BaseHamiltonian(ABC):

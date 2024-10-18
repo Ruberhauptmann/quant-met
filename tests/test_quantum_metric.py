@@ -19,7 +19,7 @@ def test_quantum_metric_egx(ndarrays_regression: NDArraysRegressionFixture) -> N
     graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     bz_grid = graphene_lattice.generate_bz_grid(20, 20)
 
-    egx_h = mean_field.EGXHamiltonian(
+    egx_h = mean_field.hamiltonians.EGXHamiltonian(
         hopping_gr=t_gr,
         hopping_x=t_x,
         hopping_x_gr_a=v,
@@ -51,7 +51,7 @@ def test_quantum_metric_graphene(ndarrays_regression: NDArraysRegressionFixture)
     graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     bz_grid = graphene_lattice.generate_bz_grid(20, 20)
 
-    graphene_h = mean_field.GrapheneHamiltonian(
+    graphene_h = mean_field.hamiltonians.GrapheneHamiltonian(
         hopping=hopping,
        lattice_constant=graphene_lattice.lattice_constant,
         chemical_potential=chemical_potential,
@@ -80,7 +80,7 @@ def test_quantum_metric_bdg_egx(ndarrays_regression: NDArraysRegressionFixture) 
     graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     bz_grid = graphene_lattice.generate_bz_grid(20, 20)
 
-    egx_h = mean_field.EGXHamiltonian(
+    egx_h = mean_field.hamiltonians.EGXHamiltonian(
         hopping_gr=t_gr,
         hopping_x=t_x,
         hopping_x_gr_a=v,
@@ -112,7 +112,7 @@ def test_quantum_metric_bdg_graphene(ndarrays_regression: NDArraysRegressionFixt
     graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     bz_grid = graphene_lattice.generate_bz_grid(20, 20)
 
-    graphene_h = mean_field.GrapheneHamiltonian(
+    graphene_h = mean_field.hamiltonians.GrapheneHamiltonian(
         hopping=hopping,
        lattice_constant=graphene_lattice.lattice_constant,
         chemical_potential=chemical_potential,
