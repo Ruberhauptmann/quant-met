@@ -28,12 +28,12 @@ from scipy import linalg
 @pytest.fixture()
 def patch_abstract(monkeypatch):
     """Patch the abstract methods."""
-    monkeypatch.setattr(mean_field.BaseHamiltonian, "__abstractmethods__", set())
+    monkeypatch.setattr(mean_field.hamiltonians.BaseHamiltonian, "__abstractmethods__", set())
 
 register_type_strategy(
-    mean_field.OneBandTightBindingHamiltonian,
+    mean_field.hamiltonians.OneBandTightBindingHamiltonian,
     builds(
-        mean_field.OneBandTightBindingHamiltonian,
+        mean_field.hamiltonians.OneBandTightBindingHamiltonian,
         lattice_constant=floats(
             min_value=0,
             max_value=1e4,
@@ -54,9 +54,9 @@ register_type_strategy(
 )
 
 register_type_strategy(
-    mean_field.GrapheneHamiltonian,
+    mean_field.hamiltonians.GrapheneHamiltonian,
     builds(
-        mean_field.GrapheneHamiltonian,
+        mean_field.hamiltonians.GrapheneHamiltonian,
         lattice_constant=floats(
             min_value=0,
             max_value=1e4,
@@ -77,9 +77,9 @@ register_type_strategy(
 )
 
 register_type_strategy(
-    mean_field.EGXHamiltonian,
+    mean_field.hamiltonians.EGXHamiltonian,
     builds(
-        mean_field.EGXHamiltonian,
+        mean_field.hamiltonians.EGXHamiltonian,
         lattice_constant=floats(
             min_value=0,
             max_value=1e5,
@@ -111,9 +111,9 @@ register_type_strategy(
 
 @given(
     sample=one_of(
-        from_type(mean_field.GrapheneHamiltonian),
-        from_type(mean_field.EGXHamiltonian),
-        from_type(mean_field.OneBandTightBindingHamiltonian),
+        from_type(mean_field.hamiltonians.GrapheneHamiltonian),
+        from_type(mean_field.hamiltonians.EGXHamiltonian),
+        from_type(mean_field.hamiltonians.OneBandTightBindingHamiltonian),
     ),
     k=arrays(
         shape=tuples(integers(min_value=0, max_value=100), just(2)),
@@ -129,7 +129,7 @@ register_type_strategy(
         none()
     )
 )
-def test_hamiltonians(sample: mean_field.BaseHamiltonian, k: npt.NDArray, q: npt.NDArray | None):
+def test_hamiltonians(sample: mean_field.hamiltonians.BaseHamiltonian, k: npt.NDArray, q: npt.NDArray | None):
     sample.delta_orbital_basis = np.array([0 for _ in range(sample.number_of_bands)])
 
     bdg_energies = sample.diagonalize_bdg(k=k, q=q)[0].flatten()
@@ -164,7 +164,7 @@ def test_hamiltonian_k_space_graphene():
     ]
 
     for k_point, h_compare in h_at_high_symmetry_points:
-        graphene_h = mean_field.GrapheneHamiltonian(
+        graphene_h = mean_field.hamiltonians.GrapheneHamiltonian(
             hopping=t_gr, lattice_constant=graphene_lattice.lattice_constant, chemical_potential=chemical_potential, hubbard_int_gr=0
         )
         h_generated = graphene_h.hamiltonian(k_point)
@@ -189,7 +189,7 @@ def test_hamiltonian_k_space_egx():
     ]
 
     for k_point, h_compare in h_at_high_symmetry_points:
-        egx_h = mean_field.EGXHamiltonian(
+        egx_h = mean_field.hamiltonians.EGXHamiltonian(
             hopping_gr=t_gr,
             hopping_x=t_x,
             hopping_x_gr_a=V,
@@ -205,7 +205,7 @@ def test_hamiltonian_k_space_egx():
 def test_hamiltonian_k_space_one_band():
     chemical_potential = 1
 
-    square_lattice = geometry.SquareLattice(lattice_constant=1)
+    square_lattice = geometry.SquareLattice(lattice_constant=1.0)
     h_at_high_symmetry_points = [
         (
             square_lattice.Gamma,
@@ -217,7 +217,7 @@ def test_hamiltonian_k_space_one_band():
     ]
 
     for k_point, h_compare in h_at_high_symmetry_points:
-        one_band_h = mean_field.OneBandTightBindingHamiltonian(
+        one_band_h = mean_field.hamiltonians.OneBandTightBindingHamiltonian(
             hopping=1,
             lattice_constant=square_lattice.lattice_constant,
             chemical_potential=chemical_potential,
@@ -230,7 +230,7 @@ def test_hamiltonian_k_space_one_band():
 def test_gap_equation_egx_nonint():
     graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
 
-    egx_h = mean_field.EGXHamiltonian(
+    egx_h = mean_field.hamiltonians.EGXHamiltonian(
         hopping_gr=1,
         hopping_x=0.01,
         hopping_x_gr_a=1,
@@ -250,7 +250,7 @@ def test_density_of_states(ndarrays_regression):
 
     graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     bz_grid = graphene_lattice.generate_bz_grid(10, 10)
-    graphene_h = mean_field.GrapheneHamiltonian(
+    graphene_h = mean_field.hamiltonians.GrapheneHamiltonian(
         hopping=hopping,
         lattice_constant=graphene_lattice.lattice_constant,
         chemical_potential=chemical_potential,
@@ -276,7 +276,7 @@ def test_hamiltonian_derivative_graphene(ndarrays_regression):
 
     graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     bz_grid = graphene_lattice.generate_bz_grid(10, 10)
-    graphene_h = mean_field.GrapheneHamiltonian(
+    graphene_h = mean_field.hamiltonians.GrapheneHamiltonian(
         hopping=hopping,
         lattice_constant=graphene_lattice.lattice_constant,
         chemical_potential=chemical_potential,
@@ -301,7 +301,7 @@ def test_hamiltonian_derivative_one_band(ndarrays_regression):
 
     square_lattice = geometry.SquareLattice(lattice_constant=1)
     bz_grid = square_lattice.generate_bz_grid(10, 10)
-    one_band_h = mean_field.OneBandTightBindingHamiltonian(
+    one_band_h = mean_field.hamiltonians.OneBandTightBindingHamiltonian(
         hopping=hopping,
         lattice_constant=square_lattice.lattice_constant,
         chemical_potential=chemical_potential,
@@ -331,7 +331,7 @@ def test_bdg_hamiltonian_derivative_graphene(ndarrays_regression):
 
     graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     bz_grid = graphene_lattice.generate_bz_grid(10, 10)
-    graphene_h = mean_field.GrapheneHamiltonian(
+    graphene_h = mean_field.hamiltonians.GrapheneHamiltonian(
         hopping=hopping,
         lattice_constant=graphene_lattice.lattice_constant,
         chemical_potential=chemical_potential,
@@ -356,7 +356,7 @@ def test_bdg_hamiltonian_derivative_graphene(ndarrays_regression):
 
 
 def test_save_graphene(tmp_path):
-    graphene_h = mean_field.GrapheneHamiltonian(hopping=1, lattice_constant=np.sqrt(3), chemical_potential=-1, hubbard_int_gr=1, delta=np.ones(2))
+    graphene_h = mean_field.hamiltonians.GrapheneHamiltonian(hopping=1, lattice_constant=np.sqrt(3), chemical_potential=-1, hubbard_int_gr=1, delta=np.ones(2))
     file_path = Path(os.path.join(tmp_path, "test.hdf5"))
     graphene_h.save(filename=file_path)
     sample_read = type(graphene_h).from_file(filename=file_path)
@@ -365,7 +365,7 @@ def test_save_graphene(tmp_path):
 
 
 def test_save_egx(tmp_path):
-    egx_h = mean_field.EGXHamiltonian(
+    egx_h = mean_field.hamiltonians.EGXHamiltonian(
         hopping_gr=1,
         hopping_x=0.01,
         hopping_x_gr_a=1,
@@ -383,7 +383,7 @@ def test_save_egx(tmp_path):
 
 
 def test_save_one_band(tmp_path):
-    one_band_h = mean_field.OneBandTightBindingHamiltonian(
+    one_band_h = mean_field.hamiltonians.OneBandTightBindingHamiltonian(
         hopping=1,
         lattice_constant=1,
         chemical_potential=0,
@@ -399,45 +399,45 @@ def test_save_one_band(tmp_path):
 
 def test_invalid_values():
     with pytest.raises(ValueError):
-        print(mean_field.GrapheneHamiltonian(hopping=1,lattice_constant=-1, chemical_potential=1, hubbard_int_gr=1))
+        print(mean_field.hamiltonians.GrapheneHamiltonian(hopping=1,lattice_constant=-1, chemical_potential=1, hubbard_int_gr=1))
     with pytest.raises(ValueError):
-        print(mean_field.EGXHamiltonian(hopping_gr=1, hopping_x=1, hopping_x_gr_a=1, lattice_constant=-1, chemical_potential=1, hubbard_int_gr=1, hubbard_int_x=1))
+        print(mean_field.hamiltonians.EGXHamiltonian(hopping_gr=1, hopping_x=1, hopping_x_gr_a=1, lattice_constant=-1, chemical_potential=1, hubbard_int_gr=1, hubbard_int_x=1))
     with pytest.raises(ValueError):
-        print(mean_field.OneBandTightBindingHamiltonian(hopping=1,lattice_constant=-1, chemical_potential=1, hubbard_int=1))
+        print(mean_field.hamiltonians.OneBandTightBindingHamiltonian(hopping=1,lattice_constant=-1, chemical_potential=1, hubbard_int=1))
     with pytest.raises(ValueError):
-        print(mean_field.GrapheneHamiltonian(hopping=np.nan,lattice_constant=1, chemical_potential=1, hubbard_int_gr=1))
+        print(mean_field.hamiltonians.GrapheneHamiltonian(hopping=np.nan,lattice_constant=1, chemical_potential=1, hubbard_int_gr=1))
     with pytest.raises(ValueError):
-        print(mean_field.GrapheneHamiltonian(hopping=1,lattice_constant=np.nan, chemical_potential=1, hubbard_int_gr=1))
+        print(mean_field.hamiltonians.GrapheneHamiltonian(hopping=1,lattice_constant=np.nan, chemical_potential=1, hubbard_int_gr=1))
     with pytest.raises(ValueError):
-        print(mean_field.GrapheneHamiltonian(hopping=1,lattice_constant=1, chemical_potential=np.nan, hubbard_int_gr=1))
+        print(mean_field.hamiltonians.GrapheneHamiltonian(hopping=1,lattice_constant=1, chemical_potential=np.nan, hubbard_int_gr=1))
     with pytest.raises(ValueError):
-        print(mean_field.GrapheneHamiltonian(hopping=1,lattice_constant=1, chemical_potential=1, hubbard_int_gr=np.nan))
+        print(mean_field.hamiltonians.GrapheneHamiltonian(hopping=1,lattice_constant=1, chemical_potential=1, hubbard_int_gr=np.nan))
     with pytest.raises(ValueError):
-        print(mean_field.GrapheneHamiltonian(hopping=np.inf,lattice_constant=1, chemical_potential=1, hubbard_int_gr=1))
+        print(mean_field.hamiltonians.GrapheneHamiltonian(hopping=np.inf,lattice_constant=1, chemical_potential=1, hubbard_int_gr=1))
     with pytest.raises(ValueError):
-        print(mean_field.GrapheneHamiltonian(hopping=1,lattice_constant=np.inf, chemical_potential=1, hubbard_int_gr=1))
+        print(mean_field.hamiltonians.GrapheneHamiltonian(hopping=1,lattice_constant=np.inf, chemical_potential=1, hubbard_int_gr=1))
     with pytest.raises(ValueError):
-        print(mean_field.GrapheneHamiltonian(hopping=1,lattice_constant=1, chemical_potential=np.inf, hubbard_int_gr=1))
+        print(mean_field.hamiltonians.GrapheneHamiltonian(hopping=1,lattice_constant=1, chemical_potential=np.inf, hubbard_int_gr=1))
     with pytest.raises(ValueError):
-        print(mean_field.GrapheneHamiltonian(hopping=1,lattice_constant=1, chemical_potential=1, hubbard_int_gr=np.nan))
+        print(mean_field.hamiltonians.GrapheneHamiltonian(hopping=1,lattice_constant=1, chemical_potential=1, hubbard_int_gr=np.nan))
     with pytest.raises(ValueError):
-        h = mean_field.GrapheneHamiltonian(hopping=1,lattice_constant=1, chemical_potential=1, hubbard_int_gr=1)
+        h = mean_field.hamiltonians.GrapheneHamiltonian(hopping=1,lattice_constant=1, chemical_potential=1, hubbard_int_gr=1)
         h.hamiltonian(k=np.array([np.nan, np.nan]))
     with pytest.raises(ValueError):
-        h = mean_field.GrapheneHamiltonian(hopping=1,lattice_constant=1, chemical_potential=1, hubbard_int_gr=1)
+        h = mean_field.hamiltonians.GrapheneHamiltonian(hopping=1,lattice_constant=1, chemical_potential=1, hubbard_int_gr=1)
         h.hamiltonian(k=np.array([[np.nan, np.inf]]))
     with pytest.raises(ValueError):
-        h = mean_field.GrapheneHamiltonian(hopping=1,lattice_constant=1, chemical_potential=1, hubbard_int_gr=1)
+        h = mean_field.hamiltonians.GrapheneHamiltonian(hopping=1,lattice_constant=1, chemical_potential=1, hubbard_int_gr=1)
         h.bdg_hamiltonian(k=np.array([np.nan, np.nan]))
     with pytest.raises(ValueError):
-        h = mean_field.GrapheneHamiltonian(hopping=1,lattice_constant=1, chemical_potential=1, hubbard_int_gr=1)
+        h = mean_field.hamiltonians.GrapheneHamiltonian(hopping=1,lattice_constant=1, chemical_potential=1, hubbard_int_gr=1)
         h.hamiltonian_derivative(k=np.array([np.nan, np.nan]), direction="x")
     with pytest.raises(ValueError):
-        print(mean_field.GrapheneHamiltonian(hopping=1,lattice_constant=1, chemical_potential=1, hubbard_int_gr=1, delta=np.array([0, 0, 0, 0])))
+        print(mean_field.hamiltonians.GrapheneHamiltonian(hopping=1,lattice_constant=1, chemical_potential=1, hubbard_int_gr=1, delta=np.array([0, 0, 0, 0])))
     with pytest.raises(ValueError):
-        print(mean_field.OneBandTightBindingHamiltonian(hopping=1,lattice_constant=1, chemical_potential=1, hubbard_int=1, delta=np.array([0, 0])))
+        print(mean_field.hamiltonians.OneBandTightBindingHamiltonian(hopping=1,lattice_constant=1, chemical_potential=1, hubbard_int=1, delta=np.array([0, 0])))
     with pytest.raises(ValueError):
-        print(mean_field.EGXHamiltonian(
+        print(mean_field.hamiltonians.EGXHamiltonian(
             hopping_gr=1,
             hopping_x=0.01,
             hopping_x_gr_a=1,
@@ -450,7 +450,7 @@ def test_invalid_values():
 
 
 def test_base_hamiltonian(patch_abstract) -> None:
-    base_hamiltonian = mean_field.BaseHamiltonian()
+    base_hamiltonian = mean_field.hamiltonians.BaseHamiltonian()
     with pytest.raises(NotImplementedError):
         print(base_hamiltonian.number_of_bands)
     with pytest.raises(NotImplementedError):

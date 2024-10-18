@@ -7,7 +7,7 @@
 import numpy as np
 import numpy.typing as npt
 
-from .base_hamiltonian import BaseHamiltonian
+from quant_met.mean_field.hamiltonians.base_hamiltonian import BaseHamiltonian
 
 
 def superfluid_weight(

@@ -21,7 +21,7 @@ def test_superfluid_weight_egx(ndarrays_regression: NDArraysRegressionFixture) -
     graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     bz_grid = graphene_lattice.generate_bz_grid(10, 10)
 
-    egx_h = mean_field.EGXHamiltonian(
+    egx_h = mean_field.hamiltonians.EGXHamiltonian(
         hopping_gr=t_gr,
         hopping_x=t_x,
         hopping_x_gr_a=v,
@@ -51,7 +51,7 @@ def test_superfluid_weight_graphene(ndarrays_regression: NDArraysRegressionFixtu
     graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     bz_grid = graphene_lattice.generate_bz_grid(10, 10)
 
-    graphene_h = mean_field.GrapheneHamiltonian(
+    graphene_h = mean_field.hamiltonians.GrapheneHamiltonian(
         hopping=hopping,
        lattice_constant=graphene_lattice.lattice_constant,
         chemical_potential=chemical_potential,

@@ -9,7 +9,8 @@ from typing import Any
 import numpy as np
 import numpy.typing as npt
 
-from ._utils import _check_valid_array, _validate_float
+from quant_met.mean_field._utils import _check_valid_array, _validate_float
+
 from .base_hamiltonian import BaseHamiltonian
 
 

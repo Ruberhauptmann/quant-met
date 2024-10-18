@@ -7,15 +7,13 @@
 import numpy as np
 import numpy.typing as npt
 
-from quant_met import geometry
-
-from .base_hamiltonian import BaseHamiltonian
+from quant_met.mean_field.hamiltonians.base_hamiltonian import BaseHamiltonian
 
 
 def self_consistency_loop(
     h: BaseHamiltonian,
+    k_space_grid: npt.NDArray[np.float64],
     beta: np.float64,
-    number_of_k_points: int,
     epsilon: float,
     q: npt.NDArray[np.float64] | None = None,
 ) -> BaseHamiltonian:
@@ -23,14 +21,13 @@ def self_consistency_loop(
 
     Parameters
     ----------
+    lattice
     q
     beta
     number_of_k_points
     h
     epsilon
     """
-    lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
-    k_space_grid = lattice.generate_bz_grid(ncols=number_of_k_points, nrows=number_of_k_points)
     if q is None:
         q = np.array([0, 0])
 
