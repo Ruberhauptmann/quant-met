@@ -14,8 +14,6 @@ Functions
 
    superfluid_weight
    quantum_metric
-   free_energy
-   free_energy_uniform_pairing
 """  # noqa: D205, D400
 
 from quant_met.mean_field import hamiltonians
