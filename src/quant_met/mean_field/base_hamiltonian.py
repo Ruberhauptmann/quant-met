@@ -126,12 +126,15 @@ class BaseHamiltonian(ABC):
 
         return cls(**config_dict)
 
-    def bdg_hamiltonian(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
+    def bdg_hamiltonian(
+        self, k: npt.NDArray[np.float64], q: npt.NDArray[np.float64] | None = None
+    ) -> npt.NDArray[np.complex64]:
         """
         Bogoliuobov de Genne Hamiltonian.
 
         Parameters
         ----------
+        q
         k : :class:`numpy.ndarray`
             List of k points.
 
@@ -144,6 +147,8 @@ class BaseHamiltonian(ABC):
         assert _check_valid_array(k)
         if k.ndim == 1:
             k = np.expand_dims(k, axis=0)
+        if q is None:
+            q = np.array([0, 0])
 
         h = np.zeros(
             (k.shape[0], 2 * self.number_of_bands, 2 * self.number_of_bands), dtype=np.complex64
@@ -154,10 +159,11 @@ class BaseHamiltonian(ABC):
             :,
             self.number_of_bands : 2 * self.number_of_bands,
             self.number_of_bands : 2 * self.number_of_bands,
-        ] = -self.hamiltonian(-k).conjugate()
+        ] = -self.hamiltonian(q - k).conjugate()
 
         for i in range(self.number_of_bands):
             h[:, self.number_of_bands + i, i] = self.delta_orbital_basis[i]
+
         h[:, 0 : self.number_of_bands, self.number_of_bands : self.number_of_bands * 2] = (
             h[:, self.number_of_bands : self.number_of_bands * 2, 0 : self.number_of_bands]
             .copy()
@@ -240,13 +246,14 @@ class BaseHamiltonian(ABC):
         return band_energies.squeeze(), bloch_wavefunctions.squeeze()
 
     def diagonalize_bdg(
-        self, k: npt.NDArray[np.float64]
+        self, k: npt.NDArray[np.float64], q: npt.NDArray[np.float64] | None = None
     ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.complex64]]:
         """
         Diagonalize the BdG Hamiltonian.
 
         Parameters
         ----------
+        q
         k : :class:`numpy.ndarray`
             List of k points.
 
@@ -258,7 +265,7 @@ class BaseHamiltonian(ABC):
             Diagonalising matrix of the BdG Hamiltonian.
 
         """
-        bdg_matrix = self.bdg_hamiltonian(k)
+        bdg_matrix = self.bdg_hamiltonian(k=k, q=q)
         if bdg_matrix.ndim == 2:
             bdg_matrix = np.expand_dims(bdg_matrix, axis=0)
             k = np.expand_dims(k, axis=0)
@@ -275,12 +282,13 @@ class BaseHamiltonian(ABC):
         return bdg_energies.squeeze(), bdg_wavefunctions.squeeze()
 
     def gap_equation(
-        self, k: npt.NDArray[np.float64], beta: np.float64
+        self, k: npt.NDArray[np.float64], beta: np.float64, q: npt.NDArray[np.float64] | None = None
     ) -> npt.NDArray[np.complex64]:
         """Gap equation.
 
         Parameters
         ----------
+        q
         beta
         k
 
@@ -291,8 +299,10 @@ class BaseHamiltonian(ABC):
 
 
         """
-        bdg_energies, bdg_wavefunctions = self.diagonalize_bdg(k)
-        bdg_energies_minus_k, _ = self.diagonalize_bdg(-k)
+        if q is None:
+            q = np.array([0, 0])
+        bdg_energies, bdg_wavefunctions = self.diagonalize_bdg(k=k, q=q)
+        bdg_energies_minus_k, _ = self.diagonalize_bdg(k=-k, q=-q)
         delta = np.zeros(self.number_of_bands, dtype=np.complex64)
 
         for i in range(self.number_of_bands):
@@ -312,7 +322,7 @@ class BaseHamiltonian(ABC):
                     )
             delta[i] = (-self.hubbard_int_orbital_basis[i] * sum_tmp / len(k)).conjugate()
 
-        delta_without_phase: npt.NDArray[np.complex64] = delta * np.exp(-1j * np.angle(delta[0]))
+        delta_without_phase: npt.NDArray[np.complex64] = delta * np.exp(-1j * np.angle(delta[-1]))
         return delta_without_phase
 
     def calculate_bandstructure(
@@ -358,12 +368,16 @@ class BaseHamiltonian(ABC):
         return results
 
     def calculate_density_of_states(
-        self, k: npt.NDArray[np.float64], energies: npt.NDArray[np.float64]
+        self,
+        k: npt.NDArray[np.float64],
+        energies: npt.NDArray[np.float64],
+        q: npt.NDArray[np.float64] | None = None,
     ) -> npt.NDArray[np.float64]:
         """Calculate the density of states.
 
         Parameters
         ----------
+        q
         k
         energies
 
@@ -373,7 +387,7 @@ class BaseHamiltonian(ABC):
 
         """
         density_of_states = np.zeros(shape=energies.shape, dtype=np.float64)
-        bands, _ = self.diagonalize_bdg(k=k)
+        bands, _ = self.diagonalize_bdg(k=k, q=q)
         for i, energy in enumerate(energies):
             density_of_states[i] = np.sum(
                 _gaussian(x=(energy - bands.flatten()), sigma=1e-2)

@@ -19,8 +19,9 @@ from hypothesis.strategies import (
     one_of,
     register_type_strategy,
     tuples,
+    none,
 )
-from quant_met import mean_field, utils, geometry
+from quant_met import mean_field, geometry
 from scipy import linalg
 
 
@@ -119,24 +120,33 @@ register_type_strategy(
         dtype=float,
         elements=floats(min_value=-1e6, max_value=1e6, allow_nan=False, allow_infinity=False),
     ),
+    q=one_of(
+        arrays(
+            shape=tuples(just(2),),
+            dtype=float,
+            elements=floats(min_value=-1e6, max_value=1e6, allow_nan=False, allow_infinity=False),
+        ),
+        none()
+    )
 )
-def test_hamiltonians(sample: mean_field.BaseHamiltonian, k: npt.NDArray):
+def test_hamiltonians(sample: mean_field.BaseHamiltonian, k: npt.NDArray, q: npt.NDArray | None):
     sample.delta_orbital_basis = np.array([0 for _ in range(sample.number_of_bands)])
 
-    bdg_energies = sample.diagonalize_bdg(k=k)[0].flatten()
+    bdg_energies = sample.diagonalize_bdg(k=k, q=q)[0].flatten()
 
-    nonint_energies = np.array(
-        [[+E, -E] for E in sample.diagonalize_nonint(k=k)[0].flatten()]
-    ).flatten()
+    if q is None:
+        nonint_energies = np.array(
+            [[+E, -E] for E in sample.diagonalize_nonint(k=k)[0].flatten()]
+        ).flatten()
+        assert np.allclose(
+            np.sort(np.nan_to_num(bdg_energies.flatten())),
+            np.sort(np.nan_to_num(nonint_energies)),
+        )
 
     h_k_space = sample.hamiltonian(k)
     if h_k_space.ndim == 2:
         h_k_space = np.expand_dims(h_k_space, axis=0)
 
-    assert np.allclose(
-        np.sort(np.nan_to_num(bdg_energies.flatten())),
-        np.sort(np.nan_to_num(nonint_energies)),
-    )
     assert len(sample.hubbard_int_orbital_basis) == sample.number_of_bands
     for h in h_k_space:
         assert h.shape[0] == sample.number_of_bands
