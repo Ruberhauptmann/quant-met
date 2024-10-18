@@ -274,19 +274,34 @@ def test_spectral_gap(ndarrays_regression):
 
     graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
     bz_grid = graphene_lattice.generate_bz_grid(10, 10)
-    graphene_h = mean_field.hamiltonians.GrapheneHamiltonian(
-        hopping=hopping,
+    egx_h = mean_field.hamiltonians.EGXHamiltonian(
+        hopping_gr=hopping,
+        hopping_x=0.01,
+        hopping_x_gr_a=1.0,
         lattice_constant=graphene_lattice.lattice_constant,
         chemical_potential=chemical_potential,
         hubbard_int_gr=1,
-        delta=np.array([0, 0]),
+        hubbard_int_x=1,
+        delta=np.array([0, 0, 0]),
     )
+    spectral_gap_zero_gap = egx_h.calculate_spectral_gap(k=bz_grid, q=np.array([0, 0]))
 
-    spectral_gap = graphene_h.calculate_spectral_gap(k=bz_grid, q=np.array([0, 0]))
+    egx_h = mean_field.hamiltonians.EGXHamiltonian(
+        hopping_gr=hopping,
+        hopping_x=0.01,
+        hopping_x_gr_a=1.0,
+        lattice_constant=graphene_lattice.lattice_constant,
+        chemical_potential=chemical_potential,
+        hubbard_int_gr=1,
+        hubbard_int_x=1,
+        delta=np.array([1, 1, 1]),
+    )
+    spectral_gap_finite_gap = egx_h.calculate_spectral_gap(k=bz_grid, q=np.array([0, 0]))
 
     ndarrays_regression.check(
         {
-            "Gap": spectral_gap,
+            "zero gap": spectral_gap_zero_gap,
+            "finite gap": spectral_gap_finite_gap,
         },
         default_tolerance=dict(atol=1e-8, rtol=1e-8),
     )
