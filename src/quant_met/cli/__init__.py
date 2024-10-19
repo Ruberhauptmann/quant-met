@@ -15,7 +15,7 @@ Functions
     cli
 """  # noqa: D205, D400
 
-from .cli import cli
+from .main import cli
 
 __all__ = [
     "cli",
