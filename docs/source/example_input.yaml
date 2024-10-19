@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2024 Tjark Sievers
+#
+# SPDX-License-Identifier: MIT
+
+model:
+  name: DressedGraphene
+  hopping_gr: 1
+  hopping_x: 0.01
+  hopping_x_gr_a: 1
+  lattice_constant: 3
+  chemical_potential: 0.0
+  hubbard_int_gr: 1
+  hubbard_int_x: 1
+
+control:
+  calculation: scf

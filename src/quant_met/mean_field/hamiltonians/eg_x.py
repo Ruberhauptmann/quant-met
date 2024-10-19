@@ -10,6 +10,7 @@ import numpy as np
 import numpy.typing as npt
 
 from quant_met.mean_field._utils import _check_valid_array, _validate_float
+from quant_met.parameters.hamiltonians import DressedGrapheneParameters
 
 from .base_hamiltonian import BaseHamiltonian
 
@@ -19,40 +20,37 @@ class EGXHamiltonian(BaseHamiltonian):
 
     def __init__(
         self,
-        hopping_gr: float,
-        hopping_x: float,
-        hopping_x_gr_a: float,
-        lattice_constant: float,
-        chemical_potential: float,
-        hubbard_int_gr: float,
-        hubbard_int_x: float,
-        delta: npt.NDArray[np.complex64] | None = None,
+        settings: DressedGrapheneParameters,
         *args: tuple[Any, ...],
         **kwargs: tuple[dict[str, Any], ...],
     ) -> None:
         del args
         del kwargs
-        self.hopping_gr = _validate_float(hopping_gr, "Hopping graphene")
-        self.hopping_x = _validate_float(hopping_x, "Hopping impurity")
-        self.hopping_x_gr_a = _validate_float(hopping_x_gr_a, "Hybridisation")
-        if lattice_constant <= 0:
+        self.hopping_gr = _validate_float(settings.hopping_gr, "Hopping graphene")
+        self.hopping_x = _validate_float(settings.hopping_x, "Hopping impurity")
+        self.hopping_x_gr_a = _validate_float(settings.hopping_x_gr_a, "Hybridisation")
+        if settings.lattice_constant <= 0:
             msg = "Lattice constant must be positive"
             raise ValueError(msg)
-        self.lattice_constant = _validate_float(lattice_constant, "Lattice constant")
-        self.chemical_potential = _validate_float(chemical_potential, "Chemical potential")
-        self.hubbard_int_gr = _validate_float(hubbard_int_gr, "hubbard_int interaction graphene")
-        self.hubbard_int_x = _validate_float(hubbard_int_x, "hubbard_int interaction impurity")
+        self.lattice_constant = _validate_float(settings.lattice_constant, "Lattice constant")
+        self.chemical_potential = _validate_float(settings.chemical_potential, "Chemical potential")
+        self.hubbard_int_gr = _validate_float(
+            settings.hubbard_int_gr, "hubbard_int interaction graphene"
+        )
+        self.hubbard_int_x = _validate_float(
+            settings.hubbard_int_x, "hubbard_int interaction impurity"
+        )
         self._hubbard_int_orbital_basis = np.array(
             [self.hubbard_int_gr, self.hubbard_int_gr, self.hubbard_int_x]
         )
         self._number_of_bands = 3
-        if delta is None:
+        if settings.delta is None:
             self._delta_orbital_basis = np.zeros(self.number_of_bands, dtype=np.complex64)
         else:
-            if delta.shape != (self.number_of_bands,):
-                msg = "Invalid input value for gaps."
+            if settings.delta.shape != (self.number_of_bands,):
+                msg = "Invalid parameters value for gaps."
                 raise ValueError(msg)
-            self._delta_orbital_basis = np.astype(delta, np.complex64)
+            self._delta_orbital_basis = np.astype(settings.delta, np.complex64)
 
     @property
     def hubbard_int_orbital_basis(self) -> npt.NDArray[np.float64]:  # noqa: D102

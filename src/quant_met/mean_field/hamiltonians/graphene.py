@@ -42,7 +42,7 @@ class GrapheneHamiltonian(BaseHamiltonian):
             self._delta_orbital_basis = np.zeros(self.number_of_bands, dtype=np.complex64)
         else:
             if delta.shape != (self.number_of_bands,):
-                msg = "Invalid input value for gaps."
+                msg = "Invalid parameters value for gaps."
                 raise ValueError(msg)
             self._delta_orbital_basis = np.astype(delta, np.complex64)
 
