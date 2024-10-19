@@ -10,7 +10,7 @@ Functions
 ---------
 
 .. autosummary::
-   :toctree: generated/
+    :toctree: generated/
 
     cli
 """  # noqa: D205, D400
