@@ -12,6 +12,7 @@ import numpy as np
 import numpy.typing as npt
 import pandas as pd
 
+from quant_met.geometry import BaseLattice
 from quant_met.mean_field._utils import _check_valid_array
 
 
@@ -20,11 +21,42 @@ class BaseHamiltonian(ABC):
 
     @property
     @abstractmethod
-    def number_of_bands(self) -> int:
-        """Number of bands in the model."""
+    def name(self) -> str:
+        """Name of the model.
+
+        Returns
+        -------
+        str
+
+        """
         raise NotImplementedError
 
     @property
+    @abstractmethod
+    def number_of_bands(self) -> int:
+        """Number of bands.
+
+        Returns
+        -------
+        int
+
+        """
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def lattice(self) -> BaseLattice:
+        """Lattice.
+
+        Returns
+        -------
+        BaseLattice
+
+        """
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
     def hubbard_int_orbital_basis(self) -> npt.NDArray[np.float64]:
         """
         hubbard_int interaction split up in orbitals.
@@ -37,6 +69,7 @@ class BaseHamiltonian(ABC):
         raise NotImplementedError
 
     @property
+    @abstractmethod
     def delta_orbital_basis(self) -> npt.NDArray[np.complex64]:
         """
         Order parameter in orbital basis.
@@ -110,6 +143,7 @@ class BaseHamiltonian(ABC):
                     f.attrs[key] = value
 
     @classmethod
+    @abstractmethod
     def from_file(cls, filename: pathlib.Path) -> "BaseHamiltonian":
         """
         Initialise a Hamiltonian from a HDF5 file.
@@ -120,11 +154,7 @@ class BaseHamiltonian(ABC):
             File to load the Hamiltonian from.
 
         """
-        with h5py.File(f"{filename}", "r") as f:
-            config_dict = dict(f.attrs.items())
-            config_dict["delta"] = f["delta"][()]
-
-        return cls(**config_dict)
+        raise NotImplementedError
 
     def bdg_hamiltonian(
         self, k: npt.NDArray[np.float64], q: npt.NDArray[np.float64] | None = None

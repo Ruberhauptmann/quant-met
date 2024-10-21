@@ -20,7 +20,7 @@ Functions
 
 from .base_lattice import BaseLattice
 from .bz_path import generate_bz_path
-from .graphene import Graphene
+from .graphene import GrapheneLattice
 from .square import SquareLattice
 
-__all__ = ["generate_bz_path", "BaseLattice", "Graphene", "SquareLattice"]
+__all__ = ["generate_bz_path", "BaseLattice", "GrapheneLattice", "SquareLattice"]

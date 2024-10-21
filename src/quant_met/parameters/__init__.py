@@ -7,6 +7,7 @@ Parameters (:mod:`quant_met.parameters`)
 ========================================
 """  # noqa: D205, D400
 
-from .parameters import Parameters
+from .hamiltonians import DressedGrapheneParameters, GrapheneParameters, OneBandParameters
+from .main import Parameters
 
-__all__ = ["Parameters"]
+__all__ = ["Parameters", "DressedGrapheneParameters", "GrapheneParameters", "OneBandParameters"]

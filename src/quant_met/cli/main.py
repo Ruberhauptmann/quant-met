@@ -4,24 +4,31 @@
 
 """Command line interface."""
 
-import pathlib
+import sys
+from typing import TextIO
 
 import click
 import yaml
 
 from quant_met.parameters import Parameters
 
+from .scf import scf
+
 
 @click.command()
-@click.option("--input-file", type=click.Path(), help="Input file", required=True)
-def cli(input_file: pathlib.Path) -> None:
+@click.argument("input-file", type=click.File("r"))
+def cli(input_file: TextIO) -> None:
     """Command line interface for quant-met.
 
     Parameters
     ----------
     input_file
     """
-    with input_file.open() as f:
-        params = Parameters(**yaml.safe_load(f))
+    params = Parameters(**yaml.safe_load(input_file))
 
-    print(params.model)
+    match params.control.calculation:
+        case "scf":
+            scf(params)
+        case _:
+            print(f"Calculation {params.control.calculation} not found.")
+            sys.exit(1)

@@ -7,8 +7,8 @@
 from typing import Literal
 
 import numpy as np
+from numpydantic import NDArray, Shape
 from pydantic import BaseModel
-from pydantic_numpy import np_array_pydantic_annotated_typing
 
 
 class DressedGrapheneParameters(BaseModel):
@@ -22,4 +22,26 @@ class DressedGrapheneParameters(BaseModel):
     chemical_potential: float
     hubbard_int_gr: float
     hubbard_int_x: float
-    delta: np_array_pydantic_annotated_typing(data_type=np.complex64, dimensions=1) | None = None
+    delta: NDArray[Shape["3"], np.complex64] | None = None
+
+
+class GrapheneParameters(BaseModel):
+    """Parameters for Graphene model."""
+
+    name: Literal["Graphene"] = "Graphene"
+    hopping: float
+    lattice_constant: float
+    chemical_potential: float
+    hubbard_int: float
+    delta: NDArray[Shape["2"], np.complex64] | None = None
+
+
+class OneBandParameters(BaseModel):
+    """Parameters for Graphene model."""
+
+    name: Literal["OneBand"] = "OneBand"
+    hopping: float
+    lattice_constant: float
+    chemical_potential: float
+    hubbard_int: float
+    delta: NDArray[Shape["1"], np.complex64] | None = None

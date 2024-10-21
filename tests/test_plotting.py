@@ -2,11 +2,12 @@
 #
 # SPDX-License-Identifier: MIT
 
+"""Test plotting functions."""
+
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.testing.decorators import image_comparison
-
-from quant_met import mean_field, plotting, geometry
+from quant_met import geometry, mean_field, parameters, plotting
 
 
 @image_comparison(
@@ -15,8 +16,9 @@ from quant_met import mean_field, plotting, geometry
     extensions=["png"],
     style="mpl20",
 )
-def test_scatter_into_bz():
-    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
+def test_scatter_into_bz() -> None:
+    """Test scatter_into_bz."""
+    graphene_lattice = geometry.GrapheneLattice(lattice_constant=np.sqrt(3))
     plotting.scatter_into_bz(bz_corners=graphene_lattice.bz_corners, k_points=np.array([[0, 0]]))
 
 
@@ -26,8 +28,9 @@ def test_scatter_into_bz():
     extensions=["png"],
     style="mpl20",
 )
-def test_scatter_into_bz_with_fig_in():
-    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
+def test_scatter_into_bz_with_fig_in() -> None:
+    """Test scatter_into_bz with figure as input."""
+    graphene_lattice = geometry.GrapheneLattice(lattice_constant=np.sqrt(3))
     fig, ax = plt.subplots()
     plotting.scatter_into_bz(
         bz_corners=graphene_lattice.bz_corners, k_points=np.array([[0, 0]]), fig_in=fig, ax_in=ax
@@ -40,8 +43,9 @@ def test_scatter_into_bz_with_fig_in():
     extensions=["png"],
     style="mpl20",
 )
-def test_scatter_into_bz_with_data():
-    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
+def test_scatter_into_bz_with_data() -> None:
+    """Test scatter_into_bz with data."""
+    graphene_lattice = geometry.GrapheneLattice(lattice_constant=np.sqrt(3))
     plotting.scatter_into_bz(
         bz_corners=graphene_lattice.bz_corners,
         k_points=np.array([[0, 0], [1, 1]]),
@@ -55,11 +59,23 @@ def test_scatter_into_bz_with_data():
     extensions=["png"],
     style="mpl20",
 )
-def test_plotting_nonint_bandstructure_graphene():
-    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
-    graphene_h = mean_field.hamiltonians.GrapheneHamiltonian(hopping=1, lattice_constant=graphene_lattice.lattice_constant, chemical_potential=0, hubbard_int_gr=0)
+def test_plotting_nonint_bandstructure_graphene() -> None:
+    """Test band structure plotting for Graphene."""
+    graphene_lattice = geometry.GrapheneLattice(lattice_constant=np.sqrt(3))
+    graphene_h = mean_field.hamiltonians.Graphene(
+        parameters=parameters.GrapheneParameters(
+            hopping=1,
+            lattice_constant=graphene_lattice.lattice_constant,
+            chemical_potential=0,
+            hubbard_int=0,
+        )
+    )
 
-    points = [(graphene_lattice.M, "M"), (graphene_lattice.Gamma, r"\Gamma"), (graphene_lattice.K, "K")]
+    points = [
+        (graphene_lattice.M, "M"),
+        (graphene_lattice.Gamma, r"\Gamma"),
+        (graphene_lattice.K, "K"),
+    ]
     band_path, band_path_plot, ticks, labels = geometry.generate_bz_path(
         points, number_of_points=1000
     )
@@ -80,9 +96,17 @@ def test_plotting_nonint_bandstructure_graphene():
     extensions=["png"],
     style="mpl20",
 )
-def test_plotting_nonint_one_band():
+def test_plotting_nonint_one_band() -> None:
+    """Test band structure plotting for one band Hamiltonian."""
     square_lattice = geometry.SquareLattice(lattice_constant=1)
-    h = mean_field.hamiltonians.OneBandTightBindingHamiltonian(hopping=1, lattice_constant=square_lattice.lattice_constant, chemical_potential=0, hubbard_int=0)
+    h = mean_field.hamiltonians.OneBand(
+        parameters=parameters.OneBandParameters(
+            hopping=1,
+            lattice_constant=square_lattice.lattice_constant,
+            chemical_potential=0,
+            hubbard_int=0,
+        )
+    )
 
     band_path, band_path_plot, ticks, labels = geometry.generate_bz_path(
         square_lattice.high_symmetry_points, number_of_points=1000
@@ -104,11 +128,23 @@ def test_plotting_nonint_one_band():
     extensions=["png"],
     style="mpl20",
 )
-def test_plotting_nonint_bandstructure_graphene_with_fig_in():
-    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
+def test_plotting_nonint_bandstructure_graphene_with_fig_in() -> None:
+    """Test band structure plotting function with input figure."""
+    graphene_lattice = geometry.GrapheneLattice(lattice_constant=np.sqrt(3))
 
-    graphene_h = mean_field.hamiltonians.GrapheneHamiltonian(hopping=1,lattice_constant=graphene_lattice.lattice_constant, chemical_potential=0, hubbard_int_gr=0)
-    points = [(graphene_lattice.M, "M"), (graphene_lattice.Gamma, r"\Gamma"), (graphene_lattice.K, "K")]
+    graphene_h = mean_field.hamiltonians.Graphene(
+        parameters=parameters.GrapheneParameters(
+            hopping=1,
+            lattice_constant=graphene_lattice.lattice_constant,
+            chemical_potential=0,
+            hubbard_int=0,
+        )
+    )
+    points = [
+        (graphene_lattice.M, "M"),
+        (graphene_lattice.Gamma, r"\Gamma"),
+        (graphene_lattice.K, "K"),
+    ]
 
     band_path, band_path_plot, ticks, labels = geometry.generate_bz_path(
         points, number_of_points=1000
@@ -134,18 +170,25 @@ def test_plotting_nonint_bandstructure_graphene_with_fig_in():
     extensions=["png"],
     style="mpl20",
 )
-def test_plotting_nonint_bandstructure_egx():
-    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
-    egx_h = mean_field.hamiltonians.EGXHamiltonian(
-        hopping_gr=1,
-        hopping_x=0.01,
-        hopping_x_gr_a=1,
-        lattice_constant=graphene_lattice.lattice_constant,
-        chemical_potential=0,
-        hubbard_int_gr=0,
-        hubbard_int_x=0,
+def test_plotting_nonint_bandstructure_egx() -> None:
+    """Test band structure plotting function for Graphene."""
+    graphene_lattice = geometry.GrapheneLattice(lattice_constant=np.sqrt(3))
+    egx_h = mean_field.hamiltonians.DressedGraphene(
+        parameters=parameters.DressedGrapheneParameters(
+            hopping_gr=1,
+            hopping_x=0.01,
+            hopping_x_gr_a=1,
+            lattice_constant=graphene_lattice.lattice_constant,
+            chemical_potential=0,
+            hubbard_int_gr=0,
+            hubbard_int_x=0,
+        )
     )
-    points = [(graphene_lattice.M, "M"), (graphene_lattice.Gamma, r"\Gamma"), (graphene_lattice.K, "K")]
+    points = [
+        (graphene_lattice.M, "M"),
+        (graphene_lattice.Gamma, r"\Gamma"),
+        (graphene_lattice.K, "K"),
+    ]
     band_path, band_path_plot, ticks, labels = geometry.generate_bz_path(
         points, number_of_points=1000
     )
@@ -169,60 +212,25 @@ def test_plotting_nonint_bandstructure_egx():
     extensions=["png"],
     style="mpl20",
 )
-def test_plotting_nonint_bandstructure_egx_with_fig_in():
-    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
-    egx_h = mean_field.hamiltonians.EGXHamiltonian(
-        hopping_gr=1,
-        hopping_x=0.01,
-        hopping_x_gr_a=1,
-        lattice_constant=graphene_lattice.lattice_constant,
-        chemical_potential=0,
-        hubbard_int_gr=0,
-        hubbard_int_x=0,
+def test_plotting_nonint_bandstructure_egx_with_fig_in() -> None:
+    """Test plotting function with input figure."""
+    graphene_lattice = geometry.GrapheneLattice(lattice_constant=np.sqrt(3))
+    egx_h = mean_field.hamiltonians.DressedGraphene(
+        parameters=parameters.DressedGrapheneParameters(
+            hopping_gr=1,
+            hopping_x=0.01,
+            hopping_x_gr_a=1,
+            lattice_constant=graphene_lattice.lattice_constant,
+            chemical_potential=0,
+            hubbard_int_gr=0,
+            hubbard_int_x=0,
+        )
     )
-
-    points = [(graphene_lattice.M, "M"), (graphene_lattice.Gamma, r"\Gamma"), (graphene_lattice.K, "K")]
-
-    band_path, band_path_plot, ticks, labels = geometry.generate_bz_path(
-        points, number_of_points=1000
-    )
-
-    band_structure = egx_h.calculate_bandstructure(
-        band_path, overlaps=(np.array([0, 0, 1]), np.array([1, 0, 0]))
-    )
-
-    fig, ax = plt.subplots()
-
-    plotting.plot_bandstructure(
-        bands=band_structure[["band_0", "band_1", "band_2"]].to_numpy().T,
-        overlaps=band_structure[["wx_0", "wx_1", "wx_2"]].to_numpy().T,
-        k_point_list=band_path_plot,
-        labels=labels,
-        ticks=ticks,
-        fig_in=fig,
-        ax_in=ax,
-    )
-
-
-@image_comparison(
-    baseline_images=["nonint_bandstructure_egx"],
-    remove_text=True,
-    extensions=["png"],
-    style="mpl20",
-)
-def test_plotting_nonint_bandstructure_egx_with_fig_in():
-    graphene_lattice = geometry.Graphene(lattice_constant=np.sqrt(3))
-    egx_h = mean_field.hamiltonians.EGXHamiltonian(
-        hopping_gr=1,
-        hopping_x=0.01,
-        hopping_x_gr_a=1,
-        lattice_constant=graphene_lattice.lattice_constant,
-        chemical_potential=0,
-        hubbard_int_gr=0,
-        hubbard_int_x=0,
-    )
-
-    points = [(graphene_lattice.M, "M"), (graphene_lattice.Gamma, r"\Gamma"), (graphene_lattice.K, "K")]
+    points = [
+        (graphene_lattice.M, "M"),
+        (graphene_lattice.Gamma, r"\Gamma"),
+        (graphene_lattice.K, "K"),
+    ]
 
     band_path, band_path_plot, ticks, labels = geometry.generate_bz_path(
         points, number_of_points=1000
@@ -251,7 +259,8 @@ def test_plotting_nonint_bandstructure_egx_with_fig_in():
     extensions=["png"],
     style="mpl20",
 )
-def test_plotting_sf_weight():
+def test_plotting_sf_weight() -> None:
+    """Test plotting for superfluid weight."""
     plotting.plot_superfluid_weight(
         x_data=np.array([0.5, 1, 1.5, 2, 2.5, 3]),
         sf_weight_geom=np.array([1, 2, 3, 4, 5, 6]),
@@ -265,7 +274,8 @@ def test_plotting_sf_weight():
     extensions=["png"],
     style="mpl20",
 )
-def test_plotting_sf_weight_with_fig_in():
+def test_plotting_sf_weight_with_fig_in() -> None:
+    """Test plotting for superfluid weight with input figure."""
     fig, ax = plt.subplots()
     plotting.plot_superfluid_weight(
         x_data=np.array([0.5, 1, 1.5, 2, 2.5, 3]),
@@ -282,7 +292,8 @@ def test_plotting_sf_weight_with_fig_in():
     extensions=["png"],
     style="mpl20",
 )
-def test_plotting_quantum_metric():
+def test_plotting_quantum_metric() -> None:
+    """Test plotting for quantum metric."""
     plotting.plot_quantum_metric(
         x_data=np.array([0.5, 1, 1.5, 2, 2.5, 3]),
         quantum_metric=np.array([1, 2, 3, 4, 5, 6]),
@@ -295,7 +306,8 @@ def test_plotting_quantum_metric():
     extensions=["png"],
     style="mpl20",
 )
-def test_plotting_quantum_metric_with_fig_in():
+def test_plotting_quantum_metric_with_fig_in() -> None:
+    """Test plotting for quantum metric with input figure."""
     fig, ax = plt.subplots()
     plotting.plot_quantum_metric(
         x_data=np.array([0.5, 1, 1.5, 2, 2.5, 3]),
