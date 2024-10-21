@@ -17,9 +17,11 @@ class Control(BaseModel):
     calculation: str
     prefix: str
     outdir: pathlib.Path
+    conv_treshold: float
+    beta: float
 
 
-class KPOints(BaseModel):
+class KPoints(BaseModel):
     """Control for k points."""
 
     nk1: int
@@ -33,4 +35,4 @@ class Parameters(BaseModel):
     model: DressedGrapheneParameters | GrapheneParameters | OneBandParameters = Field(
         ..., discriminator="name"
     )
-    k_points: KPOints
+    k_points: KPoints

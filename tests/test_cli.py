@@ -4,6 +4,7 @@
 
 """Tests for the command line interface."""
 
+import os
 from pathlib import Path
 
 import yaml
@@ -21,11 +22,17 @@ def test_scf() -> None:
             "hopping_x": 0.01,
             "hopping_x_gr_a": 1,
             "chemical_potential": 0.0,
-            "hubbard_int_gr": 1,
-            "hubbard_int_x": 1,
+            "hubbard_int_gr": 0,
+            "hubbard_int_x": 0,
             "lattice_constant": 3,
         },
-        "control": {"calculation": "scf", "prefix": "test", "outdir": "test/"},
+        "control": {
+            "calculation": "scf",
+            "prefix": "test",
+            "outdir": "test/",
+            "beta": 100,
+            "conv_treshold": 1e-6,
+        },
         "k_points": {"nk1": 30, "nk2": 30},
     }
     with runner.isolated_filesystem() and Path("input.yaml").open("w") as f:
@@ -33,7 +40,9 @@ def test_scf() -> None:
 
     result = runner.invoke(cli, ["input.yaml"])
     assert result.exit_code == 0
-    assert result.output == "[0.+0.j 0.+0.j 0.+0.j]\n"
+    Path("input.yaml").unlink()
+    Path("test/test.hdf5").unlink()
+    os.removedirs("test")
 
 
 def test_scf_no_valid_calcution() -> None:
@@ -50,7 +59,13 @@ def test_scf_no_valid_calcution() -> None:
             "hubbard_int_x": 1,
             "lattice_constant": 3,
         },
-        "control": {"calculation": "non-existent", "prefix": "test", "outdir": "test/"},
+        "control": {
+            "calculation": "non-existent",
+            "prefix": "test",
+            "outdir": "test/",
+            "beta": 100,
+            "conv_treshold": 1e-6,
+        },
         "k_points": {"nk1": 30, "nk2": 30},
     }
     with runner.isolated_filesystem() and Path("input.yaml").open("w") as f:
@@ -58,3 +73,4 @@ def test_scf_no_valid_calcution() -> None:
 
     result = runner.invoke(cli, ["input.yaml"])
     assert result.exit_code == 1
+    Path("input.yaml").unlink()

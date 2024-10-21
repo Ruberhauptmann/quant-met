@@ -136,7 +136,7 @@ class BaseHamiltonian(ABC):
             Filename to save the Hamiltonian to, should end in .hdf5
 
         """
-        with h5py.File(f"{filename}", "w") as f:
+        with h5py.File(f"{filename.absolute()}", "w") as f:
             f.create_dataset("delta", data=self.delta_orbital_basis)
             for key, value in vars(self).items():
                 if not key.startswith("_"):
