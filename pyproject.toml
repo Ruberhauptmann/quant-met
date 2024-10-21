@@ -4,7 +4,7 @@
 
 [project]
 name = "quant-met"
-requires-python = ">=3.12"
+requires-python = ">=3.11,<3.13"
 
 [tool.poetry]
 name = "quant-met"
@@ -15,13 +15,19 @@ homepage = "https://quant-met.tjarksievers.de"
 repository = "https://github.com/Ruberhauptmann/quant-met"
 readme = "README.md"
 
+[tool.poetry.scripts]
+quant-met = 'quant_met.cli:cli'
+
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.11,<3.13"
 numpy = "^2.1.2"
 scipy = "^1.14.1"
 matplotlib = "^3.9.2"
 pandas = "^2.2.3"
 h5py = "^3.12.1"
+pydantic = "^2.9.2"
+click = "^8.1.7"
+numpydantic = "^1.6.4"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.7.0"
@@ -42,6 +48,7 @@ hypothesis = {extras = ["numpy"], version = "^6.103.0"}
 pytest-regressions = "^2.5.0"
 numpydoc = "^1.7.0"
 ruff = "^0.5.0"
+types-pyyaml = "^6.0.12.20240917"
 
 [build-system]
 requires = ["poetry-core"]
@@ -51,7 +58,8 @@ build-backend = "poetry.core.masonry.api"
 [tool.ruff]
 line-length = 100
 force-exclude = true
-extend-exclude = ["tests", "docs/source/conf.py"]
+#extend-exclude = ["tests", "docs/source/conf.py"]
+extend-exclude = ["docs/source/conf.py"]
 
 [tool.ruff.lint]
 #select = []

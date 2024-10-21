@@ -21,13 +21,13 @@ Base
 """  # noqa: D205, D400
 
 from .base_hamiltonian import BaseHamiltonian
-from .eg_x import EGXHamiltonian
-from .graphene import GrapheneHamiltonian
-from .one_band_tight_binding import OneBandTightBindingHamiltonian
+from .dressed_graphene import DressedGraphene
+from .graphene import Graphene
+from .one_band_tight_binding import OneBand
 
 __all__ = [
     "BaseHamiltonian",
-    "GrapheneHamiltonian",
-    "EGXHamiltonian",
-    "OneBandTightBindingHamiltonian",
+    "Graphene",
+    "DressedGraphene",
+    "OneBand",
 ]

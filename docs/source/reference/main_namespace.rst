@@ -8,7 +8,7 @@ Main namespace
 .. currentmodule:: quant_met
 
 
-Subpackages
+Subpmodules
 -----------
 
 .. list-table::
@@ -17,15 +17,10 @@ Subpackages
 
    * - :ref:`mean_field <mean_field>`
      - Mean field
-
-
-Submodules
-----------
-
-.. list-table::
-   :widths: 25 75
-   :header-rows: 0
-
+   * - :ref:`parameters <parameters>`
+     - Parameters
+   * - :ref:`cli <cli>`
+     - CLI
    * - :ref:`plotting <plotting>`
      - Plotting
    * - :ref:`utils <utils>`

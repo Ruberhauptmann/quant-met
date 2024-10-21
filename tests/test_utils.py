@@ -2,13 +2,15 @@
 #
 # SPDX-License-Identifier: MIT
 
+"""Test for the utility functions."""
+
 import numpy as np
 import pytest
-
 from quant_met import utils
 
 
-def test_generate_uniform_grid():
+def test_generate_uniform_grid() -> None:
+    """Test the function generate_uniform_grid."""
     grid = utils.generate_uniform_grid(
         ncols=3,
         nrows=3,
@@ -35,7 +37,8 @@ def test_generate_uniform_grid():
     )
 
 
-def test_generate_uniform_grid_errors():
+def test_generate_uniform_grid_errors() -> None:
+    """Test whether right errors are raised for generate_uniform_grid."""
     with pytest.raises(ValueError, match="Number of columns and rows must be greater than 1."):
         utils.generate_uniform_grid(
             ncols=1,

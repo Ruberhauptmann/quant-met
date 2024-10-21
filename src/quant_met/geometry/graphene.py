@@ -10,7 +10,7 @@ import numpy.typing as npt
 from .base_lattice import BaseLattice
 
 
-class Graphene(BaseLattice):
+class GrapheneLattice(BaseLattice):
     """Lattice geometry for Graphene."""
 
     def __init__(self, lattice_constant: np.float64) -> None:

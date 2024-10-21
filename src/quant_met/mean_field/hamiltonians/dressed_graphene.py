@@ -4,55 +4,65 @@
 
 """Provides the implementation for the EG-X model."""
 
+import pathlib
 from typing import Any
 
+import h5py
 import numpy as np
 import numpy.typing as npt
 
+from quant_met.geometry.graphene import GrapheneLattice
 from quant_met.mean_field._utils import _check_valid_array, _validate_float
+from quant_met.parameters.hamiltonians import DressedGrapheneParameters
 
 from .base_hamiltonian import BaseHamiltonian
 
 
-class EGXHamiltonian(BaseHamiltonian):
+class DressedGraphene(BaseHamiltonian):
     """Hamiltonian for the EG-X model."""
 
     def __init__(
         self,
-        hopping_gr: float,
-        hopping_x: float,
-        hopping_x_gr_a: float,
-        lattice_constant: float,
-        chemical_potential: float,
-        hubbard_int_gr: float,
-        hubbard_int_x: float,
-        delta: npt.NDArray[np.complex64] | None = None,
+        parameters: DressedGrapheneParameters,
         *args: tuple[Any, ...],
         **kwargs: tuple[dict[str, Any], ...],
     ) -> None:
         del args
         del kwargs
-        self.hopping_gr = _validate_float(hopping_gr, "Hopping graphene")
-        self.hopping_x = _validate_float(hopping_x, "Hopping impurity")
-        self.hopping_x_gr_a = _validate_float(hopping_x_gr_a, "Hybridisation")
-        if lattice_constant <= 0:
+        self._name = parameters.name
+        self.hopping_gr = _validate_float(parameters.hopping_gr, "Hopping graphene")
+        self.hopping_x = _validate_float(parameters.hopping_x, "Hopping impurity")
+        self.hopping_x_gr_a = _validate_float(parameters.hopping_x_gr_a, "Hybridisation")
+        if parameters.lattice_constant <= 0:
             msg = "Lattice constant must be positive"
             raise ValueError(msg)
-        self.lattice_constant = _validate_float(lattice_constant, "Lattice constant")
-        self.chemical_potential = _validate_float(chemical_potential, "Chemical potential")
-        self.hubbard_int_gr = _validate_float(hubbard_int_gr, "hubbard_int interaction graphene")
-        self.hubbard_int_x = _validate_float(hubbard_int_x, "hubbard_int interaction impurity")
+        self._lattice = GrapheneLattice(
+            lattice_constant=np.float64(
+                _validate_float(parameters.lattice_constant, "Lattice constant")
+            )
+        )
+        self.lattice_constant = self._lattice.lattice_constant
+        self.chemical_potential = _validate_float(
+            parameters.chemical_potential, "Chemical potential"
+        )
+        self.hubbard_int_gr = _validate_float(
+            parameters.hubbard_int_gr, "hubbard_int interaction graphene"
+        )
+        self.hubbard_int_x = _validate_float(
+            parameters.hubbard_int_x, "hubbard_int interaction impurity"
+        )
         self._hubbard_int_orbital_basis = np.array(
             [self.hubbard_int_gr, self.hubbard_int_gr, self.hubbard_int_x]
         )
         self._number_of_bands = 3
-        if delta is None:
+        if parameters.delta is None:
             self._delta_orbital_basis = np.zeros(self.number_of_bands, dtype=np.complex64)
         else:
-            if delta.shape != (self.number_of_bands,):
-                msg = "Invalid input value for gaps."
-                raise ValueError(msg)
-            self._delta_orbital_basis = np.astype(delta, np.complex64)
+            self._delta_orbital_basis = np.astype(parameters.delta, np.complex64)
+
+    @property
+    def name(self) -> str:  # noqa: D102
+        return self._name
 
     @property
     def hubbard_int_orbital_basis(self) -> npt.NDArray[np.float64]:  # noqa: D102
@@ -69,6 +79,18 @@ class EGXHamiltonian(BaseHamiltonian):
     @property
     def number_of_bands(self) -> int:  # noqa: D102
         return self._number_of_bands
+
+    @property
+    def lattice(self) -> GrapheneLattice:  # noqa: D102
+        return self._lattice
+
+    @classmethod
+    def from_file(cls, filename: pathlib.Path) -> "BaseHamiltonian":  # noqa: D102
+        with h5py.File(f"{filename}", "r") as f:
+            config_dict = dict(f.attrs.items())
+            config_dict["delta"] = f["delta"][()]
+        parameters = DressedGrapheneParameters.model_validate(config_dict)
+        return cls(parameters=parameters)
 
     def hamiltonian(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
         """
@@ -89,7 +111,7 @@ class EGXHamiltonian(BaseHamiltonian):
 
         t_gr = self.hopping_gr
         t_x = self.hopping_x
-        a = self.lattice_constant
+        a = self.lattice.lattice_constant
         v = self.hopping_x_gr_a
         chemical_potential = self.chemical_potential
         if k.ndim == 1:
@@ -145,7 +167,7 @@ class EGXHamiltonian(BaseHamiltonian):
 
         t_gr = self.hopping_gr
         t_x = self.hopping_x
-        a = self.lattice_constant
+        a = self.lattice.lattice_constant
         if k.ndim == 1:
             k = np.expand_dims(k, axis=0)
 
