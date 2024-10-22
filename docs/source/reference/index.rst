@@ -2,13 +2,14 @@
 ..
 .. SPDX-License-Identifier: MIT
 
+.. module:: quant_met
+
 API Reference
 =============
 
-.. module:: quant_met
+Test for module structure
 
 .. toctree::
-   :maxdepth: 2
-   :hidden:
+   :maxdepth: 1
 
-   quant_met <module_structure>
+   module_structure
