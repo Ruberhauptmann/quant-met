@@ -17,6 +17,7 @@ control:
   prefix: test
   outdir: test/
   beta: 100
+  q: [0, 0]
   conv_treshold: 1e-6
 
 k_points:

@@ -35,6 +35,7 @@ def scf(parameters: Parameters) -> None:
         ),
         beta=np.float64(parameters.control.beta),
         epsilon=parameters.control.conv_treshold,
+        q=parameters.control.q,
     )
     print(solved_h.delta_orbital_basis)
     result_file = result_path / f"{parameters.control.prefix}.hdf5"
