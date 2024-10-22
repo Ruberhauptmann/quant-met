@@ -11,9 +11,4 @@ API Reference
    :maxdepth: 2
    :hidden:
 
-   quant_met <main_namespace>
-   quant_met.mean_field <mean_field>
-   quant_met.parameters <parameters>
-   quant_met.cli <cli>
-   quant_met.plotting <plotting>
-   quant_met.utils <utils>
+   quant_met <module_structure>
