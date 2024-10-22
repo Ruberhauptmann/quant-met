@@ -10,6 +10,6 @@ API Reference
 Test for module structure
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    module_structure
