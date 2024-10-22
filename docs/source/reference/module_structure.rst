@@ -2,30 +2,19 @@
 ..
 .. SPDX-License-Identifier: MIT
 
-Main namespace
-==============
+.. _module-structure:
 
-.. currentmodule:: quant_met
+Module structure
+================
 
+Submodules
+----------
 
-Subpmodules
------------
-
-.. list-table::
-   :widths: 25 75
-   :header-rows: 0
-
-   * - :ref:`mean_field <mean_field>`
-     - Mean field
-   * - :ref:`parameters <parameters>`
-     - Parameters
-   * - :ref:`cli <cli>`
-     - CLI
-   * - :ref:`plotting <plotting>`
-     - Plotting
-   * - :ref:`utils <utils>`
-     - Utilities
-
+- :ref:`mean_field <mean_field>`
+- :ref:`parameters <parameters>`
+- :ref:`cli <cli>`
+- :ref:`plotting <plotting>`
+- :ref:`utils <utils>`
 
 .. This will appear in the left sidebar on this page. Keep in sync with the contents above!
 
