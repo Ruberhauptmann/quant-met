@@ -6,6 +6,7 @@
 
 import pathlib
 
+from numpydantic import NDArray, Shape
 from pydantic import BaseModel, Field
 
 from .hamiltonians import DressedGrapheneParameters, GrapheneParameters, OneBandParameters
@@ -19,6 +20,7 @@ class Control(BaseModel):
     outdir: pathlib.Path
     conv_treshold: float
     beta: float
+    q: NDArray[Shape["2"], int | float] | None = None
 
 
 class KPoints(BaseModel):
