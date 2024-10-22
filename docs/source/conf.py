@@ -57,6 +57,7 @@ html_theme_options = {
         "text": "Quant-Met",
     },
     "navbar_end": ["theme-switcher", "version-switcher", "navbar-icon-links"],
+    "collapse_navigation": True,
     "navbar_persistent": [],
     "switcher": {
         "version_match": version,

@@ -5,6 +5,3 @@
 .. _parameters:
 
 .. automodule:: quant_met.parameters
-   :no-members:
-   :no-inherited-members:
-   :no-special-members:
