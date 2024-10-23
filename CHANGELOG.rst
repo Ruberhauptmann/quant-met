@@ -2,6 +2,37 @@
 ..
 .. SPDX-License-Identifier: MIT
 
+.. _changelog-0.0.8:
+
+0.0.8 — 2024-10-23
+------------------
+
+Removed
+^^^^^^^
+
+- Functions to calculate free energy, as they are not needed anymore with the new self-consistency solver
+
+Added
+^^^^^
+
+- Command-line-interface to run input files
+
+- Finite momentum pairing into BdG Hamiltonian and self-consistency
+
+- Finite momentum pairing into input file
+
+- Function in Hamiltonian to calculate spectral gap from DOS
+
+Changed
+^^^^^^^
+
+- Put Hamiltonians into subpackage under mean_field
+
+Fixed
+^^^^^
+
+- Take lattice as argument in self-consistency, dont use Graphene lattice as default
+
 .. _changelog-0.0.7:
 
 0.0.7 — 2024-10-15
