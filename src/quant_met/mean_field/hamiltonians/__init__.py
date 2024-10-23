@@ -4,7 +4,7 @@
 
 """
 Hamiltonians (:mod:`quant_met.mean_field.hamiltonians`)
-======================================================
+=======================================================
 
 Base
 
@@ -16,8 +16,9 @@ Base
 .. autosummary::
     :toctree: generated/
 
-    GrapheneHamiltonian
-    EGXHamiltonian
+    Graphene
+    DressedGraphene
+    OneBand
 """  # noqa: D205, D400
 
 from .base_hamiltonian import BaseHamiltonian
