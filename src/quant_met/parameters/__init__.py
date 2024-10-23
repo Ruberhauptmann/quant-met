@@ -5,6 +5,19 @@
 """
 Parameters (:mod:`quant_met.parameters`)
 ========================================
+
+.. autosummary::
+   :toctree: generated/
+
+Parameters
+----------
+
+.. autosummary::
+   :toctree: generated/
+
+   DressedGrapheneParameters
+   GrapheneParameters
+   OneBandParameters
 """  # noqa: D205, D400
 
 from .hamiltonians import DressedGrapheneParameters, GrapheneParameters, OneBandParameters

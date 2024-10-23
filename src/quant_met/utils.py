@@ -14,7 +14,7 @@ Functions
 .. autosummary::
    :toctree: generated/
 
-    generate_uniform_grid - Generate a uniform grid of points in 2D.
+    generate_uniform_grid
 """  # noqa: D205, D400
 
 import numpy as np

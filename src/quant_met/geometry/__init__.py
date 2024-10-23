@@ -15,7 +15,16 @@ Functions
    :toctree: generated/
 
     generate_bz_path
-    Graphene
+
+Classes
+-------
+
+.. autosummary::
+   :toctree: generated/
+
+   BaseLattice
+   GrapheneLattice
+   SquareLattice
 """  # noqa: D205, D400
 
 from .base_lattice import BaseLattice
