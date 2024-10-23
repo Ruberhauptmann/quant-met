@@ -6,6 +6,15 @@
 Mean field treatment (:mod:`quant_met.mean_field`)
 ==================================================
 
+Submodules
+----------
+
+.. autosummary::
+    :toctree: generated/
+
+    hamiltonians
+
+
 Functions
 ---------
 
@@ -14,6 +23,8 @@ Functions
 
    superfluid_weight
    quantum_metric
+   quantum_metric_bdg
+   self_consistency_loop
 """  # noqa: D205, D400
 
 from quant_met.mean_field import hamiltonians

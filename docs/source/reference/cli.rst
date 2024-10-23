@@ -5,6 +5,3 @@
 .. _cli:
 
 .. automodule:: quant_met.cli
-   :no-members:
-   :no-inherited-members:
-   :no-special-members:

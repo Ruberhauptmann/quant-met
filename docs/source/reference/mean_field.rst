@@ -5,6 +5,3 @@
 .. _mean_field:
 
 .. automodule:: quant_met.mean_field
-   :no-members:
-   :no-inherited-members:
-   :no-special-members:
