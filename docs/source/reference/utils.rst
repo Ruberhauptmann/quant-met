@@ -5,6 +5,3 @@
 .. _utils:
 
 .. automodule:: quant_met.utils
-   :no-members:
-   :no-inherited-members:
-   :no-special-members:

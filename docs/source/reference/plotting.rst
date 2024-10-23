@@ -5,6 +5,3 @@
 .. _plotting:
 
 .. automodule:: quant_met.plotting
-   :no-members:
-   :no-inherited-members:
-   :no-special-members:
