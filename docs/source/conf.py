@@ -51,6 +51,11 @@ html_sidebars = {
     "**": ["search-button-field", "sidebar-nav-bs"],
 }
 
+if "dev" in version:
+    switcher_version = "dev"
+else:
+    switcher_version = f"{version}"
+
 html_theme_options = {
     "github_url": "https://github.com/Ruberhauptmann/quant-met",
     "logo": {
