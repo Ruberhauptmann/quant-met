@@ -45,3 +45,25 @@ class OneBandParameters(BaseModel):
     chemical_potential: float
     hubbard_int: float
     delta: NDArray[Shape["1"], np.complex64] | None = None
+
+
+class TwoBandParameters(BaseModel):
+    """Parameters for Graphene model."""
+
+    name: Literal["TwoBand"] = "TwoBand"
+    hopping: float
+    lattice_constant: float
+    chemical_potential: float
+    hubbard_int: float
+    delta: NDArray[Shape["2"], np.complex64] | None = None
+
+
+class ThreeBandParameters(BaseModel):
+    """Parameters for Graphene model."""
+
+    name: Literal["ThreeBand"] = "ThreeBand"
+    hopping: float
+    lattice_constant: float
+    chemical_potential: float
+    hubbard_int: float
+    delta: NDArray[Shape["3"], np.complex64] | None = None

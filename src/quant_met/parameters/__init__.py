@@ -15,7 +15,20 @@ Parameters (:mod:`quant_met.parameters`)
     Parameters
 """  # noqa: D205, D400
 
-from .hamiltonians import DressedGrapheneParameters, GrapheneParameters, OneBandParameters
+from .hamiltonians import (
+    DressedGrapheneParameters,
+    GrapheneParameters,
+    OneBandParameters,
+    ThreeBandParameters,
+    TwoBandParameters,
+)
 from .main import Parameters
 
-__all__ = ["Parameters", "DressedGrapheneParameters", "GrapheneParameters", "OneBandParameters"]
+__all__ = [
+    "Parameters",
+    "DressedGrapheneParameters",
+    "GrapheneParameters",
+    "OneBandParameters",
+    "TwoBandParameters",
+    "ThreeBandParameters",
+]

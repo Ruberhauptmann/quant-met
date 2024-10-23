@@ -33,17 +33,16 @@ def self_consistency_loop(
 
     rng = np.random.default_rng()
     delta_init = np.zeros(shape=h.delta_orbital_basis.shape, dtype=np.complex64)
-    delta_init += (
-        2 * rng.random(size=h.delta_orbital_basis.shape)
-        - 1
-        + 1.0j * (2 * rng.random(size=h.delta_orbital_basis.shape) - 1)
+    delta_init += (0.2 * rng.random(size=h.delta_orbital_basis.shape) - 1) + 1.0j * (
+        0.2 * rng.random(size=h.delta_orbital_basis.shape) - 1
     )
     h.delta_orbital_basis = delta_init
 
     while True:
         new_gap = h.gap_equation(k=k_space_grid, q=q, beta=beta)
+        print(f"Diff: {np.abs(h.delta_orbital_basis - new_gap)}")
         if (np.abs(h.delta_orbital_basis - new_gap) < epsilon).all():
             h.delta_orbital_basis = new_gap
             return h
-        mixing_greed = 0.1
+        mixing_greed = 0.5
         h.delta_orbital_basis = mixing_greed * new_gap + (1 - mixing_greed) * h.delta_orbital_basis
