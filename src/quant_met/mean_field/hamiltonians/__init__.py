@@ -9,12 +9,12 @@ Hamiltonians (:mod:`quant_met.mean_field.hamiltonians`)
 Base
 
 .. autosummary::
-    :toctree: generated/
+    :toctree: hamiltonians/
 
     BaseHamiltonian
 
 .. autosummary::
-    :toctree: generated/
+    :toctree: hamiltonians/
 
     Graphene
     DressedGraphene
