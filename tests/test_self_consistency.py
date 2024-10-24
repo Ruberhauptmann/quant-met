@@ -25,7 +25,7 @@ def test_self_consistency() -> None:
     )
     assert np.allclose(
         mean_field.self_consistency_loop(
-            h=egx_h, k_space_grid=graphene_lattice.generate_bz_grid(50, 50), epsilon=1e-4, beta=100
+            h=egx_h, k_space_grid=graphene_lattice.generate_bz_grid(50, 50), epsilon=1e-4
         ).delta_orbital_basis,
         np.zeros(3),
     )
@@ -34,8 +34,6 @@ def test_self_consistency() -> None:
             h=egx_h,
             k_space_grid=graphene_lattice.generate_bz_grid(50, 50),
             epsilon=1e-4,
-            beta=100,
-            q=np.array([0, 0]),
         ).delta_orbital_basis,
         np.zeros(3),
     )

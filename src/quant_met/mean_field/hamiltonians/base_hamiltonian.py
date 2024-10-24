@@ -45,6 +45,30 @@ class BaseHamiltonian(ABC):
 
     @property
     @abstractmethod
+    def beta(self) -> float:
+        """Beta.
+
+        Returns
+        -------
+        float
+
+        """
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def q(self) -> npt.NDArray[np.float64]:
+        """Finite momentum of Cooper pairs.
+
+        Returns
+        -------
+        :class:`numpy.ndarray`
+
+        """
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
     def lattice(self) -> BaseLattice:
         """Lattice.
 
@@ -139,8 +163,8 @@ class BaseHamiltonian(ABC):
         with h5py.File(f"{filename.absolute()}", "w") as f:
             f.create_dataset("delta", data=self.delta_orbital_basis)
             for key, value in vars(self).items():
-                if not key.startswith("_"):
-                    f.attrs[key] = value
+                if key != "_lattice":
+                    f.attrs[key.strip("_")] = value
 
     @classmethod
     @abstractmethod
@@ -156,15 +180,12 @@ class BaseHamiltonian(ABC):
         """
         raise NotImplementedError
 
-    def bdg_hamiltonian(
-        self, k: npt.NDArray[np.float64], q: npt.NDArray[np.float64] | None = None
-    ) -> npt.NDArray[np.complex64]:
+    def bdg_hamiltonian(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
         """
         Bogoliuobov de Genne Hamiltonian.
 
         Parameters
         ----------
-        q
         k : :class:`numpy.ndarray`
             List of k points.
 
@@ -177,8 +198,6 @@ class BaseHamiltonian(ABC):
         assert _check_valid_array(k)
         if k.ndim == 1:
             k = np.expand_dims(k, axis=0)
-        if q is None:
-            q = np.array([0, 0])
 
         h = np.zeros(
             (k.shape[0], 2 * self.number_of_bands, 2 * self.number_of_bands), dtype=np.complex64
@@ -189,7 +208,7 @@ class BaseHamiltonian(ABC):
             :,
             self.number_of_bands : 2 * self.number_of_bands,
             self.number_of_bands : 2 * self.number_of_bands,
-        ] = -self.hamiltonian(q - k).conjugate()
+        ] = -self.hamiltonian(self.q - k).conjugate()
 
         for i in range(self.number_of_bands):
             h[:, self.number_of_bands + i, i] = self.delta_orbital_basis[i]
@@ -276,14 +295,14 @@ class BaseHamiltonian(ABC):
         return band_energies.squeeze(), bloch_wavefunctions.squeeze()
 
     def diagonalize_bdg(
-        self, k: npt.NDArray[np.float64], q: npt.NDArray[np.float64] | None = None
+        self,
+        k: npt.NDArray[np.float64],
     ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.complex64]]:
         """
         Diagonalize the BdG Hamiltonian.
 
         Parameters
         ----------
-        q
         k : :class:`numpy.ndarray`
             List of k points.
 
@@ -295,7 +314,7 @@ class BaseHamiltonian(ABC):
             Diagonalising matrix of the BdG Hamiltonian.
 
         """
-        bdg_matrix = self.bdg_hamiltonian(k=k, q=q)
+        bdg_matrix = self.bdg_hamiltonian(k=k)
         if bdg_matrix.ndim == 2:
             bdg_matrix = np.expand_dims(bdg_matrix, axis=0)
             k = np.expand_dims(k, axis=0)
@@ -312,14 +331,13 @@ class BaseHamiltonian(ABC):
         return bdg_energies.squeeze(), bdg_wavefunctions.squeeze()
 
     def gap_equation(
-        self, k: npt.NDArray[np.float64], beta: np.float64, q: npt.NDArray[np.float64] | None = None
+        self,
+        k: npt.NDArray[np.float64],
     ) -> npt.NDArray[np.complex64]:
         """Gap equation.
 
         Parameters
         ----------
-        q
-        beta
         k
 
         Returns
@@ -329,10 +347,8 @@ class BaseHamiltonian(ABC):
 
 
         """
-        if q is None:
-            q = np.array([0, 0])
-        bdg_energies, bdg_wavefunctions = self.diagonalize_bdg(k=k, q=q)
-        bdg_energies_minus_k, _ = self.diagonalize_bdg(k=-k, q=-q)
+        bdg_energies, bdg_wavefunctions = self.diagonalize_bdg(k=k)
+        bdg_energies_minus_k, _ = self.diagonalize_bdg(k=-k)
         delta = np.zeros(self.number_of_bands, dtype=np.complex64)
 
         for i in range(self.number_of_bands):
@@ -342,13 +358,13 @@ class BaseHamiltonian(ABC):
                     sum_tmp += np.conjugate(bdg_wavefunctions[k_index, i, j]) * bdg_wavefunctions[
                         k_index, i + self.number_of_bands, j
                     ] * _fermi_dirac(
-                        bdg_energies[k_index, j + self.number_of_bands].item(), beta
+                        bdg_energies[k_index, j + self.number_of_bands].item(), self.beta
                     ) + np.conjugate(
                         bdg_wavefunctions[k_index, i, j + self.number_of_bands]
                     ) * bdg_wavefunctions[
                         k_index, i + self.number_of_bands, j + self.number_of_bands
                     ] * _fermi_dirac(
-                        -bdg_energies_minus_k[k_index, j + self.number_of_bands].item(), beta
+                        -bdg_energies_minus_k[k_index, j + self.number_of_bands].item(), self.beta
                     )
             delta[i] = (-self.hubbard_int_orbital_basis[i] * sum_tmp / len(k)).conjugate()
 
@@ -400,22 +416,19 @@ class BaseHamiltonian(ABC):
     def calculate_density_of_states(
         self,
         k: npt.NDArray[np.float64],
-        q: npt.NDArray[np.float64] | None = None,
     ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
         """Calculate the density of states.
 
         Parameters
         ----------
-        q
         k
-        energies
 
         Returns
         -------
         Density of states.
 
         """
-        bands, _ = self.diagonalize_bdg(k=k, q=q)
+        bands, _ = self.diagonalize_bdg(k=k)
         energies = np.linspace(start=np.min(bands), stop=np.max(bands), num=5000)
         density_of_states = np.zeros(shape=energies.shape, dtype=np.float64)
 
@@ -425,22 +438,19 @@ class BaseHamiltonian(ABC):
             ) / len(k)
         return energies, density_of_states
 
-    def calculate_spectral_gap(
-        self, k: npt.NDArray[np.float64], q: npt.NDArray[np.float64] | None = None
-    ) -> float:
+    def calculate_spectral_gap(self, k: npt.NDArray[np.float64]) -> float:
         """Calculate the spectral gap.
 
         Parameters
         ----------
         k
-        q
 
         Returns
         -------
         Spectral gap
 
         """
-        energies, density_of_states = self.calculate_density_of_states(k=k, q=q)
+        energies, density_of_states = self.calculate_density_of_states(k=k)
 
         coherence_peaks = np.where(np.isclose(density_of_states, np.max(density_of_states)))[0]
 
@@ -466,6 +476,6 @@ def _gaussian(x: npt.NDArray[np.float64], sigma: float) -> npt.NDArray[np.float6
     return gaussian
 
 
-def _fermi_dirac(energy: np.float64, beta: np.float64) -> np.float64:
-    fermi_dirac: np.float64 = 1 / (1 + np.exp(beta * energy))
+def _fermi_dirac(energy: float, beta: float) -> float:
+    fermi_dirac: float = 1 / (1 + np.exp(beta * energy))
     return fermi_dirac

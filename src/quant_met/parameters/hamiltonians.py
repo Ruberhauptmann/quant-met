@@ -22,6 +22,8 @@ class DressedGrapheneParameters(BaseModel):
     chemical_potential: float
     hubbard_int_gr: float
     hubbard_int_x: float
+    beta: float | None = None
+    q: NDArray[Shape["2"], int | float] | None = None
     delta: NDArray[Shape["3"], np.complex64] | None = None
 
 
@@ -33,6 +35,8 @@ class GrapheneParameters(BaseModel):
     lattice_constant: float
     chemical_potential: float
     hubbard_int: float
+    beta: float | None = None
+    q: NDArray[Shape["2"], int | float] | None = None
     delta: NDArray[Shape["2"], np.complex64] | None = None
 
 
@@ -44,4 +48,6 @@ class OneBandParameters(BaseModel):
     lattice_constant: float
     chemical_potential: float
     hubbard_int: float
+    beta: float | None = None
+    q: NDArray[Shape["2"], int | float] | None = None
     delta: NDArray[Shape["1"], np.complex64] | None = None

@@ -44,6 +44,14 @@ class OneBand(BaseHamiltonian):
         self.hubbard_int = _validate_float(parameters.hubbard_int, "Hubbard interaction")
         self._hubbard_int_orbital_basis = np.array([self.hubbard_int])
         self._number_of_bands = 1
+        if parameters.beta is None:
+            self._beta = 1000.0
+        else:
+            self._beta = parameters.beta
+        if parameters.q is None:
+            self._q = np.zeros(2)
+        else:
+            self._q = parameters.q
         if parameters.delta is None:
             self._delta_orbital_basis = np.zeros(self.number_of_bands, dtype=np.complex64)
         else:
@@ -52,6 +60,14 @@ class OneBand(BaseHamiltonian):
     @property
     def name(self) -> str:  # noqa: D102
         return self._name
+
+    @property
+    def q(self) -> npt.NDArray[np.float64]:  # noqa: D102
+        return self._q
+
+    @property
+    def beta(self) -> float:  # noqa: D102
+        return self._beta
 
     @property
     def lattice(self) -> SquareLattice:  # noqa: D102
