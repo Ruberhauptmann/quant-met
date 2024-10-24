@@ -178,6 +178,8 @@ def test_hamiltonians(sample_parameters: BaseModel, k: npt.NDArray, q: npt.NDArr
         assert h.shape[1] == sample.number_of_bands
         assert linalg.ishermitian(h)
 
+    assert sample.beta == 1000.0
+
 
 def test_hamiltonian_k_space_graphene() -> None:
     """Test Graphene Hamiltonians at some k points."""
@@ -485,6 +487,27 @@ def test_save_graphene(tmp_path: Path) -> None:
             assert np.allclose(value, graphene_h.__dict__[key])
 
 
+def test_save_graphene_with_beta_and_q(tmp_path: Path) -> None:
+    """Test whether a saved Graphene Hamiltonian is restored correctly."""
+    graphene_h = mean_field.hamiltonians.Graphene(
+        parameters=parameters.GrapheneParameters(
+            hopping=1,
+            lattice_constant=np.sqrt(3),
+            chemical_potential=-1,
+            hubbard_int=1,
+            q=np.ones(2, dtype=np.float64),
+            beta=100,
+            delta=np.ones(2, dtype=np.complex64),
+        )
+    )
+    file_path = tmp_path / "test.hdf5"
+    graphene_h.save(filename=file_path)
+    sample_read = type(graphene_h).from_file(filename=file_path)
+    for key, value in vars(sample_read).items():
+        if not key.startswith("_"):
+            assert np.allclose(value, graphene_h.__dict__[key])
+
+
 def test_save_egx(tmp_path: Path) -> None:
     """Test whether a saved dressed Graphene Hamiltonian is restored correctly."""
     egx_h = mean_field.hamiltonians.DressedGraphene(
@@ -507,6 +530,30 @@ def test_save_egx(tmp_path: Path) -> None:
             assert np.allclose(value, egx_h.__dict__[key])
 
 
+def test_save_egx_with_q_and_beta(tmp_path: Path) -> None:
+    """Test whether a saved dressed Graphene Hamiltonian is restored correctly."""
+    egx_h = mean_field.hamiltonians.DressedGraphene(
+        parameters=parameters.DressedGrapheneParameters(
+            hopping_gr=1,
+            hopping_x=0.01,
+            hopping_x_gr_a=1,
+            lattice_constant=np.sqrt(3),
+            chemical_potential=0,
+            hubbard_int_gr=1,
+            hubbard_int_x=1,
+            q=np.ones(2, dtype=np.float64),
+            beta=100,
+            delta=np.ones(3, dtype=np.complex64),
+        )
+    )
+    file_path = tmp_path / "test.hdf5"
+    egx_h.save(filename=file_path)
+    sample_read = type(egx_h).from_file(filename=file_path)
+    for key, value in vars(sample_read).items():
+        if not key.startswith("_"):
+            assert np.allclose(value, egx_h.__dict__[key])
+
+
 def test_save_one_band(tmp_path: Path) -> None:
     """Test whether a saved one band Hamiltonian is restored correctly."""
     one_band_h = mean_field.hamiltonians.OneBand(
@@ -515,6 +562,27 @@ def test_save_one_band(tmp_path: Path) -> None:
             lattice_constant=1,
             chemical_potential=0,
             hubbard_int=1,
+            delta=np.ones(1, dtype=np.complex64),
+        )
+    )
+    file_path = tmp_path / "test.hdf5"
+    one_band_h.save(filename=file_path)
+    sample_read = type(one_band_h).from_file(filename=file_path)
+    for key, value in vars(sample_read).items():
+        if not key.startswith("_"):
+            assert np.allclose(value, one_band_h.__dict__[key])
+
+
+def test_save_one_band_with_q_and_beta(tmp_path: Path) -> None:
+    """Test whether a saved one band Hamiltonian is restored correctly."""
+    one_band_h = mean_field.hamiltonians.OneBand(
+        parameters=parameters.OneBandParameters(
+            hopping=1,
+            lattice_constant=1,
+            chemical_potential=0,
+            hubbard_int=1,
+            q=np.ones(2, dtype=np.float64),
+            beta=100,
             delta=np.ones(1, dtype=np.complex64),
         )
     )
@@ -662,6 +730,10 @@ def test_base_hamiltonian() -> None:
     base_hamiltonian = mean_field.hamiltonians.BaseHamiltonian()
     with pytest.raises(NotImplementedError):
         print(base_hamiltonian.name)
+    with pytest.raises(NotImplementedError):
+        print(base_hamiltonian.q)
+    with pytest.raises(NotImplementedError):
+        print(base_hamiltonian.beta)
     with pytest.raises(NotImplementedError):
         print(base_hamiltonian.lattice)
     with pytest.raises(NotImplementedError):
