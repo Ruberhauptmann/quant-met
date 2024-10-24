@@ -157,7 +157,7 @@ def test_hamiltonians(sample_parameters: BaseModel, k: npt.NDArray, q: npt.NDArr
 
     sample.delta_orbital_basis = np.array([0 for _ in range(sample.number_of_bands)])
 
-    bdg_energies = sample.diagonalize_bdg(k=k, q=q)[0].flatten()
+    bdg_energies = sample.diagonalize_bdg(k=k)[0].flatten()
 
     if q is None:
         nonint_energies = np.array(
@@ -293,7 +293,7 @@ def test_gap_equation_egx_nonint() -> None:
         )
     )
     assert np.allclose(
-        egx_h.gap_equation(k=graphene_lattice.generate_bz_grid(ncols=30, nrows=30), beta=200),
+        egx_h.gap_equation(k=graphene_lattice.generate_bz_grid(ncols=30, nrows=30)),
         np.zeros(3, dtype=np.complex64),
     )
 
@@ -315,7 +315,7 @@ def test_density_of_states(ndarrays_regression: NDArraysRegressionFixture) -> No
         )
     )
 
-    dos = graphene_h.calculate_density_of_states(k=bz_grid, q=np.array([0, 0]))
+    dos = graphene_h.calculate_density_of_states(k=bz_grid)
 
     ndarrays_regression.check(
         {
@@ -344,7 +344,7 @@ def test_spectral_gap(ndarrays_regression: NDArraysRegressionFixture) -> None:
             delta=np.array([0, 0, 0], dtype=np.complex64),
         )
     )
-    spectral_gap_zero_gap = egx_h.calculate_spectral_gap(k=bz_grid, q=np.array([0, 0]))
+    spectral_gap_zero_gap = egx_h.calculate_spectral_gap(k=bz_grid)
 
     egx_h = mean_field.hamiltonians.DressedGraphene(
         parameters=parameters.DressedGrapheneParameters(
@@ -358,7 +358,7 @@ def test_spectral_gap(ndarrays_regression: NDArraysRegressionFixture) -> None:
             delta=np.array([1, 1, 1], dtype=np.complex64),
         )
     )
-    spectral_gap_finite_gap = egx_h.calculate_spectral_gap(k=bz_grid, q=np.array([0, 0]))
+    spectral_gap_finite_gap = egx_h.calculate_spectral_gap(k=bz_grid)
 
     ndarrays_regression.check(
         {

@@ -30,7 +30,6 @@ def test_scf() -> None:
             "calculation": "scf",
             "prefix": "test",
             "outdir": "test/",
-            "beta": 100,
             "conv_treshold": 1e-6,
         },
         "k_points": {"nk1": 30, "nk2": 30},
