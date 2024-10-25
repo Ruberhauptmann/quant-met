@@ -109,7 +109,7 @@ class OneBandParameters(HamiltonianParameters):
     )
 
 
-class TwoBandParameters(BaseModel):
+class TwoBandParameters(HamiltonianParameters):
     """Parameters for Graphene model."""
 
     name: Literal["TwoBand"] = "TwoBand"
@@ -128,7 +128,7 @@ class TwoBandParameters(BaseModel):
     )
 
 
-class ThreeBandParameters(BaseModel):
+class ThreeBandParameters(HamiltonianParameters):
     """Parameters for Graphene model."""
 
     name: Literal["ThreeBand"] = "ThreeBand"
