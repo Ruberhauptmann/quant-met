@@ -296,7 +296,9 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
                     )
             delta[i] = (-self.hubbard_int_orbital_basis[i] * sum_tmp / len(k)).conjugate()
 
-        delta_without_phase: npt.NDArray[np.complex64] = delta * np.exp(-1j * np.angle(delta[-1]))
+        delta_without_phase: npt.NDArray[np.complex64] = delta * np.exp(
+            -1j * np.angle(delta[np.argmax(np.abs(delta))])
+        )
         return delta_without_phase
 
     def calculate_bandstructure(

@@ -66,6 +66,9 @@ class ThreeBand(BaseHamiltonian[ThreeBandParameters]):
         h[:, 2, 2] = (
             -2 * hopping * (np.cos(k[:, 1] * lattice_constant) + np.cos(k[:, 0] * lattice_constant))
         )
+        h[:, 2, 0] = 0.5
+        h[:, 0, 2] = 0.5
+
         h[:, 0, 0] -= chemical_potential
         h[:, 1, 1] -= chemical_potential
         h[:, 2, 2] -= chemical_potential
