@@ -2,111 +2,40 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""Provides the implementation for the EG-X model."""
+"""Provides the implementation for the dressed graphene model."""
 
-import pathlib
-from typing import Any
-
-import h5py
 import numpy as np
 import numpy.typing as npt
 
+from quant_met.geometry import BaseLattice
 from quant_met.geometry.graphene import GrapheneLattice
-from quant_met.mean_field._utils import _check_valid_array, _validate_float
+from quant_met.mean_field._utils import _check_valid_array
 from quant_met.parameters.hamiltonians import DressedGrapheneParameters
 
 from .base_hamiltonian import BaseHamiltonian
 
 
-class DressedGraphene(BaseHamiltonian):
-    """Hamiltonian for the EG-X model."""
+class DressedGraphene(BaseHamiltonian[DressedGrapheneParameters]):
+    """Hamiltonian for the dressed graphene model."""
 
-    def __init__(
-        self,
-        parameters: DressedGrapheneParameters,
-        *args: tuple[Any, ...],
-        **kwargs: tuple[dict[str, Any], ...],
-    ) -> None:
-        del args
-        del kwargs
-        self._name = parameters.name
-        self.hopping_gr = _validate_float(parameters.hopping_gr, "Hopping graphene")
-        self.hopping_x = _validate_float(parameters.hopping_x, "Hopping impurity")
-        self.hopping_x_gr_a = _validate_float(parameters.hopping_x_gr_a, "Hybridisation")
-        if parameters.lattice_constant <= 0:
-            msg = "Lattice constant must be positive"
-            raise ValueError(msg)
-        self._lattice = GrapheneLattice(
-            lattice_constant=np.float64(
-                _validate_float(parameters.lattice_constant, "Lattice constant")
-            )
-        )
-        self.lattice_constant = self._lattice.lattice_constant
-        self.chemical_potential = _validate_float(
-            parameters.chemical_potential, "Chemical potential"
-        )
-        self.hubbard_int_gr = _validate_float(
-            parameters.hubbard_int_gr, "hubbard_int interaction graphene"
-        )
-        self.hubbard_int_x = _validate_float(
-            parameters.hubbard_int_x, "hubbard_int interaction impurity"
-        )
-        self._hubbard_int_orbital_basis = np.array(
-            [self.hubbard_int_gr, self.hubbard_int_gr, self.hubbard_int_x]
-        )
-        self._number_of_bands = 3
-        if parameters.beta is None:
-            self._beta = 1000.0
-        else:
-            self._beta = parameters.beta
-        if parameters.q is None:
-            self._q = np.zeros(2)
-        else:
-            self._q = parameters.q
-        if parameters.delta is None:
-            self._delta_orbital_basis = np.zeros(self.number_of_bands, dtype=np.complex64)
-        else:
-            self._delta_orbital_basis = np.astype(parameters.delta, np.complex64)
+    def __init__(self, parameters: DressedGrapheneParameters) -> None:
+        super().__init__(parameters)
+        self.hopping_gr = parameters.hopping_gr
+        self.hopping_x = parameters.hopping_x
+        self.hopping_x_gr_a = parameters.hopping_x_gr_a
+        self.hubbard_int_orbital_basis = parameters.hubbard_int_orbital_basis
+        self.chemical_potential = parameters.chemical_potential
+        if parameters.delta is not None:
+            self.delta_orbital_basis = np.astype(parameters.delta, np.complex64)
 
-    @property
-    def name(self) -> str:  # noqa: D102
-        return self._name
-
-    @property
-    def q(self) -> npt.NDArray[np.float64]:  # noqa: D102
-        return self._q
-
-    @property
-    def beta(self) -> float:  # noqa: D102
-        return self._beta
-
-    @property
-    def hubbard_int_orbital_basis(self) -> npt.NDArray[np.float64]:  # noqa: D102
-        return self._hubbard_int_orbital_basis
-
-    @property
-    def delta_orbital_basis(self) -> npt.NDArray[np.complex64]:  # noqa: D102
-        return self._delta_orbital_basis
-
-    @delta_orbital_basis.setter
-    def delta_orbital_basis(self, new_delta: npt.NDArray[np.complex64]) -> None:
-        self._delta_orbital_basis = new_delta
-
-    @property
-    def number_of_bands(self) -> int:  # noqa: D102
-        return self._number_of_bands
-
-    @property
-    def lattice(self) -> GrapheneLattice:  # noqa: D102
-        return self._lattice
+    def setup_lattice(self, parameters: DressedGrapheneParameters) -> BaseLattice:
+        """Set up lattice based on parameters."""
+        return GrapheneLattice(lattice_constant=parameters.lattice_constant)
 
     @classmethod
-    def from_file(cls, filename: pathlib.Path) -> "BaseHamiltonian":  # noqa: D102
-        with h5py.File(f"{filename}", "r") as f:
-            config_dict = dict(f.attrs.items())
-            config_dict["delta"] = f["delta"][()]
-        parameters = DressedGrapheneParameters.model_validate(config_dict)
-        return cls(parameters=parameters)
+    def get_parameters_model(cls) -> type[DressedGrapheneParameters]:
+        """Return the specific parameters model for the subclass."""
+        return DressedGrapheneParameters
 
     def hamiltonian(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
         """

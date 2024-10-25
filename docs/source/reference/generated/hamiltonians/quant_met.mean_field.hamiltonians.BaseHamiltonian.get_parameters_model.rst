@@ -9,9 +9,9 @@
    <div class="prename">quant_met.mean_field.hamiltonians.BaseHamiltonian.</div>
    <div class="empty"></div>
 
-quant_met.mean_field.hamiltonians.BaseHamiltonian.name
-======================================================
+get_parameters_model
+======================================================================
 
 .. currentmodule:: quant_met.mean_field.hamiltonians
 
-.. autoproperty:: BaseHamiltonian.name
+.. automethod:: BaseHamiltonian.get_parameters_model

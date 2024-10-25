@@ -31,20 +31,8 @@ Graphene
          Graphene.diagonalize_nonint
          Graphene.from_file
          Graphene.gap_equation
+         Graphene.get_parameters_model
          Graphene.hamiltonian
          Graphene.hamiltonian_derivative
          Graphene.save
-
-
-
-
-
-   .. HACK -- the point here is that we don't want this to appear in the output, but the autosummary should still generate the pages.
-      .. autosummary::
-         :toctree:
-
-         Graphene.delta_orbital_basis
-         Graphene.hubbard_int_orbital_basis
-         Graphene.lattice
-         Graphene.name
-         Graphene.number_of_bands
+         Graphene.setup_lattice

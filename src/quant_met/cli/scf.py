@@ -6,19 +6,20 @@
 
 from pathlib import Path
 
-from pydantic import BaseModel
-
 from quant_met import mean_field
 from quant_met.mean_field.hamiltonians import BaseHamiltonian
 from quant_met.parameters import Parameters
+from quant_met.parameters.hamiltonians import HamiltonianParameters
 
 
-def _hamiltonian_factory(classname: str, parameters: BaseModel) -> BaseHamiltonian:
+def _hamiltonian_factory(
+    classname: str, parameters: HamiltonianParameters
+) -> BaseHamiltonian[HamiltonianParameters]:
     """Create a hamiltonian by its class name."""
     from quant_met.mean_field import hamiltonians
 
     cls = getattr(hamiltonians, classname)
-    h: BaseHamiltonian = cls(parameters)
+    h: BaseHamiltonian[HamiltonianParameters] = cls(parameters)
     return h
 
 

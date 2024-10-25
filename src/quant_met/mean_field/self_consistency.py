@@ -8,13 +8,14 @@ import numpy as np
 import numpy.typing as npt
 
 from quant_met.mean_field.hamiltonians.base_hamiltonian import BaseHamiltonian
+from quant_met.parameters import GenericParameters
 
 
 def self_consistency_loop(
-    h: BaseHamiltonian,
+    h: BaseHamiltonian[GenericParameters],
     k_space_grid: npt.NDArray[np.float64],
     epsilon: float,
-) -> BaseHamiltonian:
+) -> BaseHamiltonian[GenericParameters]:
     """Self-consistency loop.
 
     Parameters

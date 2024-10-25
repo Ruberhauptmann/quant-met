@@ -67,7 +67,7 @@ def test_plotting_nonint_bandstructure_graphene() -> None:
             hopping=1,
             lattice_constant=graphene_lattice.lattice_constant,
             chemical_potential=0,
-            hubbard_int=0,
+            hubbard_int_orbital_basis=[1.0, 1.0],
         )
     )
 
@@ -104,7 +104,7 @@ def test_plotting_nonint_one_band() -> None:
             hopping=1,
             lattice_constant=square_lattice.lattice_constant,
             chemical_potential=0,
-            hubbard_int=0,
+            hubbard_int_orbital_basis=[1.0],
         )
     )
 
@@ -137,7 +137,7 @@ def test_plotting_nonint_bandstructure_graphene_with_fig_in() -> None:
             hopping=1,
             lattice_constant=graphene_lattice.lattice_constant,
             chemical_potential=0,
-            hubbard_int=0,
+            hubbard_int_orbital_basis=[1.0, 1.0],
         )
     )
     points = [
@@ -180,8 +180,7 @@ def test_plotting_nonint_bandstructure_egx() -> None:
             hopping_x_gr_a=1,
             lattice_constant=graphene_lattice.lattice_constant,
             chemical_potential=0,
-            hubbard_int_gr=0,
-            hubbard_int_x=0,
+            hubbard_int_orbital_basis=[1.0, 1.0, 1.0],
         )
     )
     points = [
@@ -222,8 +221,7 @@ def test_plotting_nonint_bandstructure_egx_with_fig_in() -> None:
             hopping_x_gr_a=1,
             lattice_constant=graphene_lattice.lattice_constant,
             chemical_potential=0,
-            hubbard_int_gr=0,
-            hubbard_int_x=0,
+            hubbard_int_orbital_basis=[1.0, 1.0, 1.0],
         )
     )
     points = [

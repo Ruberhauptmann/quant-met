@@ -9,9 +9,9 @@
    <div class="prename">quant_met.parameters.OneBandParameters.</div>
    <div class="empty"></div>
 
-quant_met.parameters.OneBandParameters.hubbard_int
-==================================================
+quant_met.parameters.OneBandParameters.beta
+===========================================
 
 .. currentmodule:: quant_met.parameters
 
-.. autoattribute:: OneBandParameters.hubbard_int
+.. autoattribute:: OneBandParameters.beta

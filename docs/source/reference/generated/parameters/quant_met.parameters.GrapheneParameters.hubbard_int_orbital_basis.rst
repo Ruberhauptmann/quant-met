@@ -9,9 +9,9 @@
    <div class="prename">quant_met.parameters.GrapheneParameters.</div>
    <div class="empty"></div>
 
-quant_met.parameters.GrapheneParameters.hubbard_int
-===================================================
+quant_met.parameters.GrapheneParameters.hubbard_int_orbital_basis
+=================================================================
 
 .. currentmodule:: quant_met.parameters
 
-.. autoattribute:: GrapheneParameters.hubbard_int
+.. autoattribute:: GrapheneParameters.hubbard_int_orbital_basis

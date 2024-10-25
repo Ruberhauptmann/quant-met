@@ -19,8 +19,7 @@ def test_self_consistency() -> None:
             hopping_x_gr_a=1,
             lattice_constant=graphene_lattice.lattice_constant,
             chemical_potential=0,
-            hubbard_int_gr=0,
-            hubbard_int_x=0,
+            hubbard_int_orbital_basis=[0.0, 0.0, 0.0],
         )
     )
     assert np.allclose(

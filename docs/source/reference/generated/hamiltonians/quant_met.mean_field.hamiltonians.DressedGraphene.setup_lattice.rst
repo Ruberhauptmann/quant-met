@@ -9,9 +9,9 @@
    <div class="prename">quant_met.mean_field.hamiltonians.DressedGraphene.</div>
    <div class="empty"></div>
 
-quant_met.mean_field.hamiltonians.DressedGraphene.hubbard_int_orbital_basis
-===========================================================================
+setup_lattice
+===============================================================
 
 .. currentmodule:: quant_met.mean_field.hamiltonians
 
-.. autoproperty:: DressedGraphene.hubbard_int_orbital_basis
+.. automethod:: DressedGraphene.setup_lattice

@@ -9,9 +9,9 @@
    <div class="prename">quant_met.parameters.DressedGrapheneParameters.</div>
    <div class="empty"></div>
 
-quant_met.parameters.DressedGrapheneParameters.hubbard_int_gr
-=============================================================
+check_positive_values
+====================================================================
 
 .. currentmodule:: quant_met.parameters
 
-.. autoattribute:: DressedGrapheneParameters.hubbard_int_gr
+.. automethod:: DressedGrapheneParameters.check_positive_values

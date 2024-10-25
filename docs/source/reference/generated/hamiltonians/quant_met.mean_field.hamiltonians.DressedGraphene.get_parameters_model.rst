@@ -9,9 +9,9 @@
    <div class="prename">quant_met.mean_field.hamiltonians.DressedGraphene.</div>
    <div class="empty"></div>
 
-quant_met.mean_field.hamiltonians.DressedGraphene.name
-======================================================
+get_parameters_model
+======================================================================
 
 .. currentmodule:: quant_met.mean_field.hamiltonians
 
-.. autoproperty:: DressedGraphene.name
+.. automethod:: DressedGraphene.get_parameters_model

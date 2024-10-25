@@ -9,9 +9,9 @@
    <div class="prename">quant_met.mean_field.hamiltonians.OneBand.</div>
    <div class="empty"></div>
 
-quant_met.mean_field.hamiltonians.OneBand.number_of_bands
-=========================================================
+get_parameters_model
+==============================================================
 
 .. currentmodule:: quant_met.mean_field.hamiltonians
 
-.. autoproperty:: OneBand.number_of_bands
+.. automethod:: OneBand.get_parameters_model
