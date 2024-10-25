@@ -19,7 +19,7 @@ class BaseLattice(ABC):
 
     @property
     @abstractmethod
-    def lattice_constant(self) -> np.float64:
+    def lattice_constant(self) -> float:
         """Lattice constant."""
         raise NotImplementedError
 

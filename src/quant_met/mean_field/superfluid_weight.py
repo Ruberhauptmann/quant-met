@@ -8,10 +8,11 @@ import numpy as np
 import numpy.typing as npt
 
 from quant_met.mean_field.hamiltonians.base_hamiltonian import BaseHamiltonian
+from quant_met.parameters import GenericParameters
 
 
 def superfluid_weight(
-    h: BaseHamiltonian,
+    h: BaseHamiltonian[GenericParameters],
     k_grid: npt.NDArray[np.float64],
 ) -> tuple[npt.NDArray[np.complex64], npt.NDArray[np.complex64]]:
     """Calculate the superfluid weight.
@@ -54,7 +55,7 @@ def superfluid_weight(
 
 
 def _current_operator(
-    h: BaseHamiltonian, direction: str, k: npt.NDArray[np.float64]
+    h: BaseHamiltonian[GenericParameters], direction: str, k: npt.NDArray[np.float64]
 ) -> npt.NDArray[np.complex64]:
     j = np.zeros(shape=(h.number_of_bands, h.number_of_bands), dtype=np.complex64)
 
@@ -71,7 +72,9 @@ def _current_operator(
     return j
 
 
-def _c_factor(h: BaseHamiltonian, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
+def _c_factor(
+    h: BaseHamiltonian[GenericParameters], k: npt.NDArray[np.float64]
+) -> npt.NDArray[np.complex64]:
     bdg_energies, bdg_functions = h.diagonalize_bdg(k)
     c_mnpq = np.zeros(
         shape=(

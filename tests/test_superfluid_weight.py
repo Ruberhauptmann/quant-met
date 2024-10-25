@@ -26,8 +26,7 @@ def test_superfluid_weight_egx(ndarrays_regression: NDArraysRegressionFixture) -
             hopping_x_gr_a=v,
             lattice_constant=graphene_lattice.lattice_constant,
             chemical_potential=chemical_potential,
-            hubbard_int_gr=1,
-            hubbard_int_x=1,
+            hubbard_int_orbital_basis=[1.0, 1.0, 1.0],
             delta=np.array([1, 1, 1], dtype=np.complex64),
         )
     )
@@ -56,7 +55,7 @@ def test_superfluid_weight_graphene(ndarrays_regression: NDArraysRegressionFixtu
             hopping=hopping,
             lattice_constant=graphene_lattice.lattice_constant,
             chemical_potential=chemical_potential,
-            hubbard_int=1,
+            hubbard_int_orbital_basis=[1.0, 1.0],
             delta=np.array([1, 1], dtype=np.complex64),
         )
     )

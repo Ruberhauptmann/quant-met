@@ -8,10 +8,11 @@ import numpy as np
 import numpy.typing as npt
 
 from quant_met.mean_field.hamiltonians.base_hamiltonian import BaseHamiltonian
+from quant_met.parameters import GenericParameters
 
 
 def quantum_metric(
-    h: BaseHamiltonian, k_grid: npt.NDArray[np.float64], bands: list[int]
+    h: BaseHamiltonian[GenericParameters], k_grid: npt.NDArray[np.float64], bands: list[int]
 ) -> npt.NDArray[np.float64]:
     """Calculate the quantum metric in the normal state.
 
@@ -60,7 +61,7 @@ def quantum_metric(
 
 
 def quantum_metric_bdg(
-    h: BaseHamiltonian, k_grid: npt.NDArray[np.float64], bands: list[int]
+    h: BaseHamiltonian[GenericParameters], k_grid: npt.NDArray[np.float64], bands: list[int]
 ) -> npt.NDArray[np.float64]:
     """Calculate the quantum metric in the BdG state.
 

@@ -22,8 +22,7 @@ def test_scf() -> None:
             "hopping_x": 0.01,
             "hopping_x_gr_a": 1,
             "chemical_potential": 0.0,
-            "hubbard_int_gr": 0,
-            "hubbard_int_x": 0,
+            "hubbard_int_orbital_basis": [0.0, 0.0, 0.0],
             "lattice_constant": 3,
         },
         "control": {
@@ -54,8 +53,7 @@ def test_scf_no_valid_calcution() -> None:
             "hopping_x": 0.01,
             "hopping_x_gr_a": 1,
             "chemical_potential": 0.0,
-            "hubbard_int_gr": 1,
-            "hubbard_int_x": 1,
+            "hubbard_int_orbital_basis": [0.0, 0.0, 0.0],
             "lattice_constant": 3,
         },
         "control": {

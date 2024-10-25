@@ -6,6 +6,7 @@
 
 import pathlib
 from abc import ABC, abstractmethod
+from typing import Generic
 
 import h5py
 import numpy as np
@@ -14,100 +15,31 @@ import pandas as pd
 
 from quant_met.geometry import BaseLattice
 from quant_met.mean_field._utils import _check_valid_array
+from quant_met.parameters.hamiltonians import GenericParameters
 
 
-class BaseHamiltonian(ABC):
+class BaseHamiltonian(Generic[GenericParameters], ABC):
     """Base class for Hamiltonians."""
 
-    @property
+    def __init__(self, parameters: GenericParameters) -> None:
+        self.name = parameters.name
+        self.beta = parameters.beta if parameters.beta else 1000.0
+        self.q = parameters.q if parameters.q is not None else np.zeros(2)
+
+        self.lattice = self.setup_lattice(parameters)
+        self.hubbard_int_orbital_basis = parameters.hubbard_int_orbital_basis
+        self.number_of_bands = len(self.hubbard_int_orbital_basis)
+        self.delta_orbital_basis = np.zeros(self.number_of_bands, dtype=np.complex64)
+
     @abstractmethod
-    def name(self) -> str:
-        """Name of the model.
-
-        Returns
-        -------
-        str
-
-        """
+    def setup_lattice(self, parameters: GenericParameters) -> BaseLattice:
+        """Set up lattice based on parameters."""
         raise NotImplementedError
 
-    @property
+    @classmethod
     @abstractmethod
-    def number_of_bands(self) -> int:
-        """Number of bands.
-
-        Returns
-        -------
-        int
-
-        """
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def beta(self) -> float:
-        """Beta.
-
-        Returns
-        -------
-        float
-
-        """
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def q(self) -> npt.NDArray[np.float64]:
-        """Finite momentum of Cooper pairs.
-
-        Returns
-        -------
-        :class:`numpy.ndarray`
-
-        """
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def lattice(self) -> BaseLattice:
-        """Lattice.
-
-        Returns
-        -------
-        BaseLattice
-
-        """
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def hubbard_int_orbital_basis(self) -> npt.NDArray[np.float64]:
-        """
-        hubbard_int interaction split up in orbitals.
-
-        Returns
-        -------
-        :class:`numpy.ndarray`
-
-        """
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def delta_orbital_basis(self) -> npt.NDArray[np.complex64]:
-        """
-        Order parameter in orbital basis.
-
-        Returns
-        -------
-        :class:`numpy.ndarray`
-
-        """
-        raise NotImplementedError
-
-    @delta_orbital_basis.setter
-    @abstractmethod
-    def delta_orbital_basis(self, new_delta: npt.NDArray[np.complex64]) -> None:
+    def get_parameters_model(cls) -> type[GenericParameters]:
+        """Return the specific parameters model for the subclass."""
         raise NotImplementedError
 
     @abstractmethod
@@ -163,22 +95,20 @@ class BaseHamiltonian(ABC):
         with h5py.File(f"{filename.absolute()}", "w") as f:
             f.create_dataset("delta", data=self.delta_orbital_basis)
             for key, value in vars(self).items():
-                if key != "_lattice":
+                if key != "lattice":
                     f.attrs[key.strip("_")] = value
+            f.attrs["lattice_constant"] = self.lattice.lattice_constant
 
     @classmethod
-    @abstractmethod
-    def from_file(cls, filename: pathlib.Path) -> "BaseHamiltonian":
-        """
-        Initialise a Hamiltonian from a HDF5 file.
+    def from_file(cls, filename: pathlib.Path) -> "BaseHamiltonian[GenericParameters]":
+        """Initialize a Hamiltonian from an HDF5 file."""
+        with h5py.File(str(filename), "r") as f:
+            config_dict = dict(f.attrs.items())
+            config_dict["delta"] = f["delta"][()]
 
-        Parameters
-        ----------
-        filename : :class:`pathlib.Path`
-            File to load the Hamiltonian from.
-
-        """
-        raise NotImplementedError
+        parameters_model = cls.get_parameters_model()
+        parameters = parameters_model.model_validate(config_dict)
+        return cls(parameters=parameters)
 
     def bdg_hamiltonian(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
         """

@@ -13,7 +13,7 @@ from .base_lattice import BaseLattice
 class SquareLattice(BaseLattice):
     """Lattice geometry for Square Lattice."""
 
-    def __init__(self, lattice_constant: np.float64) -> None:
+    def __init__(self, lattice_constant: float) -> None:
         self._lattice_constant = lattice_constant
         self._bz_corners = (
             np.pi
@@ -26,7 +26,7 @@ class SquareLattice(BaseLattice):
         self._high_symmetry_points = ((self.Gamma, r"\Gamma"), (self.M, "M"))
 
     @property
-    def lattice_constant(self) -> np.float64:  # noqa: D102
+    def lattice_constant(self) -> float:  # noqa: D102
         return self._lattice_constant
 
     @property
