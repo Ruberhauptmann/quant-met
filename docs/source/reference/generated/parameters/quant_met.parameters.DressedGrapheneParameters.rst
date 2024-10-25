@@ -22,6 +22,7 @@ DressedGrapheneParameters
       .. autosummary::
          :toctree:
 
+         DressedGrapheneParameters.check_positive_values
          DressedGrapheneParameters.construct
          DressedGrapheneParameters.copy
          DressedGrapheneParameters.dict
@@ -45,6 +46,7 @@ DressedGrapheneParameters
          DressedGrapheneParameters.schema_json
          DressedGrapheneParameters.update_forward_refs
          DressedGrapheneParameters.validate
+         DressedGrapheneParameters.validate_float
 
 
 
@@ -65,6 +67,7 @@ DressedGrapheneParameters
          DressedGrapheneParameters.hopping_x_gr_a
          DressedGrapheneParameters.lattice_constant
          DressedGrapheneParameters.chemical_potential
-         DressedGrapheneParameters.hubbard_int_gr
-         DressedGrapheneParameters.hubbard_int_x
+         DressedGrapheneParameters.hubbard_int_orbital_basis
          DressedGrapheneParameters.delta
+         DressedGrapheneParameters.beta
+         DressedGrapheneParameters.q

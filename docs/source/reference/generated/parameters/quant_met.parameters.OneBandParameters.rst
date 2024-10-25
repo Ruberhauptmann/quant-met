@@ -22,6 +22,7 @@ OneBandParameters
       .. autosummary::
          :toctree:
 
+         OneBandParameters.check_positive_values
          OneBandParameters.construct
          OneBandParameters.copy
          OneBandParameters.dict
@@ -45,6 +46,7 @@ OneBandParameters
          OneBandParameters.schema_json
          OneBandParameters.update_forward_refs
          OneBandParameters.validate
+         OneBandParameters.validate_float
 
 
 
@@ -63,5 +65,7 @@ OneBandParameters
          OneBandParameters.hopping
          OneBandParameters.lattice_constant
          OneBandParameters.chemical_potential
-         OneBandParameters.hubbard_int
+         OneBandParameters.hubbard_int_orbital_basis
          OneBandParameters.delta
+         OneBandParameters.beta
+         OneBandParameters.q

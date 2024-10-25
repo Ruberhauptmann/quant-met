@@ -31,20 +31,8 @@ BaseHamiltonian
          BaseHamiltonian.diagonalize_nonint
          BaseHamiltonian.from_file
          BaseHamiltonian.gap_equation
+         BaseHamiltonian.get_parameters_model
          BaseHamiltonian.hamiltonian
          BaseHamiltonian.hamiltonian_derivative
          BaseHamiltonian.save
-
-
-
-
-
-   .. HACK -- the point here is that we don't want this to appear in the output, but the autosummary should still generate the pages.
-      .. autosummary::
-         :toctree:
-
-         BaseHamiltonian.delta_orbital_basis
-         BaseHamiltonian.hubbard_int_orbital_basis
-         BaseHamiltonian.lattice
-         BaseHamiltonian.name
-         BaseHamiltonian.number_of_bands
+         BaseHamiltonian.setup_lattice

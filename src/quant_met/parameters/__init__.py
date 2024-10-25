@@ -17,6 +17,7 @@ Parameters (:mod:`quant_met.parameters`)
 
 from .hamiltonians import (
     DressedGrapheneParameters,
+    GenericParameters,
     GrapheneParameters,
     OneBandParameters,
     ThreeBandParameters,
@@ -31,4 +32,5 @@ __all__ = [
     "OneBandParameters",
     "TwoBandParameters",
     "ThreeBandParameters",
+    "GenericParameters",
 ]

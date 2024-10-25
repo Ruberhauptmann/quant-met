@@ -19,13 +19,12 @@ def test_self_consistency() -> None:
             hopping_x_gr_a=1,
             lattice_constant=graphene_lattice.lattice_constant,
             chemical_potential=0,
-            hubbard_int_gr=0,
-            hubbard_int_x=0,
+            hubbard_int_orbital_basis=[0.0, 0.0, 0.0],
         )
     )
     assert np.allclose(
         mean_field.self_consistency_loop(
-            h=egx_h, k_space_grid=graphene_lattice.generate_bz_grid(50, 50), epsilon=1e-4, beta=100
+            h=egx_h, k_space_grid=graphene_lattice.generate_bz_grid(50, 50), epsilon=1e-4
         ).delta_orbital_basis,
         np.zeros(3),
     )
@@ -34,8 +33,6 @@ def test_self_consistency() -> None:
             h=egx_h,
             k_space_grid=graphene_lattice.generate_bz_grid(50, 50),
             epsilon=1e-4,
-            beta=100,
-            q=np.array([0, 0]),
         ).delta_orbital_basis,
         np.zeros(3),
     )

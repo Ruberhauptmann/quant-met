@@ -4,84 +4,37 @@
 
 """Provides the implementation for Graphene."""
 
-import pathlib
-from typing import Any
-
-import h5py
 import numpy as np
 import numpy.typing as npt
 
 from quant_met.geometry import GrapheneLattice
-from quant_met.mean_field._utils import _check_valid_array, _validate_float
+from quant_met.mean_field._utils import _check_valid_array
 from quant_met.parameters.hamiltonians import GrapheneParameters
 
 from .base_hamiltonian import BaseHamiltonian
 
 
-class Graphene(BaseHamiltonian):
+class Graphene(BaseHamiltonian[GrapheneParameters]):
     """Hamiltonian for Graphene."""
 
     def __init__(
         self,
         parameters: GrapheneParameters,
-        *args: tuple[Any, ...],
-        **kwargs: tuple[dict[str, Any], ...],
     ) -> None:
-        del args
-        del kwargs
-        self._name = parameters.name
-        self.hopping = _validate_float(parameters.hopping, "Hopping")
-        if parameters.lattice_constant <= 0:
-            msg = "Lattice constant must be positive"
-            raise ValueError(msg)
-        self._lattice = GrapheneLattice(
-            lattice_constant=np.float64(
-                _validate_float(parameters.lattice_constant, "Lattice constant")
-            )
-        )
-        self.lattice_constant = self._lattice.lattice_constant
-        self.chemical_potential = _validate_float(
-            parameters.chemical_potential, "Chemical potential"
-        )
-        self.hubbard_int = _validate_float(parameters.hubbard_int, "Hubbard interaction")
-        self._hubbard_int_orbital_basis = np.array([self.hubbard_int, self.hubbard_int])
-        self._number_of_bands = 2
-        if parameters.delta is None:
-            self._delta_orbital_basis = np.zeros(self.number_of_bands, dtype=np.complex64)
-        else:
-            self._delta_orbital_basis = np.astype(parameters.delta, np.complex64)
+        super().__init__(parameters)
+        self.hopping = parameters.hopping
+        self.chemical_potential = parameters.chemical_potential
+        if parameters.delta is not None:
+            self.delta_orbital_basis = np.astype(parameters.delta, np.complex64)
 
-    @property
-    def name(self) -> str:  # noqa: D102
-        return self._name
-
-    @property
-    def lattice(self) -> GrapheneLattice:  # noqa: D102
-        return self._lattice
-
-    @property
-    def number_of_bands(self) -> int:  # noqa: D102
-        return self._number_of_bands
-
-    @property
-    def hubbard_int_orbital_basis(self) -> npt.NDArray[np.float64]:  # noqa: D102
-        return self._hubbard_int_orbital_basis
-
-    @property
-    def delta_orbital_basis(self) -> npt.NDArray[np.complex64]:  # noqa: D102
-        return self._delta_orbital_basis
-
-    @delta_orbital_basis.setter
-    def delta_orbital_basis(self, new_delta: npt.NDArray[np.complex64]) -> None:
-        self._delta_orbital_basis = new_delta
+    def setup_lattice(self, parameters: GrapheneParameters) -> GrapheneLattice:
+        """Set up lattice based on parameters."""
+        return GrapheneLattice(lattice_constant=parameters.lattice_constant)
 
     @classmethod
-    def from_file(cls, filename: pathlib.Path) -> "BaseHamiltonian":  # noqa: D102
-        with h5py.File(f"{filename}", "r") as f:
-            config_dict = dict(f.attrs.items())
-            config_dict["delta"] = f["delta"][()]
-        parameters = GrapheneParameters.model_validate(config_dict)
-        return cls(parameters=parameters)
+    def get_parameters_model(cls) -> type[GrapheneParameters]:
+        """Return the specific parameters model for the subclass."""
+        return GrapheneParameters
 
     def hamiltonian(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
         """
