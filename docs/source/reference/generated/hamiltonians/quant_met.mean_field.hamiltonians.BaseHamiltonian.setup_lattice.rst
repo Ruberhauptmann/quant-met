@@ -9,9 +9,9 @@
    <div class="prename">quant_met.mean_field.hamiltonians.BaseHamiltonian.</div>
    <div class="empty"></div>
 
-quant_met.mean_field.hamiltonians.BaseHamiltonian.number_of_bands
-=================================================================
+setup_lattice
+===============================================================
 
 .. currentmodule:: quant_met.mean_field.hamiltonians
 
-.. autoproperty:: BaseHamiltonian.number_of_bands
+.. automethod:: BaseHamiltonian.setup_lattice

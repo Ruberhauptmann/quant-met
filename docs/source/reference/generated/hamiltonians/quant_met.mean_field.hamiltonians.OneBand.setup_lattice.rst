@@ -9,9 +9,9 @@
    <div class="prename">quant_met.mean_field.hamiltonians.OneBand.</div>
    <div class="empty"></div>
 
-quant_met.mean_field.hamiltonians.OneBand.delta_orbital_basis
-=============================================================
+setup_lattice
+=======================================================
 
 .. currentmodule:: quant_met.mean_field.hamiltonians
 
-.. autoproperty:: OneBand.delta_orbital_basis
+.. automethod:: OneBand.setup_lattice

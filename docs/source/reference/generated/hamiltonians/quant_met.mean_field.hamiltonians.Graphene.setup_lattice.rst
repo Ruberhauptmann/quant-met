@@ -9,9 +9,9 @@
    <div class="prename">quant_met.mean_field.hamiltonians.Graphene.</div>
    <div class="empty"></div>
 
-quant_met.mean_field.hamiltonians.Graphene.name
-===============================================
+setup_lattice
+========================================================
 
 .. currentmodule:: quant_met.mean_field.hamiltonians
 
-.. autoproperty:: Graphene.name
+.. automethod:: Graphene.setup_lattice

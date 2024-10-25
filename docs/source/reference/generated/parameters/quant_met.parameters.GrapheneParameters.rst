@@ -22,6 +22,7 @@ GrapheneParameters
       .. autosummary::
          :toctree:
 
+         GrapheneParameters.check_positive_values
          GrapheneParameters.construct
          GrapheneParameters.copy
          GrapheneParameters.dict
@@ -45,6 +46,7 @@ GrapheneParameters
          GrapheneParameters.schema_json
          GrapheneParameters.update_forward_refs
          GrapheneParameters.validate
+         GrapheneParameters.validate_float
 
 
 
@@ -63,5 +65,7 @@ GrapheneParameters
          GrapheneParameters.hopping
          GrapheneParameters.lattice_constant
          GrapheneParameters.chemical_potential
-         GrapheneParameters.hubbard_int
+         GrapheneParameters.hubbard_int_orbital_basis
          GrapheneParameters.delta
+         GrapheneParameters.beta
+         GrapheneParameters.q
