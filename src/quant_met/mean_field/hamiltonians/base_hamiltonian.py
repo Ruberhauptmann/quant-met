@@ -32,18 +32,18 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
         self.delta_orbital_basis = np.zeros(self.number_of_bands, dtype=np.complex64)
 
     @abstractmethod
-    def setup_lattice(self, parameters: GenericParameters) -> BaseLattice:
+    def setup_lattice(self, parameters: GenericParameters) -> BaseLattice:  # pragma: no cover
         """Set up lattice based on parameters."""
-        raise NotImplementedError
 
     @classmethod
     @abstractmethod
-    def get_parameters_model(cls) -> type[GenericParameters]:
+    def get_parameters_model(cls) -> type[GenericParameters]:  # pragma: no cover
         """Return the specific parameters model for the subclass."""
-        raise NotImplementedError
 
     @abstractmethod
-    def hamiltonian(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
+    def hamiltonian(
+        self, k: npt.NDArray[np.float64]
+    ) -> npt.NDArray[np.complex64]:  # pragma: no cover
         """
         Return the normal state Hamiltonian in orbital basis.
 
@@ -58,12 +58,11 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
             Hamiltonian in matrix form.
 
         """
-        raise NotImplementedError
 
     @abstractmethod
     def hamiltonian_derivative(
         self, k: npt.NDArray[np.float64], direction: str
-    ) -> npt.NDArray[np.complex64]:
+    ) -> npt.NDArray[np.complex64]:  # pragma: no cover
         """
         Deriative of the Hamiltonian.
 
@@ -80,7 +79,6 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
             Derivative of Hamiltonian.
 
         """
-        raise NotImplementedError
 
     def save(self, filename: pathlib.Path) -> None:
         """

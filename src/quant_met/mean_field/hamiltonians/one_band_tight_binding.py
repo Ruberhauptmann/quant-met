@@ -62,7 +62,7 @@ class OneBand(BaseHamiltonian[OneBandParameters]):
         )
         h[:, 0, 0] -= chemical_potential
 
-        return h.squeeze()
+        return h
 
     def hamiltonian_derivative(
         self, k: npt.NDArray[np.float64], direction: str

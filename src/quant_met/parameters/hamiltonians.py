@@ -14,6 +14,25 @@ from pydantic_core.core_schema import ValidationInfo
 GenericParameters = TypeVar("GenericParameters", bound="HamiltonianParameters")
 
 
+def check_positive_values(value: float, info: ValidationInfo) -> float:
+    """Check for positive values."""
+    if value < 0:
+        msg = f"{info.field_name} must be positive"
+        raise ValueError(msg)
+    return value
+
+
+def validate_float(value: float, info: ValidationInfo) -> float:
+    """Check for valid floats."""
+    if np.isinf(value):
+        msg = f"{info.field_name} must not be Infinity"
+        raise ValueError(msg)
+    if np.isnan(value):
+        msg = f"{info.field_name} must not be NaN"
+        raise ValueError(msg)
+    return value
+
+
 class HamiltonianParameters(BaseModel):
     """Base class for Hamiltonian parameters."""
 
@@ -43,28 +62,13 @@ class DressedGrapheneParameters(HamiltonianParameters):
         default=None, description="Initial value for gaps in orbital space"
     )
 
-    @field_validator("hopping_gr", "hopping_x", "hopping_x_gr_a", "lattice_constant")
-    @classmethod
-    def check_positive_values(cls, value: float, info: ValidationInfo) -> float:
-        """Check for positive values."""
-        if value < 0:
-            msg = f"{info.field_name} must be positive"
-            raise ValueError(msg)
-        return value
+    _check_positive_values = field_validator(
+        "hopping_gr", "hopping_x", "hopping_x_gr_a", "lattice_constant"
+    )(check_positive_values)
 
-    @field_validator(
+    _check_valid_floats = field_validator(
         "hopping_gr", "hopping_x", "hopping_x_gr_a", "lattice_constant", "chemical_potential"
-    )
-    @classmethod
-    def validate_float(cls, value: float, info: ValidationInfo) -> float:
-        """Check for valid floats."""
-        if np.isinf(value):
-            msg = f"{info.field_name} must not be Infinity"
-            raise ValueError(msg)
-        if np.isnan(value):
-            msg = f"{info.field_name} must not be NaN"
-            raise ValueError(msg)
-        return value
+    )(validate_float)
 
 
 class GrapheneParameters(HamiltonianParameters):
@@ -79,26 +83,11 @@ class GrapheneParameters(HamiltonianParameters):
     )
     delta: NDArray[Shape["2"], np.complex64] | None = None
 
-    @field_validator("hopping", "lattice_constant")
-    @classmethod
-    def check_positive_values(cls, value: float, info: ValidationInfo) -> float:
-        """Check for positive values."""
-        if value < 0:
-            msg = f"{info.field_name} must be positive"
-            raise ValueError(msg)
-        return value
+    _check_positive_values = field_validator("hopping", "lattice_constant")(check_positive_values)
 
-    @field_validator("hopping", "lattice_constant", "chemical_potential")
-    @classmethod
-    def validate_float(cls, value: float, info: ValidationInfo) -> float:
-        """Check for valid floats."""
-        if np.isinf(value):
-            msg = f"{info.field_name} must not be Infinity"
-            raise ValueError(msg)
-        if np.isnan(value):
-            msg = f"{info.field_name} must not be NaN"
-            raise ValueError(msg)
-        return value
+    _check_valid_floats = field_validator("hopping", "lattice_constant", "chemical_potential")(
+        validate_float
+    )
 
 
 class OneBandParameters(HamiltonianParameters):
@@ -113,23 +102,8 @@ class OneBandParameters(HamiltonianParameters):
     )
     delta: NDArray[Shape["1"], np.complex64] | None = None
 
-    @field_validator("hopping", "lattice_constant")
-    @classmethod
-    def check_positive_values(cls, value: float, info: ValidationInfo) -> float:
-        """Check for positive values."""
-        if value < 0:
-            msg = f"{info.field_name} must be positive"
-            raise ValueError(msg)
-        return value
+    _check_positive_values = field_validator("hopping", "lattice_constant")(check_positive_values)
 
-    @field_validator("hopping", "lattice_constant", "chemical_potential")
-    @classmethod
-    def validate_float(cls, value: float, info: ValidationInfo) -> float:
-        """Check for valid floats."""
-        if np.isinf(value):
-            msg = f"{info.field_name} must not be Infinity"
-            raise ValueError(msg)
-        if np.isnan(value):
-            msg = f"{info.field_name} must not be NaN"
-            raise ValueError(msg)
-        return value
+    _check_valid_floats = field_validator("hopping", "lattice_constant", "chemical_potential")(
+        validate_float
+    )

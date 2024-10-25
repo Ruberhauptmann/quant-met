@@ -20,34 +20,25 @@ def test_invalid_values_graphene() -> None:
                 )
             )
         )
-
-
-def test_invalid_values_dressed_graphene() -> None:
-    """Test that invalid values are correctly identified in dressed graphene."""
-    with pytest.raises(
-        ValidationError, match=r"4 validation errors for DressedGrapheneParameters.*"
-    ):
+    with pytest.raises(ValidationError, match=r"4 validation errors for GrapheneParameters.*"):
         print(
-            mean_field.hamiltonians.DressedGraphene(
-                parameters=parameters.DressedGrapheneParameters(
-                    hopping_gr=-1,
-                    hopping_x=-1,
-                    hopping_x_gr_a=-1,
-                    lattice_constant=-1,
-                    chemical_potential=1,
-                    hubbard_int_orbital_basis=[-1.0, -1.0, -1.0],
+            mean_field.hamiltonians.Graphene(
+                parameters=parameters.GrapheneParameters(
+                    hopping=np.inf,
+                    lattice_constant=np.inf,
+                    chemical_potential=np.inf,
+                    hubbard_int=np.inf,
                 )
             )
         )
-
-
-def test_invalid_values_one_band() -> None:
-    """Test that invalid values are correctly identified in dressed graphene."""
-    with pytest.raises(ValidationError, match=r"3 validation errors for OneBandParameters.*"):
+    with pytest.raises(ValidationError, match=r"4 validation errors for GrapheneParameters.*"):
         print(
-            mean_field.hamiltonians.OneBand(
-                parameters=parameters.OneBandParameters(
-                    hopping=-1, lattice_constant=-1, chemical_potential=1, hubbard_int=-1
+            mean_field.hamiltonians.Graphene(
+                parameters=parameters.GrapheneParameters(
+                    hopping=np.nan,
+                    lattice_constant=np.nan,
+                    chemical_potential=np.nan,
+                    hubbard_int=np.nan,
                 )
             )
         )

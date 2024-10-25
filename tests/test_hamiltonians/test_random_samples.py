@@ -148,18 +148,15 @@ def test_hamiltonians(sample_parameters: BaseModel, k: npt.NDArray) -> None:
 
     sample.delta_orbital_basis = np.array([0 for _ in range(sample.number_of_bands)])
 
-    """
     bdg_energies = sample.diagonalize_bdg(k=k)[0].flatten()
 
-    if q is None:
-        nonint_energies = np.array(
-            [[+E, -E] for E in sample.diagonalize_nonint(k=k)[0].flatten()]
-        ).flatten()
-        assert np.allclose(
-            np.sort(np.nan_to_num(bdg_energies.flatten())),
-            np.sort(np.nan_to_num(nonint_energies)),
-        )
-    """
+    nonint_energies = np.array(
+        [[+E, -E] for E in sample.diagonalize_nonint(k=k)[0].flatten()]
+    ).flatten()
+    assert np.allclose(
+        np.sort(np.nan_to_num(bdg_energies.flatten())),
+        np.sort(np.nan_to_num(nonint_energies)),
+    )
 
     h_k_space = sample.hamiltonian(k)
     if h_k_space.ndim == 2:
