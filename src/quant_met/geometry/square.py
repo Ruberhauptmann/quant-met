@@ -34,7 +34,7 @@ class SquareLattice(BaseLattice):
         return self._lattice_constant
 
     @property
-    def bz_corners(self) -> npt.NDArray[np.float64]:  # noqa: D102
+    def bz_corners(self) -> npt.NDArray[np.float64]:  # noqa: D102, pragma: no cover
         return self._bz_corners
 
     @property

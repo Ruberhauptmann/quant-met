@@ -29,7 +29,6 @@ Functions
 
 from quant_met.mean_field import hamiltonians
 
-from .free_energy import free_energy
 from .quantum_metric import quantum_metric, quantum_metric_bdg
 from .self_consistency import self_consistency_loop
 from .superfluid_weight import superfluid_weight
@@ -40,5 +39,4 @@ __all__ = [
     "quantum_metric_bdg",
     "self_consistency_loop",
     "hamiltonians",
-    "free_energy",
 ]

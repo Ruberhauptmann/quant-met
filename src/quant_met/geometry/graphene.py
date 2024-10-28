@@ -25,6 +25,10 @@ class GrapheneLattice(BaseLattice):
         self.M = np.pi / self.lattice_constant * np.array([1, 1 / np.sqrt(3)])
         self.K = 4 * np.pi / (3 * self.lattice_constant) * np.array([1, 0])
         self._high_symmetry_points = ((self.M, "M"), (self.Gamma, r"\Gamma"), (self.K, "K"))
+        self._reciprocal_basis = (
+            2 * np.pi / self.lattice_constant * np.array([1, 1 / np.sqrt(3)]),
+            2 * np.pi / self.lattice_constant * np.array([1, -1 / np.sqrt(3)]),
+        )
 
     @property
     def lattice_constant(self) -> float:  # noqa: D102
@@ -33,6 +37,10 @@ class GrapheneLattice(BaseLattice):
     @property
     def bz_corners(self) -> npt.NDArray[np.float64]:  # noqa: D102
         return self._bz_corners
+
+    @property
+    def reciprocal_basis(self) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:  # noqa: D102
+        return self._reciprocal_basis
 
     @property
     def high_symmetry_points(self) -> tuple[tuple[npt.NDArray[np.float64], str], ...]:  # noqa: D102

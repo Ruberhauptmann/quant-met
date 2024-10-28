@@ -19,25 +19,29 @@ class BaseLattice(ABC):
 
     @property
     @abstractmethod
-    def lattice_constant(self) -> float:
+    def lattice_constant(self) -> float:  # pragma: no cover
         """Lattice constant."""
         raise NotImplementedError
 
     @property
     @abstractmethod
-    def bz_corners(self) -> npt.NDArray[np.float64]:
+    def bz_corners(self) -> npt.NDArray[np.float64]:  # pragma: no cover
         """Corners of the BZ."""
         raise NotImplementedError
 
     @property
     @abstractmethod
-    def reciprocal_basis(self) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
+    def reciprocal_basis(
+        self,
+    ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:  # pragma: no cover
         """Reciprocal basis vectors."""
         raise NotImplementedError
 
     @property
     @abstractmethod
-    def high_symmetry_points(self) -> tuple[tuple[npt.NDArray[np.float64], str], ...]:
+    def high_symmetry_points(
+        self,
+    ) -> tuple[tuple[npt.NDArray[np.float64], str], ...]:  # pragma: no cover
         """Tuple of high symmetry points and names."""
         raise NotImplementedError
 
