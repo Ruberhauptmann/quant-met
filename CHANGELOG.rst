@@ -2,6 +2,23 @@
 ..
 .. SPDX-License-Identifier: MIT
 
+.. _changelog-0.0.9:
+
+0.0.9 — 2024-10-28
+------------------
+
+Changed
+^^^^^^^
+
+- Save all simulation parameters into the output file
+
+- Restructured mean_field Hamiltonian classes, so more functionality is concentrated in the base class
+
+Fixed
+^^^^^
+
+- Fixed mistake in gap equation: had the algebra wrong, leading to the self-consistency not converging correctly
+
 .. _changelog-0.0.8:
 
 0.0.8 — 2024-10-23
