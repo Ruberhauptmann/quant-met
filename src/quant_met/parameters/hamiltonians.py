@@ -107,3 +107,41 @@ class OneBandParameters(HamiltonianParameters):
     _check_valid_floats = field_validator("hopping", "lattice_constant", "chemical_potential")(
         validate_float
     )
+
+
+class TwoBandParameters(HamiltonianParameters):
+    """Parameters for Graphene model."""
+
+    name: Literal["TwoBand"] = "TwoBand"
+    hopping: float
+    lattice_constant: float
+    chemical_potential: float
+    hubbard_int_orbital_basis: NDArray[Shape["2"], np.float64] = Field(
+        ..., description="Hubbard interaction in orbital basis"
+    )
+    delta: NDArray[Shape["2"], np.complex64] | None = None
+
+    _check_positive_values = field_validator("hopping", "lattice_constant")(check_positive_values)
+
+    _check_valid_floats = field_validator("hopping", "lattice_constant", "chemical_potential")(
+        validate_float
+    )
+
+
+class ThreeBandParameters(HamiltonianParameters):
+    """Parameters for Graphene model."""
+
+    name: Literal["ThreeBand"] = "ThreeBand"
+    hopping: float
+    lattice_constant: float
+    chemical_potential: float
+    hubbard_int_orbital_basis: NDArray[Shape["3"], np.float64] = Field(
+        ..., description="Hubbard interaction in orbital basis"
+    )
+    delta: NDArray[Shape["3"], np.complex64] | None = None
+
+    _check_positive_values = field_validator("hopping", "lattice_constant")(check_positive_values)
+
+    _check_valid_floats = field_validator("hopping", "lattice_constant", "chemical_potential")(
+        validate_float
+    )

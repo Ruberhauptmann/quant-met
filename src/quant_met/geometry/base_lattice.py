@@ -19,19 +19,29 @@ class BaseLattice(ABC):
 
     @property
     @abstractmethod
-    def lattice_constant(self) -> float:
+    def lattice_constant(self) -> float:  # pragma: no cover
         """Lattice constant."""
         raise NotImplementedError
 
     @property
     @abstractmethod
-    def bz_corners(self) -> npt.NDArray[np.float64]:
+    def bz_corners(self) -> npt.NDArray[np.float64]:  # pragma: no cover
         """Corners of the BZ."""
         raise NotImplementedError
 
     @property
     @abstractmethod
-    def high_symmetry_points(self) -> tuple[tuple[npt.NDArray[np.float64], str], ...]:
+    def reciprocal_basis(
+        self,
+    ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:  # pragma: no cover
+        """Reciprocal basis vectors."""
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def high_symmetry_points(
+        self,
+    ) -> tuple[tuple[npt.NDArray[np.float64], str], ...]:  # pragma: no cover
         """Tuple of high symmetry points and names."""
         raise NotImplementedError
 
@@ -52,7 +62,11 @@ class BaseLattice(ABC):
 
         """
         return generate_uniform_grid(
-            ncols, nrows, self.bz_corners[0], self.bz_corners[1], origin=np.array([0, 0])
+            ncols,
+            nrows,
+            self.reciprocal_basis[0],
+            self.reciprocal_basis[1],
+            origin=np.array([0, 0]),
         )
 
     def generate_high_symmetry_path(

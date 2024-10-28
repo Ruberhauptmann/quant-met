@@ -140,6 +140,80 @@ def test_hamiltonian_derivative_one_band(ndarrays_regression: NDArraysRegression
     )
 
 
+def test_hamiltonian_two_band(ndarrays_regression: NDArraysRegressionFixture) -> None:
+    """Regression test for the derivative of the two band Hamiltonian."""
+    hopping = 1
+    chemical_potential = 0
+
+    square_lattice = geometry.SquareLattice(lattice_constant=1)
+    bz_grid = square_lattice.generate_bz_grid(10, 10)
+    two_band_h = mean_field.hamiltonians.TwoBand(
+        parameters=parameters.TwoBandParameters(
+            hopping=hopping,
+            lattice_constant=square_lattice.lattice_constant,
+            chemical_potential=chemical_potential,
+            hubbard_int_orbital_basis=[1.0, 1.0],
+            delta=np.array([1.0, 1.0], dtype=np.complex64),
+        )
+    )
+
+    h = two_band_h.hamiltonian(k=bz_grid)
+    h_one_point = two_band_h.hamiltonian(k=np.array([1, 1]))
+    h_der_x = two_band_h.hamiltonian_derivative(k=bz_grid, direction="x")
+    h_der_y = two_band_h.hamiltonian_derivative(k=bz_grid, direction="y")
+    h_der_x_one_point = two_band_h.hamiltonian_derivative(k=np.array([1, 1]), direction="x")
+    h_der_y_one_point = two_band_h.hamiltonian_derivative(k=np.array([1, 1]), direction="y")
+
+    ndarrays_regression.check(
+        {
+            "h": h,
+            "h_one_point": h_one_point,
+            "h_der_x": h_der_x,
+            "h_der_y": h_der_y,
+            "h_der_x_one_point": h_der_x_one_point,
+            "h_der_y_one_point": h_der_y_one_point,
+        },
+        default_tolerance={"atol": 1e-8, "rtol": 1e-8},
+    )
+
+
+def test_hamiltonian_three_band(ndarrays_regression: NDArraysRegressionFixture) -> None:
+    """Regression test for the derivative of the two band Hamiltonian."""
+    hopping = 1
+    chemical_potential = 0
+
+    square_lattice = geometry.SquareLattice(lattice_constant=1)
+    bz_grid = square_lattice.generate_bz_grid(10, 10)
+    three_band_h = mean_field.hamiltonians.ThreeBand(
+        parameters=parameters.ThreeBandParameters(
+            hopping=hopping,
+            lattice_constant=square_lattice.lattice_constant,
+            chemical_potential=chemical_potential,
+            hubbard_int_orbital_basis=[1.0, 1.0, 1.0],
+            delta=np.array([1.0, 1.0, 1.0], dtype=np.complex64),
+        )
+    )
+
+    h = three_band_h.hamiltonian(k=bz_grid)
+    h_one_point = three_band_h.hamiltonian(k=np.array([1, 1]))
+    h_der_x = three_band_h.hamiltonian_derivative(k=bz_grid, direction="x")
+    h_der_y = three_band_h.hamiltonian_derivative(k=bz_grid, direction="y")
+    h_der_x_one_point = three_band_h.hamiltonian_derivative(k=np.array([1, 1]), direction="x")
+    h_der_y_one_point = three_band_h.hamiltonian_derivative(k=np.array([1, 1]), direction="y")
+
+    ndarrays_regression.check(
+        {
+            "h": h,
+            "h_one_point": h_one_point,
+            "h_der_x": h_der_x,
+            "h_der_y": h_der_y,
+            "h_der_x_one_point": h_der_x_one_point,
+            "h_der_y_one_point": h_der_y_one_point,
+        },
+        default_tolerance={"atol": 1e-8, "rtol": 1e-8},
+    )
+
+
 def test_bdg_hamiltonian_derivative_graphene(
     ndarrays_regression: NDArraysRegressionFixture,
 ) -> None:

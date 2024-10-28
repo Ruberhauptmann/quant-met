@@ -20,6 +20,8 @@ from .hamiltonians import (
     GenericParameters,
     GrapheneParameters,
     OneBandParameters,
+    ThreeBandParameters,
+    TwoBandParameters,
 )
 from .main import Parameters
 
@@ -28,5 +30,7 @@ __all__ = [
     "DressedGrapheneParameters",
     "GrapheneParameters",
     "OneBandParameters",
+    "TwoBandParameters",
+    "ThreeBandParameters",
     "GenericParameters",
 ]

@@ -276,27 +276,22 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
 
         """
         bdg_energies, bdg_wavefunctions = self.diagonalize_bdg(k=k)
-        bdg_energies_minus_k, _ = self.diagonalize_bdg(k=-k)
         delta = np.zeros(self.number_of_bands, dtype=np.complex64)
 
         for i in range(self.number_of_bands):
             sum_tmp = 0
-            for j in range(self.number_of_bands):
+            for j in range(2 * self.number_of_bands):
                 for k_index in range(len(k)):
-                    sum_tmp += np.conjugate(bdg_wavefunctions[k_index, i, j]) * bdg_wavefunctions[
-                        k_index, i + self.number_of_bands, j
-                    ] * _fermi_dirac(
-                        bdg_energies[k_index, j + self.number_of_bands].item(), self.beta
-                    ) + np.conjugate(
-                        bdg_wavefunctions[k_index, i, j + self.number_of_bands]
-                    ) * bdg_wavefunctions[
-                        k_index, i + self.number_of_bands, j + self.number_of_bands
-                    ] * _fermi_dirac(
-                        -bdg_energies_minus_k[k_index, j + self.number_of_bands].item(), self.beta
+                    sum_tmp += (
+                        np.conjugate(bdg_wavefunctions[k_index, i, j])
+                        * bdg_wavefunctions[k_index, i + self.number_of_bands, j]
+                        * _fermi_dirac(bdg_energies[k_index, j].item(), self.beta)
                     )
             delta[i] = (-self.hubbard_int_orbital_basis[i] * sum_tmp / len(k)).conjugate()
 
-        delta_without_phase: npt.NDArray[np.complex64] = delta * np.exp(-1j * np.angle(delta[-1]))
+        delta_without_phase: npt.NDArray[np.complex64] = delta * np.exp(
+            -1j * np.angle(delta[np.argmax(np.abs(delta))])
+        )
         return delta_without_phase
 
     def calculate_bandstructure(
