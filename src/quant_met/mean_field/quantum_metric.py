@@ -14,21 +14,30 @@ from quant_met.parameters import GenericParameters
 def quantum_metric(
     h: BaseHamiltonian[GenericParameters], k_grid: npt.NDArray[np.float64], bands: list[int]
 ) -> npt.NDArray[np.float64]:
-    """Calculate the quantum metric in the normal state.
+    """Calculate the quantum metric (geometric tensor) for specified bands.
+
+    This function computes the quantum geometric tensor associated with
+    the specified bands of a given Hamiltonian over a grid of k-points.
+    The output is a 2x2 matrix representing the quantum metric.
 
     Parameters
     ----------
-    bands
-    h : :class:`~quant_met.BaseHamiltonian`
-        Hamiltonian object.
-    k_grid : :class:`numpy.ndarray`
-        List of k points.
+    h : BaseHamiltonian
+        Hamiltonian object used to compute Bloch states and their derivatives.
+    k_grid : numpy.ndarray
+        Array of k points in the Brillouin zone.
+    bands : list of int
+        Indices of the bands for which the quantum metric is to be calculated.
 
     Returns
     -------
     :class:`numpy.ndarray`
-        Quantum metric in the normal state.
+        A 2x2 matrix representing the quantum metric.
 
+    Raises
+    ------
+    ValueError
+        If `bands` contains invalid indices or `k_grid` is empty.
     """
     energies, bloch = h.diagonalize_nonint(k_grid)
 
@@ -53,55 +62,6 @@ def quantum_metric(
                                 bloch[k_index][:, n].conjugate()
                                 @ h_derivative_direction_2[k_index]
                                 @ bloch[k_index][:, band]
-                            )
-                            / (energies[k_index][band] - energies[k_index][n]) ** 2
-                        )
-
-    return np.real(quantum_geom_tensor) / number_k_points
-
-
-def quantum_metric_bdg(
-    h: BaseHamiltonian[GenericParameters], k_grid: npt.NDArray[np.float64], bands: list[int]
-) -> npt.NDArray[np.float64]:
-    """Calculate the quantum metric in the BdG state.
-
-    Parameters
-    ----------
-    bands
-    h : :class:`~quant_met.BaseHamiltonian`
-        Hamiltonian object.
-    k_grid : :class:`numpy.ndarray`
-        List of k points.
-
-    Returns
-    -------
-    :class:`numpy.ndarray`
-        Quantum metric in the normal state.
-
-    """
-    energies, bdg_functions = h.diagonalize_bdg(k_grid)
-
-    number_k_points = len(k_grid)
-
-    quantum_geom_tensor = np.zeros(shape=(2, 2), dtype=np.complex64)
-
-    for band in bands:
-        for i, direction_1 in enumerate(["x", "y"]):
-            h_derivative_dir_1 = h.bdg_hamiltonian_derivative(k=k_grid, direction=direction_1)
-            for j, direction_2 in enumerate(["x", "y"]):
-                h_derivative_dir_2 = h.bdg_hamiltonian_derivative(k=k_grid, direction=direction_2)
-                for k_index in range(len(k_grid)):
-                    for n in [i for i in range(2 * h.number_of_bands) if i != band]:
-                        quantum_geom_tensor[i, j] += (
-                            (
-                                bdg_functions[k_index][:, band].conjugate()
-                                @ h_derivative_dir_1[k_index]
-                                @ bdg_functions[k_index][:, n]
-                            )
-                            * (
-                                bdg_functions[k_index][:, n].conjugate()
-                                @ h_derivative_dir_2[k_index]
-                                @ bdg_functions[k_index][:, band]
                             )
                             / (energies[k_index][band] - energies[k_index][n]) ** 2
                         )
