@@ -19,6 +19,8 @@ Base
     Graphene
     DressedGraphene
     OneBand
+    TwoBand
+    ThreeBand
 """  # noqa: D205, D400
 
 from .base_hamiltonian import BaseHamiltonian
