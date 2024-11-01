@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: MIT
 
 """
-Hamiltonians (:mod:`quant_met.mean_field.hamiltonians`)
-=======================================================
+Hamiltonians
+============
 
 Base
 

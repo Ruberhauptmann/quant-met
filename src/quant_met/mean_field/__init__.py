@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: MIT
 
 """
-Mean field treatment (:mod:`quant_met.mean_field`)
-==================================================
+Mean field treatment
+====================
 
 Submodules
 ----------
