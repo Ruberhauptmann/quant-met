@@ -30,7 +30,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
 
     Parameters
     ----------
-    parameters : :class:`GenericParameters`
+    parameters : :class:`quant_met.parameters.hamiltonians.GenericParameters`
         An object containing the necessary parameters to define the Hamiltonian,
         including lattice parameters, critical constants, and Hubbard interaction
         strengths.
@@ -41,16 +41,16 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
         Name or identifier of the Hamiltonian.
     beta : float
         Inverse temperature (related to thermal excitations).
-    q : numpy.ndarray
+    q : :class:`numpy.ndarray`
         A two-dimensional array defining a momentum offset, typically in
         reciprocal space.
-    lattice : BaseLattice
+    lattice : :class:`quant_met.geometry.BaseLattice`
         The lattice structure in which the Hamiltonian is defined.
-    hubbard_int_orbital_basis : numpy.ndarray
+    hubbard_int_orbital_basis : :class:`numpy.ndarray`
         Interaction terms for Hubbard-type models represented in orbital basis.
     number_of_bands : int
         The total number of bands calculated based on the orbital basis provided.
-    delta_orbital_basis : numpy.ndarray
+    delta_orbital_basis : :class:`numpy.ndarray`
         An array initialized for the order parameter or pairing potentials.
     """
 
