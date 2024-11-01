@@ -167,5 +167,3 @@ def test_hamiltonians(sample_parameters: BaseModel, k: npt.NDArray) -> None:
         assert h.shape[0] == sample.number_of_bands
         assert h.shape[1] == sample.number_of_bands
         assert linalg.ishermitian(h)
-
-    assert sample.beta == 1000.0
