@@ -6,12 +6,12 @@
 
 .. raw:: html
 
-   <div class="prename">quant_met.parameters.OneBandParameters.</div>
+   <div class="prename">quant_met.mean_field.hamiltonians.ThreeBand.</div>
    <div class="empty"></div>
 
-validate_float
+from_file
 =====================================================
 
-.. currentmodule:: quant_met.parameters
+.. currentmodule:: quant_met.mean_field.hamiltonians
 
-.. automethod:: OneBandParameters.validate_float
+.. automethod:: ThreeBand.from_file

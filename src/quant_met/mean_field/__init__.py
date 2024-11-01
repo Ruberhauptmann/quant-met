@@ -23,7 +23,6 @@ Functions
 
    superfluid_weight
    quantum_metric
-   quantum_metric_bdg
    self_consistency_loop
 """  # noqa: D205, D400
 

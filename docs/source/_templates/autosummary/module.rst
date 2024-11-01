@@ -14,4 +14,4 @@
 
 .. currentmodule:: {{ module }}
 
-.. automodule:: {{ objname }}
+.. automodule:: {{module}}.{{ objname }}

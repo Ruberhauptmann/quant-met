@@ -6,12 +6,12 @@
 
 .. raw:: html
 
-   <div class="prename">quant_met.parameters.GrapheneParameters.</div>
+   <div class="prename">quant_met.mean_field.hamiltonians.TwoBand.</div>
    <div class="empty"></div>
 
-validate_float
+gap_equation
 ======================================================
 
-.. currentmodule:: quant_met.parameters
+.. currentmodule:: quant_met.mean_field.hamiltonians
 
-.. automethod:: GrapheneParameters.validate_float
+.. automethod:: TwoBand.gap_equation

@@ -22,7 +22,6 @@ OneBandParameters
       .. autosummary::
          :toctree:
 
-         OneBandParameters.check_positive_values
          OneBandParameters.construct
          OneBandParameters.copy
          OneBandParameters.dict
@@ -46,7 +45,6 @@ OneBandParameters
          OneBandParameters.schema_json
          OneBandParameters.update_forward_refs
          OneBandParameters.validate
-         OneBandParameters.validate_float
 
 
 

@@ -22,7 +22,6 @@ DressedGrapheneParameters
       .. autosummary::
          :toctree:
 
-         DressedGrapheneParameters.check_positive_values
          DressedGrapheneParameters.construct
          DressedGrapheneParameters.copy
          DressedGrapheneParameters.dict
@@ -46,7 +45,6 @@ DressedGrapheneParameters
          DressedGrapheneParameters.schema_json
          DressedGrapheneParameters.update_forward_refs
          DressedGrapheneParameters.validate
-         DressedGrapheneParameters.validate_float
 
 
 

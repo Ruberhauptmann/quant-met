@@ -22,7 +22,6 @@ GrapheneParameters
       .. autosummary::
          :toctree:
 
-         GrapheneParameters.check_positive_values
          GrapheneParameters.construct
          GrapheneParameters.copy
          GrapheneParameters.dict
@@ -46,7 +45,6 @@ GrapheneParameters
          GrapheneParameters.schema_json
          GrapheneParameters.update_forward_refs
          GrapheneParameters.validate
-         GrapheneParameters.validate_float
 
 
 

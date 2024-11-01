@@ -1,11 +1,17 @@
-.. SPDX-FileCopyrightText: 2024 Tjark Sievers
+﻿.. SPDX-FileCopyrightText: 2024 Tjark Sievers
 ..
 .. SPDX-License-Identifier: MIT
 
-.. _mean_field.hamiltonians:
+:orphan:
 
-Test 1
+.. raw:: html
+
+   <div class="prename">quant_met.mean_field.</div>
+   <div class="empty"></div>
+
+hamiltonians
+=================================
+
+.. currentmodule:: quant_met.mean_field
 
 .. automodule:: quant_met.mean_field.hamiltonians
-
-Test 2

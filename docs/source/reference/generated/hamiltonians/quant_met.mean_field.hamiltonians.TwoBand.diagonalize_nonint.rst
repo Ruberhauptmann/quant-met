@@ -6,12 +6,12 @@
 
 .. raw:: html
 
-   <div class="prename">quant_met.parameters.OneBandParameters.</div>
+   <div class="prename">quant_met.mean_field.hamiltonians.TwoBand.</div>
    <div class="empty"></div>
 
-check_positive_values
+diagonalize_nonint
 ============================================================
 
-.. currentmodule:: quant_met.parameters
+.. currentmodule:: quant_met.mean_field.hamiltonians
 
-.. automethod:: OneBandParameters.check_positive_values
+.. automethod:: TwoBand.diagonalize_nonint

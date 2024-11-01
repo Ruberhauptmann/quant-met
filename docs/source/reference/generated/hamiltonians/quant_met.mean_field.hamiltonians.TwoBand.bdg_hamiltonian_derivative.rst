@@ -6,12 +6,12 @@
 
 .. raw:: html
 
-   <div class="prename">quant_met.parameters.DressedGrapheneParameters.</div>
+   <div class="prename">quant_met.mean_field.hamiltonians.TwoBand.</div>
    <div class="empty"></div>
 
-check_positive_values
+bdg_hamiltonian_derivative
 ====================================================================
 
-.. currentmodule:: quant_met.parameters
+.. currentmodule:: quant_met.mean_field.hamiltonians
 
-.. automethod:: DressedGrapheneParameters.check_positive_values
+.. automethod:: TwoBand.bdg_hamiltonian_derivative
