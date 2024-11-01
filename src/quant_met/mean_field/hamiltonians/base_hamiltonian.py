@@ -19,7 +19,7 @@ from quant_met.parameters.hamiltonians import GenericParameters
 
 
 class BaseHamiltonian(Generic[GenericParameters], ABC):
-    """Base class for Hamiltonians in solid-state systems.
+    """Base class for Hamiltonians.
 
     This abstract class provides the essential framework for defining various
     Hamiltonians used in solid-state physics. It includes methods for constructing
@@ -30,7 +30,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
 
     Parameters
     ----------
-    parameters : GenericParameters
+    parameters : :class:`GenericParameters`
         An object containing the necessary parameters to define the Hamiltonian,
         including lattice parameters, critical constants, and Hubbard interaction
         strengths.
@@ -97,7 +97,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
     def hamiltonian(
         self, k: npt.NDArray[np.float64]
     ) -> npt.NDArray[np.complex64]:  # pragma: no cover
-        """Return the normal state Hamiltonian in orbital basis.
+        """Return the normal state Hamiltonian.
 
         Parameters
         ----------
