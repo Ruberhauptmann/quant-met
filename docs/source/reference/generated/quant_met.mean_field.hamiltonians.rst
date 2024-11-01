@@ -2,7 +2,4 @@
 ..
 .. SPDX-License-Identifier: MIT
 
-Hamiltonians
-============
-
 .. automodule:: quant_met.mean_field.hamiltonians
