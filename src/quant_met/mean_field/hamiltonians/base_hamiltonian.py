@@ -399,6 +399,8 @@ def _gaussian(x: npt.NDArray[np.float64], sigma: float) -> npt.NDArray[np.float6
     return gaussian
 
 
-def _fermi_dirac(energy: float, beta: float) -> float:
-    fermi_dirac: float = 1 / (1 + np.exp(beta * energy))
+def _fermi_dirac(energy: float, beta: float | None) -> float:
+    fermi_dirac: float = (
+        (1 if energy < 0 else 0) if beta is None else 1 / (1 + np.exp(beta * energy))
+    )
     return fermi_dirac
