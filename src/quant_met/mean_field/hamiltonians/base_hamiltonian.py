@@ -23,7 +23,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
 
     def __init__(self, parameters: GenericParameters) -> None:
         self.name = parameters.name
-        self.beta = parameters.beta if parameters.beta else 1000.0
+        self.beta = parameters.beta
         self.q = parameters.q if parameters.q is not None else np.zeros(2)
 
         self.lattice = self.setup_lattice(parameters)
