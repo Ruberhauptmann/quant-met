@@ -37,7 +37,7 @@ class HamiltonianParameters(BaseModel):
     """Base class for Hamiltonian parameters."""
 
     name: str
-    beta: float | None = Field(default=None, description="Inverse temperature")
+    beta: float = Field(default=np.inf, description="Inverse temperature")
     q: NDArray[Shape["2"], int | float] | None = Field(
         default=None, description="Momentum of Cooper pairs"
     )
