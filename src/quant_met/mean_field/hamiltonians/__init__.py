@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 """
-Hamiltonians
+hamiltonians
 ============
 
 Base
