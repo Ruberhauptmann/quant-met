@@ -6,7 +6,7 @@
 
 import pathlib
 from abc import ABC, abstractmethod
-from typing import Generic
+from typing import Generic, TypeVar
 
 import h5py
 import numpy as np
@@ -15,7 +15,9 @@ import pandas as pd
 
 from quant_met.geometry import BaseLattice
 from quant_met.mean_field._utils import _check_valid_array
-from quant_met.parameters.hamiltonians import GenericParameters
+from quant_met.parameters.hamiltonians import GenericParameters, HamiltonianParameters
+
+GenericHamiltonian = TypeVar("GenericHamiltonian", bound="BaseHamiltonian[HamiltonianParameters]")
 
 
 class BaseHamiltonian(Generic[GenericParameters], ABC):
@@ -148,7 +150,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
             f.attrs["lattice_constant"] = self.lattice.lattice_constant
 
     @classmethod
-    def from_file(cls, filename: pathlib.Path) -> "BaseHamiltonian[GenericParameters]":
+    def from_file(cls: type[GenericHamiltonian], filename: pathlib.Path) -> GenericHamiltonian:
         """Initialize a Hamiltonian from a previously saved HDF5 file.
 
         This class method allows users to reconstruct a Hamiltonian object
