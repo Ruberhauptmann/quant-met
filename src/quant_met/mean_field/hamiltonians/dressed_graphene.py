@@ -37,21 +37,7 @@ class DressedGraphene(BaseHamiltonian[DressedGrapheneParameters]):
         """Return the specific parameters model for the subclass."""
         return DressedGrapheneParameters
 
-    def hamiltonian(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
-        """
-        Return the normal state Hamiltonian in orbital basis.
-
-        Parameters
-        ----------
-        k : :class:`numpy.ndarray`
-            List of k points.
-
-        Returns
-        -------
-        :class:`numpy.ndarray`
-            Hamiltonian in matrix form.
-
-        """
+    def hamiltonian(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:  # noqa: D102
         assert _check_valid_array(k)
 
         t_gr = self.hopping_gr

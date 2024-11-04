@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""Provides the implementation for Graphene."""
+"""Provides the implementation for a three band tight binding model."""
 
 import numpy as np
 import numpy.typing as npt
