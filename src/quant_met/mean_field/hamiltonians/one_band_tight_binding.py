@@ -15,7 +15,7 @@ from .base_hamiltonian import BaseHamiltonian
 
 
 class OneBand(BaseHamiltonian[OneBandParameters]):
-    """Hamiltonian for Graphene."""
+    """Hamiltonian for one band tight binding model."""
 
     def __init__(self, parameters: OneBandParameters) -> None:
         super().__init__(parameters)
