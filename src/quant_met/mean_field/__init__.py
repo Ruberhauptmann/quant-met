@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: MIT
 
 """
-Mean field treatment
-====================
+Mean field
+==========
 
 Submodules
 ----------

@@ -18,13 +18,11 @@ Functions
     scatter_into_bz
     plot_bandstructure
     plot_superfluid_weight
-    plot_quantum_metric
 """  # noqa: D205, D400
 
 from .plotting import (
     format_plot,
     plot_bandstructure,
-    plot_quantum_metric,
     plot_superfluid_weight,
     scatter_into_bz,
 )
@@ -34,5 +32,4 @@ __all__ = [
     "format_plot",
     "plot_bandstructure",
     "plot_superfluid_weight",
-    "plot_quantum_metric",
 ]

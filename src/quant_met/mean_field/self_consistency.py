@@ -4,11 +4,15 @@
 
 """Self-consistency loop."""
 
+import logging
+
 import numpy as np
 import numpy.typing as npt
 
 from quant_met.mean_field.hamiltonians.base_hamiltonian import BaseHamiltonian
 from quant_met.parameters import GenericParameters
+
+logger = logging.getLogger(__name__)
 
 
 def self_consistency_loop(
@@ -43,22 +47,37 @@ def self_consistency_loop(
 
     Notes
     -----
-    The function initializes the delta orbital basis with random complex
-    numbers before entering the self-consistency loop.
-    The mixing parameter is set to 0.2, which controls how much of the
-    new gap is taken relative to the previous value in each iteration.
+    The function initializes the gaps with random complex numbers before entering the
+    self-consistency loop.
+    The mixing parameter is set to 0.2, which controls how much of the new gaps is taken
+    relative to the previous value in each iteration.
     """
+    logger.info("Starting self-consistency loop.")
+
     rng = np.random.default_rng()
     delta_init = np.zeros(shape=h.delta_orbital_basis.shape, dtype=np.complex64)
     delta_init += (0.2 * rng.random(size=h.delta_orbital_basis.shape) - 1) + 1.0j * (
         0.2 * rng.random(size=h.delta_orbital_basis.shape) - 1
     )
     h.delta_orbital_basis = delta_init
+    logger.debug("Initial gaps set to: %s", h.delta_orbital_basis)
 
+    iteration_count = 0
     while True:
+        iteration_count += 1
+        logger.debug("Iteration %d: Computing new gaps.", iteration_count)
+
         new_gap = h.gap_equation(k=k_space_grid)
-        if (np.abs(h.delta_orbital_basis - new_gap) < epsilon).all():
+
+        delta_change = np.abs(h.delta_orbital_basis - new_gap)
+        logger.debug("New gaps computed: %s", new_gap)
+
+        if (delta_change < epsilon).all():
             h.delta_orbital_basis = new_gap
+            logger.info("Convergence achieved after %d iterations.", iteration_count)
             return h
+
         mixing_greed = 0.2
         h.delta_orbital_basis = mixing_greed * new_gap + (1 - mixing_greed) * h.delta_orbital_basis
+        logger.debug("Updated gaps: %s", h.delta_orbital_basis)
+        logger.debug("Change in gaps: %s", delta_change)

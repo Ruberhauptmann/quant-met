@@ -8,16 +8,15 @@ model:
   hopping_x: 0.01
   hopping_x_gr_a: 1
   chemical_potential: 0.0
-  hubbard_int_gr: 1
-  hubbard_int_x: 1
+  hubbard_int_orbital_basis: [1.0, 1.0, 1.0]
   lattice_constant: 3
+  beta: 100
+  q: [0, 0]
 
 control:
   calculation: scf
   prefix: test
   outdir: test/
-  beta: 100
-  q: [0, 0]
   conv_treshold: 1e-6
 
 k_points:

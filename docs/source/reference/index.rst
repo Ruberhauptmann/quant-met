@@ -7,8 +7,6 @@
 API Reference
 =============
 
-Test for module structure
-
 - :ref:`mean_field <mean_field>`
 - :ref:`parameters <parameters>`
 - :ref:`geometry <geometry>`

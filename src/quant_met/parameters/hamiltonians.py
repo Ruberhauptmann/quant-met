@@ -34,7 +34,19 @@ def validate_float(value: float, info: ValidationInfo) -> float:
 
 
 class HamiltonianParameters(BaseModel):
-    """Base class for Hamiltonian parameters."""
+    """Base class for Hamiltonian parameters.
+
+    Attributes
+    ----------
+    name : str
+        The name of the Hamiltonian model (e.g., "Graphene", "DressedGraphene").
+    beta : float
+        The inverse temperature; default is set to infinity.
+    q : :class:`numpy.ndarray` | None
+        An optional numpy array representing the momentum of Cooper pairs.
+    hubbard_int_orbital_basis : :class:`numpy.ndarray`
+        A numpy array representing the Hubbard interactions in the orbital basis.
+    """
 
     name: str
     beta: float = Field(default=np.inf, description="Inverse temperature")
@@ -47,7 +59,25 @@ class HamiltonianParameters(BaseModel):
 
 
 class DressedGrapheneParameters(HamiltonianParameters):
-    """Parameters for the dressed Graphene model."""
+    """Parameters for the Dressed Graphene model.
+
+    Attributes
+    ----------
+    hopping_gr : float
+        Hopping parameter in the graphene layer.
+    hopping_x : float
+        Hopping parameter at the impurity site.
+    hopping_x_gr_a : float
+        Hybridization parameter.
+    lattice_constant : float
+        The lattice constant of the model.
+    chemical_potential : float
+        The chemical potential.
+    hubbard_int_orbital_basis : npt.NDArray[np.float64]
+        Hubbard interaction in the orbital basis.
+    delta : npt.NDArray[np.complex64] | None
+        Initial value for gaps in orbital space.
+    """
 
     name: Literal["DressedGraphene"] = "DressedGraphene"
     hopping_gr: float = Field(..., description="Hopping in graphene")
