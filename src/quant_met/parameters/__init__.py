@@ -5,14 +5,11 @@
 """
 Parameters
 ----------
-Parameter class for the whole calculation:
+Main class holding all the parameters for the calculation:
 
-.. autosummary::
-   :toctree: generated/parameters/
+- :class:`Parameters`
 
-Parameters
-----------
-Parameters for the Hamiltonian classes:
+Classes holding the configuration for the Hamiltonians:
 
 .. autosummary::
    :toctree: generated/parameters/
