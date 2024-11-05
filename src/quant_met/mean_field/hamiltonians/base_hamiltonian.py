@@ -6,7 +6,7 @@
 
 import pathlib
 from abc import ABC, abstractmethod
-from typing import Generic
+from typing import Generic, TypeVar
 
 import h5py
 import numpy as np
@@ -15,11 +15,46 @@ import pandas as pd
 
 from quant_met.geometry import BaseLattice
 from quant_met.mean_field._utils import _check_valid_array
-from quant_met.parameters.hamiltonians import GenericParameters
+from quant_met.parameters.hamiltonians import GenericParameters, HamiltonianParameters
+
+GenericHamiltonian = TypeVar("GenericHamiltonian", bound="BaseHamiltonian[HamiltonianParameters]")
 
 
 class BaseHamiltonian(Generic[GenericParameters], ABC):
-    """Base class for Hamiltonians."""
+    """Base class for Hamiltonians.
+
+    This abstract class provides the essential framework for defining various
+    Hamiltonians used in solid-state physics. It includes methods for constructing
+    the Hamiltonian based on a set of parameters, calculating properties such as
+    energy bands, conducting derivatives, and diagonalizing the Hamiltonian to
+    obtain eigenstates and eigenvalues. Subclasses should implement methods to
+    provide specific Hamiltonian forms.
+
+    Parameters
+    ----------
+    parameters : :class:`quant_met.parameters.hamiltonians.GenericParameters`
+        An object containing the necessary parameters to define the Hamiltonian,
+        including lattice parameters, critical constants, and Hubbard interaction
+        strengths.
+
+    Attributes
+    ----------
+    name : str
+        Name or identifier of the Hamiltonian.
+    beta : float
+        Inverse temperature (related to thermal excitations).
+    q : :class:`numpy.ndarray`
+        A two-dimensional array defining a momentum offset, typically in
+        reciprocal space.
+    lattice : :class:`quant_met.geometry.BaseLattice`
+        The lattice structure in which the Hamiltonian is defined.
+    hubbard_int_orbital_basis : :class:`numpy.ndarray`
+        Interaction terms for Hubbard-type models represented in orbital basis.
+    number_of_bands : int
+        The total number of bands calculated based on the orbital basis provided.
+    delta_orbital_basis : :class:`numpy.ndarray`
+        An array initialized for the order parameter or pairing potentials.
+    """
 
     def __init__(self, parameters: GenericParameters) -> None:
         self.name = parameters.name
@@ -33,62 +68,79 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
 
     @abstractmethod
     def setup_lattice(self, parameters: GenericParameters) -> BaseLattice:  # pragma: no cover
-        """Set up lattice based on parameters."""
+        """Set up the lattice based on the provided parameters.
+
+        Parameters
+        ----------
+        parameters : GenericParameters
+            Input parameters containing necessary information for lattice construction.
+
+        Returns
+        -------
+        BaseLattice
+            An instance of a lattice object configured according to the input parameters.
+        """
 
     @classmethod
     @abstractmethod
     def get_parameters_model(cls) -> type[GenericParameters]:  # pragma: no cover
-        """Return the specific parameters model for the subclass."""
+        """Return the specific parameters model for the subclass.
+
+        This method should provide the structure of parameters required by
+        subclasses to initialize the Hamiltonian.
+
+        Returns
+        -------
+        type
+            The parameters model class type specific to the Hamiltonian subclass.
+        """
 
     @abstractmethod
     def hamiltonian(
         self, k: npt.NDArray[np.float64]
     ) -> npt.NDArray[np.complex64]:  # pragma: no cover
-        """
-        Return the normal state Hamiltonian in orbital basis.
+        """Return the normal state Hamiltonian.
 
         Parameters
         ----------
-        k : :class:`numpy.ndarray`
-            List of k points.
+        k : numpy.ndarray
+            List of k points in reciprocal space.
 
         Returns
         -------
-        :class:`numpy.ndarray`
-            Hamiltonian in matrix form.
-
+        class `numpy.ndarray`
+            The Hamiltonian matrix evaluated at the provided k points.
         """
 
     @abstractmethod
     def hamiltonian_derivative(
         self, k: npt.NDArray[np.float64], direction: str
     ) -> npt.NDArray[np.complex64]:  # pragma: no cover
-        """
-        Deriative of the Hamiltonian.
+        """Calculate the spatial derivative of the Hamiltonian.
 
         Parameters
         ----------
-        k: :class:`numpy.ndarray`
-            List of k points.
-        direction: str
-            Direction for derivative, either 'x' oder 'y'.
+        k : numpy.ndarray
+            List of k points in reciprocal space.
+        direction : str
+            Direction for the derivative, either 'x' or 'y'.
 
         Returns
         -------
-        :class:`numpy.ndarray`
-            Derivative of Hamiltonian.
-
+        :class: `numpy.ndarray`
+            The derivative of the Hamiltonian matrix in the specified direction.
         """
 
     def save(self, filename: pathlib.Path) -> None:
-        """
-        Save the Hamiltonian as a HDF5 file.
+        """Save the Hamiltonian configuration as an HDF5 file.
+
+        This method stores Hamiltonian parameters and the delta orbital basis in
+        a specified HDF5 file format for later retrieval.
 
         Parameters
         ----------
-        filename : :class:`pathlib.Path`
-            Filename to save the Hamiltonian to, should end in .hdf5
-
+        filename : class:`pathlib.Path`
+            The file path where the Hamiltonian will be saved. Must end with .hdf5.
         """
         with h5py.File(f"{filename.absolute()}", "w") as f:
             f.create_dataset("delta", data=self.delta_orbital_basis)
@@ -98,8 +150,22 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
             f.attrs["lattice_constant"] = self.lattice.lattice_constant
 
     @classmethod
-    def from_file(cls, filename: pathlib.Path) -> "BaseHamiltonian[GenericParameters]":
-        """Initialize a Hamiltonian from an HDF5 file."""
+    def from_file(cls: type[GenericHamiltonian], filename: pathlib.Path) -> GenericHamiltonian:
+        """Initialize a Hamiltonian from a previously saved HDF5 file.
+
+        This class method allows users to reconstruct a Hamiltonian object
+        from saved attributes and matrix configurations stored in an HDF5 file.
+
+        Parameters
+        ----------
+        filename : :class:`pathlib.Path`
+            The file path to the HDF5 file containing Hamiltonian data.
+
+        Returns
+        -------
+        class:`BaseHamiltonian[GenericParameters]`
+            An instance of the Hamiltonian initialized with data from the file.
+        """
         with h5py.File(str(filename), "r") as f:
             config_dict = dict(f.attrs.items())
             config_dict["delta"] = f["delta"][()]
@@ -109,19 +175,22 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
         return cls(parameters=parameters)
 
     def bdg_hamiltonian(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
-        """
-        Bogoliuobov de Genne Hamiltonian.
+        """Generate the Bogoliubov-de Gennes (BdG) Hamiltonian.
+
+        The BdG Hamiltonian incorporates pairing interactions and is used to
+        study superfluid and superconducting phases. This method constructs a
+        2x2 block Hamiltonian based on the normal state Hamiltonian and the
+        pairing terms.
 
         Parameters
         ----------
         k : :class:`numpy.ndarray`
-            List of k points.
+            List of k points in reciprocal space.
 
         Returns
         -------
         :class:`numpy.ndarray`
-            BdG Hamiltonian.
-
+            The BdG Hamiltonian matrix evaluated at the specified k points.
         """
         assert _check_valid_array(k)
         if k.ndim == 1:
@@ -152,21 +221,22 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
     def bdg_hamiltonian_derivative(
         self, k: npt.NDArray[np.float64], direction: str
     ) -> npt.NDArray[np.complex64]:
-        """
-        Deriative of the BdG Hamiltonian.
+        """Calculate the derivative of the BdG Hamiltonian.
+
+        This method computes the spatial derivative of the Bogoliubov-de Gennes
+        Hamiltonian with respect to the specified direction.
 
         Parameters
         ----------
-        k: :class:`numpy.ndarray`
-            List of k points.
-        direction: str
-            Direction for derivative, either 'x' oder 'y'.
+        k : :class:`numpy.ndarray`
+            List of k points in reciprocal space.
+        direction : str
+            Direction for the derivative, either 'x' or 'y'.
 
         Returns
         -------
         :class:`numpy.ndarray`
-            Derivative of Hamiltonian.
-
+            The derivative of the BdG Hamiltonian matrix in the specified direction.
         """
         assert _check_valid_array(k)
         if k.ndim == 1:
@@ -190,21 +260,23 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
     def diagonalize_nonint(
         self, k: npt.NDArray[np.float64]
     ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
-        """
-        Diagonalize the normal state Hamiltonian.
+        """Diagonalizes the normal state Hamiltonian.
+
+        This method computes the eigenvalues and eigenvectors of the normal state
+        Hamiltonian for the given k points. It is essential for analyzing the
+        electronic properties and band structure of materials.
 
         Parameters
         ----------
         k : :class:`numpy.ndarray`
-            List of k points.
+            List of k points in reciprocal space.
 
         Returns
         -------
-        :class:`numpy.ndarray`
-            Eigenvalues of the normal state Hamiltonian.
-        :class:`numpy.ndarray`
-            Diagonalising matrix of the normal state Hamiltonian.
-
+        tuple
+            - :class:`numpy.ndarray`: Eigenvalues of the normal state Hamiltonian.
+            - :class:`numpy.ndarray`: Eigenvectors (Bloch wavefunctions) corresponding to
+            the eigenvalues.
         """
         k_point_matrix = self.hamiltonian(k)
         if k_point_matrix.ndim == 2:
@@ -226,21 +298,23 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
         self,
         k: npt.NDArray[np.float64],
     ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.complex64]]:
-        """
-        Diagonalize the BdG Hamiltonian.
+        """Diagonalizes the BdG Hamiltonian.
+
+        This method computes the eigenvalues and eigenvectors of the Bogoliubov-de
+        Gennes Hamiltonian, providing insight into the quasiparticle excitations in
+        superconducting states.
 
         Parameters
         ----------
         k : :class:`numpy.ndarray`
-            List of k points.
+            List of k points in reciprocal space.
 
         Returns
         -------
-        :class:`numpy.ndarray`
-            Eigenvalues of the BdG Hamiltonian.
-        :class:`numpy.ndarray`
-            Diagonalising matrix of the BdG Hamiltonian.
-
+        tuple
+            - :class:`numpy.ndarray`: Eigenvalues of the BdG Hamiltonian.
+            - :class:`numpy.ndarray`: Eigenvectors corresponding to the eigenvalues of the
+              BdG Hamiltonian.
         """
         bdg_matrix = self.bdg_hamiltonian(k=k)
         if bdg_matrix.ndim == 2:
@@ -262,18 +336,20 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
         self,
         k: npt.NDArray[np.float64],
     ) -> npt.NDArray[np.complex64]:
-        """Gap equation.
+        """Calculate the gap equation.
+
+        The gap equation determines the order parameter for superconductivity by
+        relating the pairings to the spectral properties of the BdG Hamiltonian.
 
         Parameters
         ----------
-        k
+        k : :class:`numpy.ndarray`
+            List of k points in reciprocal space.
 
         Returns
         -------
         :class:`numpy.ndarray`
-            New gap in orbital basis.
-
-
+            New pairing gap in orbital basis, adjusted to remove global phase.
         """
         bdg_energies, bdg_wavefunctions = self.diagonalize_bdg(k=k)
         delta = np.zeros(self.number_of_bands, dtype=np.complex64)
@@ -299,21 +375,24 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
         k: npt.NDArray[np.float64],
         overlaps: tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]] | None = None,
     ) -> pd.DataFrame:
-        """
-        Calculate the band structure.
+        """Calculate the band structure.
+
+        This method computes the energy bands of the system by diagonalizing
+        the normal state Hamiltonian over the provided k points. It can also
+        calculate overlaps with provided wavefunctions if available.
 
         Parameters
         ----------
         k : :class:`numpy.ndarray`
-            List of k points.
+            List of k points in reciprocal space.
         overlaps : tuple(:class:`numpy.ndarray`, :class:`numpy.ndarray`), optional
-            Overlaps.
+            A tuple containing two sets of wavefunctions for overlap calculations.
 
         Returns
         -------
         `pandas.DataFrame`
-            Band structure.
-
+            A DataFrame containing the calculated band energies with optional
+            overlap information.
         """
         results = pd.DataFrame(
             index=range(len(k)),
@@ -340,16 +419,22 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
         self,
         k: npt.NDArray[np.float64],
     ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
-        """Calculate the density of states.
+        """Calculate the density of states (DOS).
+
+        This method computes the density of states by evaluating the eigenvalues
+        of the BdG Hamiltonian over a specified energy range. The DOS provides
+        insights into the allowed energy levels of the system.
 
         Parameters
         ----------
-        k
+        k : :class:`numpy.ndarray`
+            List of k points in reciprocal space.
 
         Returns
         -------
-        Density of states.
-
+        tuple
+            - numpy.ndarray: Energy levels over which the density of states is calculated.
+            - numpy.ndarray: The density of states corresponding to each energy level.
         """
         bands, _ = self.diagonalize_bdg(k=k)
         energies = np.linspace(start=np.min(bands), stop=np.max(bands), num=5000)
@@ -364,14 +449,20 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
     def calculate_spectral_gap(self, k: npt.NDArray[np.float64]) -> float:
         """Calculate the spectral gap.
 
+        This method evaluates the spectral gap of the system by examining the
+        density of states. It identifies the range of energy where there are no
+        states and thus determines the energy difference between the highest
+        occupied and lowest unoccupied states.
+
         Parameters
         ----------
-        k
+        k : :class:`numpy.ndarray`
+            List of k points in reciprocal space.
 
         Returns
         -------
-        Spectral gap
-
+        float
+            The calculated spectral gap.
         """
         energies, density_of_states = self.calculate_density_of_states(k=k)
 

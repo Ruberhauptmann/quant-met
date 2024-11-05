@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: MIT
 
 """
-Hamiltonians (:mod:`quant_met.mean_field.hamiltonians`)
-=======================================================
+hamiltonians
+============
 
 Base
 
@@ -19,6 +19,8 @@ Base
     Graphene
     DressedGraphene
     OneBand
+    TwoBand
+    ThreeBand
 """  # noqa: D205, D400
 
 from .base_hamiltonian import BaseHamiltonian

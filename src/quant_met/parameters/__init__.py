@@ -3,16 +3,24 @@
 # SPDX-License-Identifier: MIT
 
 """
-Parameters (:mod:`quant_met.parameters`)
-========================================
+Parameter Classes
+=================
+
+Main class holding all the parameters for the calculation.
+
+- :class:`Parameters<quant_met.parameters.Parameters>`
+
+Classes holding the configuration for the Hamiltonians.
 
 .. autosummary::
    :toctree: generated/parameters/
 
+    Parameters  # noqa
     DressedGrapheneParameters
     GrapheneParameters
     OneBandParameters
-    Parameters
+    TwoBandParameters
+    ThreeBandParameters
 """  # noqa: D205, D400
 
 from .hamiltonians import (

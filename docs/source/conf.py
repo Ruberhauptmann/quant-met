@@ -12,11 +12,11 @@
 
 
 import importlib.metadata
+import os
 
 project = "quant-met"
 copyright = "2024, Tjark Sievers"
 author = "Tjark Sievers"
-version = importlib.metadata.version("quant-met")
 language = "en"
 
 
@@ -51,10 +51,21 @@ html_sidebars = {
     "**": ["search-button-field", "sidebar-nav-bs"],
 }
 
-if "dev" in version:
-    switcher_version = "dev"
-else:
-    switcher_version = f"{version}"
+version_match = os.environ.get("READTHEDOCS_VERSION")
+release = importlib.metadata.version("quant-met")
+json_url = "https://quant-met.tjarksievers.de/en/latest/versions.json"
+
+if not version_match or version_match.isdigit() or version_match == "latest":
+    if "dev" in release:
+        version_match = "dev"
+        json_url = f"{os.environ.get('READTHEDOCS_CANONICAL_URL')}/versions.json"
+    else:
+        version_match = f"{release}"
+elif version_match == "stable":
+    version_match = f"{release}"
+
+print(version_match)
+print(json_url)
 
 html_theme_options = {
     "github_url": "https://github.com/Ruberhauptmann/quant-met",
@@ -65,8 +76,8 @@ html_theme_options = {
     "collapse_navigation": True,
     "navbar_persistent": [],
     "switcher": {
-        "version_match": switcher_version,
-        "json_url": "https://quant-met.tjarksievers.de/en/latest/versions.json",
+        "version_match": version_match,
+        "json_url": json_url
     },
     "show_version_warning_banner": True,
 }

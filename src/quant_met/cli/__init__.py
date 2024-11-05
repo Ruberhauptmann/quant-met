@@ -3,11 +3,8 @@
 # SPDX-License-Identifier: MIT
 
 """
-Command-Line-Interface (:mod:`quant_met.cli`)
-=============================================
-
-Functions
----------
+Command-Line-Interface
+======================
 
 .. autosummary::
     :toctree: generated/

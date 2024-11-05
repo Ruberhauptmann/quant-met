@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 """
-Geometry (:mod:`quant_met.geometry`)
+Geometry
 ========
 
 .. currentmodule:: quant_met.geometry

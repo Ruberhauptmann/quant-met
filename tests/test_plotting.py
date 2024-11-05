@@ -282,34 +282,3 @@ def test_plotting_sf_weight_with_fig_in() -> None:
         fig_in=fig,
         ax_in=ax,
     )
-
-
-@image_comparison(
-    baseline_images=["quantum_metric"],
-    remove_text=True,
-    extensions=["png"],
-    style="mpl20",
-)
-def test_plotting_quantum_metric() -> None:
-    """Test plotting for quantum metric."""
-    plotting.plot_quantum_metric(
-        x_data=np.array([0.5, 1, 1.5, 2, 2.5, 3]),
-        quantum_metric=np.array([1, 2, 3, 4, 5, 6]),
-    )
-
-
-@image_comparison(
-    baseline_images=["quantum_metric"],
-    remove_text=True,
-    extensions=["png"],
-    style="mpl20",
-)
-def test_plotting_quantum_metric_with_fig_in() -> None:
-    """Test plotting for quantum metric with input figure."""
-    fig, ax = plt.subplots()
-    plotting.plot_quantum_metric(
-        x_data=np.array([0.5, 1, 1.5, 2, 2.5, 3]),
-        quantum_metric=np.array([1, 2, 3, 4, 5, 6]),
-        fig_in=fig,
-        ax_in=ax,
-    )

@@ -212,37 +212,3 @@ def plot_superfluid_weight(
     ax.set_ylabel(r"$D_S\ [t]$")
 
     return fig
-
-
-def plot_quantum_metric(
-    x_data: npt.NDArray[np.float64],
-    quantum_metric: npt.NDArray[np.float64],
-    fig_in: matplotlib.figure.Figure | None = None,
-    ax_in: matplotlib.axes.Axes | None = None,
-) -> matplotlib.figure.Figure:
-    """Plot quantum metric against some parameter.
-
-    Parameters
-    ----------
-    x_data : :class:`numpy.ndarray`
-    quantum_metric : :class:`numpy.ndarray`
-    fig_in : :class:`matplotlib.figure.Figure`, optional
-    ax_in : :class:`matplotlib.axes.Axes`, optional
-
-    Returns
-    -------
-    :obj:`matplotlib.figure.Figure`
-        Figure with the data plotted onto the axis.
-
-    """
-    if fig_in is None or ax_in is None:
-        fig, ax = plt.subplots()
-    else:
-        fig, ax = fig_in, ax_in
-
-    ax.plot(x_data, quantum_metric, "x--")
-
-    ax = format_plot(ax)
-    ax.set_ylabel(r"$M\ [t]$")
-
-    return fig

@@ -28,30 +28,14 @@ class DressedGraphene(BaseHamiltonian[DressedGrapheneParameters]):
         if parameters.delta is not None:
             self.delta_orbital_basis = np.astype(parameters.delta, np.complex64)
 
-    def setup_lattice(self, parameters: DressedGrapheneParameters) -> BaseLattice:
-        """Set up lattice based on parameters."""
+    def setup_lattice(self, parameters: DressedGrapheneParameters) -> BaseLattice:  # noqa: D102
         return GrapheneLattice(lattice_constant=parameters.lattice_constant)
 
     @classmethod
-    def get_parameters_model(cls) -> type[DressedGrapheneParameters]:
-        """Return the specific parameters model for the subclass."""
+    def get_parameters_model(cls) -> type[DressedGrapheneParameters]:  # noqa: D102
         return DressedGrapheneParameters
 
-    def hamiltonian(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
-        """
-        Return the normal state Hamiltonian in orbital basis.
-
-        Parameters
-        ----------
-        k : :class:`numpy.ndarray`
-            List of k points.
-
-        Returns
-        -------
-        :class:`numpy.ndarray`
-            Hamiltonian in matrix form.
-
-        """
+    def hamiltonian(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:  # noqa: D102
         assert _check_valid_array(k)
 
         t_gr = self.hopping_gr
@@ -88,25 +72,9 @@ class DressedGraphene(BaseHamiltonian[DressedGrapheneParameters]):
 
         return h.squeeze()
 
-    def hamiltonian_derivative(
+    def hamiltonian_derivative(  # noqa: D102
         self, k: npt.NDArray[np.float64], direction: str
     ) -> npt.NDArray[np.complex64]:
-        """
-        Deriative of the Hamiltonian.
-
-        Parameters
-        ----------
-        k: :class:`numpy.ndarray`
-            List of k points.
-        direction: str
-            Direction for derivative, either 'x' oder 'y'.
-
-        Returns
-        -------
-        :class:`numpy.ndarray`
-            Derivative of Hamiltonian.
-
-        """
         assert _check_valid_array(k)
         assert direction in ["x", "y"]
 
