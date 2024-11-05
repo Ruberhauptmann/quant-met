@@ -54,12 +54,12 @@ html_sidebars = {
 version_match = os.environ.get("READTHEDOCS_VERSION")
 print(version_match)
 version = importlib.metadata.version("quant-met")
-json_url = "https://quant-met.tjarksievers.de/en/latest/versions.json",
+json_url = "https://quant-met.tjarksievers.de/en/latest/versions.json"
 
 if not version_match or version_match == "latest":
     if "dev" in version:
         version_match = "dev"
-        json_url = "extra/versions.json"
+        json_url = "versions.json"
     else:
         version_match = f"{version}"
 else:
