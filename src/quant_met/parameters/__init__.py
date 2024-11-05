@@ -15,6 +15,7 @@ Classes holding the configuration for the Hamiltonians.
 .. autosummary::
    :toctree: generated/parameters/
 
+    Parameters  # noqa
     DressedGrapheneParameters
     GrapheneParameters
     OneBandParameters
