@@ -51,10 +51,14 @@ html_sidebars = {
     "**": ["search-button-field", "sidebar-nav-bs"],
 }
 
+json_url = "https://quant-met.tjarksievers.de/en/latest/versions.json",
+
 if "dev" in version:
     switcher_version = "dev"
+    json_url = "versions.json"
 else:
     switcher_version = f"{version}"
+
 
 html_theme_options = {
     "github_url": "https://github.com/Ruberhauptmann/quant-met",
@@ -66,7 +70,7 @@ html_theme_options = {
     "navbar_persistent": [],
     "switcher": {
         "version_match": switcher_version,
-        "json_url": "https://quant-met.tjarksievers.de/en/latest/versions.json",
+        "json_url": json_url
     },
     "show_version_warning_banner": True,
 }
