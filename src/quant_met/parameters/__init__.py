@@ -8,7 +8,7 @@ Parameter Classes
 
 Main class holding all the parameters for the calculation.
 
-- :class:`Parameters <quant_met.parameters.Parameters>`
+- :class:`Parameters<quant_met.parameters.Parameters>`
 
 Classes holding the configuration for the Hamiltonians.
 

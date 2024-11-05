@@ -37,13 +37,14 @@ def test_scf() -> None:
         yaml.dump(parameters, f)
 
     result = runner.invoke(cli, ["input.yaml"])
+    result = runner.invoke(cli, ["--debug", "input.yaml"])
     assert result.exit_code == 0
     Path("input.yaml").unlink()
     Path("test/test.hdf5").unlink()
     os.removedirs("test")
 
 
-def test_scf_no_valid_calcution() -> None:
+def test_scf_no_valid_calculation() -> None:
     """Test invalid calculation."""
     runner = CliRunner()
     parameters = {
