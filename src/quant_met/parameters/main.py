@@ -5,7 +5,6 @@
 """Pydantic models to hold parameters to run a simulation."""
 
 import pathlib
-from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -28,7 +27,7 @@ class Control(BaseModel):
         The calculation will stop when changes in the results drop below this threshold.
     """
 
-    calculation: Literal["scf"]
+    calculation: str
     prefix: str
     outdir: pathlib.Path
     conv_treshold: float
