@@ -52,7 +52,7 @@ html_sidebars = {
 }
 
 version_match = os.environ.get("READTHEDOCS_VERSION")
-version = importlib.metadata.version("quant-met")
+release = importlib.metadata.version("quant-met")
 json_url = "https://quant-met.tjarksievers.de/en/latest/versions.json"
 
 if not version_match or version_match.isdigit() or version_match == "latest":
