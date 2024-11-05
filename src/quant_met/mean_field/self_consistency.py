@@ -27,11 +27,11 @@ def self_consistency_loop(
 
     Parameters
     ----------
-    h : class `BaseHamiltonian`
+    h : :class:`BaseHamiltonian`
         The Hamiltonian object containing the current delta orbital basis
         and the method to compute the gap equation.
 
-    k_space_grid : class `numpy.ndarray`
+    k_space_grid : :class:`numpy.ndarray`
         A grid of k-space points at which the gap equation is evaluated.
         This defines the momentum space for the calculation.
 
