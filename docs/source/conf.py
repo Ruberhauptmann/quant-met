@@ -55,7 +55,7 @@ json_url = "https://quant-met.tjarksievers.de/en/latest/versions.json",
 
 if "dev" in version:
     switcher_version = "dev"
-    json_url = "versions.json"
+    json_url = "extra/versions.json"
 else:
     switcher_version = f"{version}"
 
