@@ -16,7 +16,7 @@ def self_consistency_loop(
     k_space_grid: npt.NDArray[np.float64],
     epsilon: float,
 ) -> BaseHamiltonian[GenericParameters]:
-    """Solves the gap equation for a given Hamiltonian self-consistently.
+    """Self-consistently solves the gap equation for a given Hamiltonian.
 
     This function performs a self-consistency loop to solve the gap equation
     for a Hamiltonian `h`.
@@ -25,7 +25,7 @@ def self_consistency_loop(
 
     Parameters
     ----------
-    h : :class:`quant_met.mean_field.BaseHamiltonian`
+    h : :class:`BaseHamiltonian<quant_met.mean_field.hamiltonians.BaseHamiltonian>`
         The Hamiltonian object with the parameters for the calculation.
 
     k_space_grid : :class:`numpy.ndarray`
