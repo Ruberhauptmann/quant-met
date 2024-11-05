@@ -56,13 +56,13 @@ release = importlib.metadata.version("quant-met")
 json_url = "https://quant-met.tjarksievers.de/en/latest/versions.json"
 
 if not version_match or version_match.isdigit() or version_match == "latest":
-    if "dev" in version:
+    if "dev" in release:
         version_match = "dev"
         json_url = "versions.json"
     else:
-        version_match = f"{version}"
+        version_match = f"{release}"
 elif version_match == "stable":
-    version_match = f"{version}"
+    version_match = f"{release}"
 
 print(version_match)
 print(json_url)
