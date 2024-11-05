@@ -16,24 +16,21 @@ def self_consistency_loop(
     k_space_grid: npt.NDArray[np.float64],
     epsilon: float,
 ) -> BaseHamiltonian[GenericParameters]:
-    """Self-consistency loop for updating the delta orbital basis.
+    """Solves the gap equation for a given Hamiltonian self-consistently.
 
     This function performs a self-consistency loop to solve the gap equation
-    for a given Hamiltonian.
-    The delta orbital basis is iteratively updated until the change is within
-    a specified tolerance (epsilon).
-    The updates are performed using a mixing approach to ensure stability in
-    convergence.
+    for a Hamiltonian `h`.
+    The gaps in the orbital basis are iteratively updated until the change is within
+    a specified tolerance `epsilon`.
 
     Parameters
     ----------
-    h : :class:`BaseHamiltonian`
-        The Hamiltonian object containing the current delta orbital basis
-        and the method to compute the gap equation.
+    h : :class:`quant_met.mean_field.BaseHamiltonian`
+        The Hamiltonian object with the parameters for the calculation.
 
     k_space_grid : :class:`numpy.ndarray`
-        A grid of k-space points at which the gap equation is evaluated.
-        This defines the momentum space for the calculation.
+        A grid of points in the Brillouin zone at which the gap equation is evaluated.
+        See
 
     epsilon : float
         The convergence criterion. The loop will terminate when the change
@@ -41,15 +38,8 @@ def self_consistency_loop(
 
     Returns
     -------
-    BaseHamiltonian[GenericParameters]
-        The updated Hamiltonian object with the new delta orbital basis.
-
-    Examples
-    --------
-    >>> h = BaseHamiltonian(parameters)
-    >>> k_space = np.linspace(-np.pi, np.pi, num=100)
-    >>> epsilon = 1e-5
-    >>> updated_h = self_consistency_loop(h, k_space, epsilon)
+    :class:`quant_met.mean_field.BaseHamiltonian`
+        The updated Hamiltonian object with the new gaps.
 
     Notes
     -----
