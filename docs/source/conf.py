@@ -12,11 +12,11 @@
 
 
 import importlib.metadata
+import os
 
 project = "quant-met"
 copyright = "2024, Tjark Sievers"
 author = "Tjark Sievers"
-version = importlib.metadata.version("quant-met")
 language = "en"
 
 
@@ -51,13 +51,19 @@ html_sidebars = {
     "**": ["search-button-field", "sidebar-nav-bs"],
 }
 
+
+version_match = os.environ.get("READTHEDOCS_VERSION")
+version = importlib.metadata.version("quant-met")
 json_url = "https://quant-met.tjarksievers.de/en/latest/versions.json",
 
-if "dev" in version:
-    switcher_version = "dev"
-    json_url = "extra/versions.json"
+if not version_match or version_match == "latest":
+    if "dev" in version:
+        version_match = "dev"
+        json_url = "extra/versions.json"
+    else:
+        version_match = f"{version}"
 else:
-    switcher_version = f"{version}"
+    version_match = f"{version}"
 
 
 html_theme_options = {
@@ -69,7 +75,7 @@ html_theme_options = {
     "collapse_navigation": True,
     "navbar_persistent": [],
     "switcher": {
-        "version_match": switcher_version,
+        "version_match": version_match,
         "json_url": json_url
     },
     "show_version_warning_banner": True,
