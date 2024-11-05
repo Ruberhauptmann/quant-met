@@ -51,8 +51,8 @@ html_sidebars = {
     "**": ["search-button-field", "sidebar-nav-bs"],
 }
 
-
 version_match = os.environ.get("READTHEDOCS_VERSION")
+print(version_match)
 version = importlib.metadata.version("quant-met")
 json_url = "https://quant-met.tjarksievers.de/en/latest/versions.json",
 
