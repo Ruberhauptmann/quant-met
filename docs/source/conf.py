@@ -61,7 +61,7 @@ if not version_match or version_match.isdigit() or version_match == "latest":
         json_url = "versions.json"
     else:
         version_match = f"{version}"
-else:
+elif version_match == "stable":
     version_match = f"{version}"
 
 print(version_match)
