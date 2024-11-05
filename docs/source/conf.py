@@ -58,7 +58,7 @@ json_url = "https://quant-met.tjarksievers.de/en/latest/versions.json"
 if not version_match or version_match.isdigit() or version_match == "latest":
     if "dev" in release:
         version_match = "dev"
-        json_url = "extra/versions.json"
+        json_url = "versions.json"
     else:
         version_match = f"{release}"
 elif version_match == "stable":
