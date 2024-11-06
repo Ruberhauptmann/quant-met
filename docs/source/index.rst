@@ -16,7 +16,7 @@ basic statistical operations, random simulation and much more.
 
 
 .. grid:: 1 1 2 2
-   :gutter: 2 3 4 4
+    :gutter: 2 3 4 4
 
     .. grid-item-card::
         :text-align: center

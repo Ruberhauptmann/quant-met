@@ -5,6 +5,7 @@
 """Self-consistency loop."""
 
 import logging
+import sys
 
 import numpy as np
 import numpy.typing as npt
@@ -19,6 +20,7 @@ def self_consistency_loop(
     h: BaseHamiltonian[GenericParameters],
     k_space_grid: npt.NDArray[np.float64],
     epsilon: float,
+    max_iter: int = 300,
 ) -> BaseHamiltonian[GenericParameters]:
     """Self-consistently solves the gap equation for a given Hamiltonian.
 
@@ -39,6 +41,9 @@ def self_consistency_loop(
     epsilon : float
         The convergence criterion. The loop will terminate when the change
         in the delta orbital basis is less than this value.
+
+    max_iter : int
+        Maximal number of iterations, default 300.
 
     Returns
     -------
@@ -65,6 +70,9 @@ def self_consistency_loop(
     iteration_count = 0
     while True:
         iteration_count += 1
+        if iteration_count > max_iter:
+            sys.exit("Maximum number of iterations reached.")
+
         logger.debug("Iteration %d: Computing new gaps.", iteration_count)
 
         new_gap = h.gap_equation(k=k_space_grid)
