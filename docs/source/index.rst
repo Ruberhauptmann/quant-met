@@ -5,8 +5,6 @@
 Quant-Met
 =========
 
-Version: |version|
-
 .. grid:: 1 1 2 2
 
     .. grid-item-card::
@@ -35,7 +33,7 @@ Version: |version|
 
         +++
 
-        .. button-ref:: examples
+        .. button-ref:: reference/index
             :color: primary
             :click-parent:
 
