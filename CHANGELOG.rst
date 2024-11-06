@@ -2,6 +2,23 @@
 ..
 .. SPDX-License-Identifier: MIT
 
+.. _changelog-0.0.10:
+
+0.0.10 — 2024-11-06
+-------------------
+
+Added
+^^^^^
+
+- Gap equation at zero temperature
+
+- Proper logging and debug mode
+
+Fixed
+^^^^^
+
+- Typing in Hamiltonian classes, so the from_file method returns the corresponding subclass
+
 .. _changelog-0.0.9:
 
 0.0.9 — 2024-10-28
