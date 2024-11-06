@@ -7,13 +7,6 @@ Quant-Met
 
 **Version**: |release|
 
-**Useful links**:
-`Installation <https://numpy.org/install/>`_ |
-`Source Repository <https://github.com/numpy/numpy>`_ |
-`Issue Tracker <https://github.com/numpy/numpy/issues>`_ |
-`Q&A Support <https://numpy.org/gethelp/>`_ |
-`Mailing List <https://mail.python.org/mailman/listinfo/numpy-discussion>`_
-
 NumPy is the fundamental package for scientific computing in Python. It is a
 Python library that provides a multidimensional array object, various derived
 objects (such as masked arrays and matrices), and an assortment of routines for
@@ -23,6 +16,7 @@ basic statistical operations, random simulation and much more.
 
 
 .. grid:: 1 1 2 2
+   :gutter: 2 3 4 4
 
     .. grid-item-card::
         :text-align: center
