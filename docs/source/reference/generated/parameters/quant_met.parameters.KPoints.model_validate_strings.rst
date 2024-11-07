@@ -6,12 +6,12 @@
 
 .. raw:: html
 
-   <div class="prename">quant_met.geometry.GrapheneLattice.</div>
+   <div class="prename">quant_met.parameters.KPoints.</div>
    <div class="empty"></div>
 
-generate_bz_grid
+model_validate_strings
 ===================================================
 
-.. currentmodule:: quant_met.geometry
+.. currentmodule:: quant_met.parameters
 
-.. automethod:: GrapheneLattice.generate_bz_grid
+.. automethod:: KPoints.model_validate_strings
