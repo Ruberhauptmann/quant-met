@@ -31,9 +31,9 @@ def test_quantum_metric_dressed_graphene(ndarrays_regression: NDArraysRegression
         )
     )
 
-    quantum_metric_0 = mean_field.quantum_metric(h=dressed_graphene_h, k_grid=bz_grid, bands=[0])
-    quantum_metric_1 = mean_field.quantum_metric(h=dressed_graphene_h, k_grid=bz_grid, bands=[1])
-    quantum_metric_2 = mean_field.quantum_metric(h=dressed_graphene_h, k_grid=bz_grid, bands=[2])
+    quantum_metric_0 = mean_field.quantum_metric(h=dressed_graphene_h, k=bz_grid, bands=[0])
+    quantum_metric_1 = mean_field.quantum_metric(h=dressed_graphene_h, k=bz_grid, bands=[1])
+    quantum_metric_2 = mean_field.quantum_metric(h=dressed_graphene_h, k=bz_grid, bands=[2])
 
     ndarrays_regression.check(
         {
@@ -62,8 +62,8 @@ def test_quantum_metric_graphene(ndarrays_regression: NDArraysRegressionFixture)
         )
     )
 
-    quantum_metric_0 = mean_field.quantum_metric(h=graphene_h, k_grid=bz_grid, bands=[0])
-    quantum_metric_1 = mean_field.quantum_metric(h=graphene_h, k_grid=bz_grid, bands=[1])
+    quantum_metric_0 = mean_field.quantum_metric(h=graphene_h, k=bz_grid, bands=[0])
+    quantum_metric_1 = mean_field.quantum_metric(h=graphene_h, k=bz_grid, bands=[1])
 
     ndarrays_regression.check(
         {

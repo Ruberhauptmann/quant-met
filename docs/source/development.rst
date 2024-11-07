@@ -59,7 +59,7 @@ Run all tests via::
 3. Collect changelog
 ++++++++++++++++++++
 
-Via scriv:::
+Via scriv::
 
     scriv collect --version
 

@@ -31,7 +31,7 @@ def test_superfluid_weight_dressed_graphene(ndarrays_regression: NDArraysRegress
         )
     )
 
-    d_s_conv, d_s_geom = mean_field.superfluid_weight(h=dressed_graphene_h, k_grid=bz_grid)
+    d_s_conv, d_s_geom = mean_field.superfluid_weight(h=dressed_graphene_h, k=bz_grid)
 
     ndarrays_regression.check(
         {
@@ -60,7 +60,7 @@ def test_superfluid_weight_graphene(ndarrays_regression: NDArraysRegressionFixtu
         )
     )
 
-    d_s_conv, d_s_geom = mean_field.superfluid_weight(h=graphene_h, k_grid=bz_grid)
+    d_s_conv, d_s_geom = mean_field.superfluid_weight(h=graphene_h, k=bz_grid)
 
     ndarrays_regression.check(
         {
