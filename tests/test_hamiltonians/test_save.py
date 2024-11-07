@@ -50,9 +50,9 @@ def test_save_graphene_with_beta_and_q(tmp_path: Path) -> None:
             assert np.allclose(value, graphene_h.__dict__[key])
 
 
-def test_save_egx(tmp_path: Path) -> None:
+def test_save_dressed_graphene(tmp_path: Path) -> None:
     """Test whether a saved dressed Graphene Hamiltonian is restored correctly."""
-    egx_h = mean_field.hamiltonians.DressedGraphene(
+    dressed_graphene_h = mean_field.hamiltonians.DressedGraphene(
         parameters=parameters.DressedGrapheneParameters(
             hopping_gr=1,
             hopping_x=0.01,
@@ -64,16 +64,16 @@ def test_save_egx(tmp_path: Path) -> None:
         )
     )
     file_path = tmp_path / "test.hdf5"
-    egx_h.save(filename=file_path)
-    sample_read = type(egx_h).from_file(filename=file_path)
+    dressed_graphene_h.save(filename=file_path)
+    sample_read = type(dressed_graphene_h).from_file(filename=file_path)
     for key, value in vars(sample_read).items():
         if key not in ["name", "lattice"]:
-            assert np.allclose(value, egx_h.__dict__[key])
+            assert np.allclose(value, dressed_graphene_h.__dict__[key])
 
 
-def test_save_egx_with_q_and_beta(tmp_path: Path) -> None:
+def test_save_dressed_graphene_with_q_and_beta(tmp_path: Path) -> None:
     """Test whether a saved dressed Graphene Hamiltonian is restored correctly."""
-    egx_h = mean_field.hamiltonians.DressedGraphene(
+    dressed_graphene_h = mean_field.hamiltonians.DressedGraphene(
         parameters=parameters.DressedGrapheneParameters(
             hopping_gr=1,
             hopping_x=0.01,
@@ -87,11 +87,11 @@ def test_save_egx_with_q_and_beta(tmp_path: Path) -> None:
         )
     )
     file_path = tmp_path / "test.hdf5"
-    egx_h.save(filename=file_path)
-    sample_read = type(egx_h).from_file(filename=file_path)
+    dressed_graphene_h.save(filename=file_path)
+    sample_read = type(dressed_graphene_h).from_file(filename=file_path)
     for key, value in vars(sample_read).items():
         if key not in ["name", "lattice"]:
-            assert np.allclose(value, egx_h.__dict__[key])
+            assert np.allclose(value, dressed_graphene_h.__dict__[key])
 
 
 def test_save_one_band(tmp_path: Path) -> None:
