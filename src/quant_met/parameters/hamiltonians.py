@@ -2,7 +2,22 @@
 #
 # SPDX-License-Identifier: MIT
 
-"""Pydantic models to hold parameters for Hamiltonians."""
+"""
+Hamiltonian Parameter Classes
+=============================
+
+Classes holding the configuration for the Hamiltonians.
+
+.. autosummary::
+   :toctree: generated/parameters/
+
+    HamiltonianParameters
+    DressedGrapheneParameters
+    GrapheneParameters
+    OneBandParameters
+    TwobandParameters
+    ThreeBandParameters
+"""  # noqa: D205, D400
 
 from typing import Literal, TypeVar
 
