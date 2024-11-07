@@ -9,8 +9,7 @@ from pathlib import Path
 
 from quant_met import mean_field
 from quant_met.mean_field.hamiltonians import BaseHamiltonian
-from quant_met.parameters import Parameters
-from quant_met.parameters.hamiltonians import HamiltonianParameters
+from quant_met.parameters import HamiltonianParameters, Parameters
 
 logger = logging.getLogger(__name__)
 
