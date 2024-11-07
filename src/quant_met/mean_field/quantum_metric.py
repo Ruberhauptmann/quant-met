@@ -12,7 +12,7 @@ from quant_met.parameters import GenericParameters
 
 
 def quantum_metric(
-    h: BaseHamiltonian[GenericParameters], k_grid: npt.NDArray[np.float64], bands: list[int]
+    h: BaseHamiltonian[GenericParameters], k: npt.NDArray[np.float64], bands: list[int]
 ) -> npt.NDArray[np.float64]:
     """Calculate the quantum metric (geometric tensor) for specified bands.
 
@@ -24,7 +24,7 @@ def quantum_metric(
     ----------
     h : BaseHamiltonian
         Hamiltonian object used to compute Bloch states and their derivatives.
-    k_grid : numpy.ndarray
+    k : numpy.ndarray
         Array of k points in the Brillouin zone.
     bands : list of int
         Indices of the bands for which the quantum metric is to be calculated.
@@ -39,18 +39,18 @@ def quantum_metric(
     ValueError
         If `bands` contains invalid indices or `k_grid` is empty.
     """
-    energies, bloch = h.diagonalize_nonint(k_grid)
+    energies, bloch = h.diagonalize_nonint(k)
 
-    number_k_points = len(k_grid)
+    number_k_points = len(k)
 
     quantum_geom_tensor = np.zeros(shape=(2, 2), dtype=np.complex64)
 
     for band in bands:
         for i, direction_1 in enumerate(["x", "y"]):
-            h_derivative_direction_1 = h.hamiltonian_derivative(k=k_grid, direction=direction_1)
+            h_derivative_direction_1 = h.hamiltonian_derivative(k=k, direction=direction_1)
             for j, direction_2 in enumerate(["x", "y"]):
-                h_derivative_direction_2 = h.hamiltonian_derivative(k=k_grid, direction=direction_2)
-                for k_index in range(len(k_grid)):
+                h_derivative_direction_2 = h.hamiltonian_derivative(k=k, direction=direction_2)
+                for k_index in range(len(k)):
                     for n in [i for i in range(h.number_of_bands) if i != band]:
                         quantum_geom_tensor[i, j] += (
                             (
