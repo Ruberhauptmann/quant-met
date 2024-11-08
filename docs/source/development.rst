@@ -61,16 +61,21 @@ Run all tests via::
 
 Via scriv::
 
-    scriv collect --version
+    scriv collect --version x.x.x
 
 Sadly, this destroys the reuse information, so that needs to get fixed by putting it back to the top of the file in the changelog.
 
-4. Bump version
+4. Add new version to docs version switcher
++++++++++++++++++++++++++++++++++++++++++++
+
+This needs to be changed in ``docs/source/extra/versions.json``.
+
+5. Bump version
 +++++++++++++++
 
 In ``pyproject.toml``, then lock the new version via ``poetry lock``.
 
-5. Prepare Github release
+6. Prepare Github release
 +++++++++++++++++++++++++
 
 Merge the release branch and in Github, create a release together with the tag ``x.x.x``.

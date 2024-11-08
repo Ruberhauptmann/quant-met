@@ -2,6 +2,18 @@
 ..
 .. SPDX-License-Identifier: MIT
 
+.. _changelog-0.0.11:
+
+0.0.11 — 2024-11-08
+-------------------
+
+Changed
+^^^^^^^
+
+- Option to set maximum number of iterations in self-consistency loop
+
+- Convergence criterium changed to be relative, i.e. the change in gap components is divided by the old gap components and then compared to the epsilon
+
 .. _changelog-0.0.10:
 
 0.0.10 — 2024-11-06
