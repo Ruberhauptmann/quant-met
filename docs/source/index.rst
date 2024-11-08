@@ -72,6 +72,7 @@ basic statistical operations, random simulation and much more.
    :maxdepth: 2
    :hidden:
 
+   user_guide
    examples
    reference/index
    development

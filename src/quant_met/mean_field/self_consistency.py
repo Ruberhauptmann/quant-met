@@ -77,7 +77,10 @@ def self_consistency_loop(
 
         new_gap = h.gap_equation(k=k_space_grid)
 
-        delta_change = np.abs(h.delta_orbital_basis - new_gap)
+        if not np.allclose(h.delta_orbital_basis, 0):
+            delta_change = np.abs(h.delta_orbital_basis - new_gap) / np.abs(h.delta_orbital_basis)
+        else:
+            delta_change = np.abs(h.delta_orbital_basis - new_gap)
         logger.debug("New gaps computed: %s", new_gap)
 
         if (delta_change < epsilon).all():
