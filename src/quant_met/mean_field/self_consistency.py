@@ -20,7 +20,7 @@ def self_consistency_loop(
     h: BaseHamiltonian[GenericParameters],
     k_space_grid: npt.NDArray[np.float64],
     epsilon: float,
-    max_iter: int = 300,
+    max_iter: int = 1000,
 ) -> BaseHamiltonian[GenericParameters]:
     """Self-consistently solves the gap equation for a given Hamiltonian.
 
