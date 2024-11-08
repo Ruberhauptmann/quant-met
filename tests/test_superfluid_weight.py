@@ -9,8 +9,8 @@ from pytest_regressions.ndarrays_regression import NDArraysRegressionFixture
 from quant_met import geometry, mean_field, parameters
 
 
-def test_superfluid_weight_egx(ndarrays_regression: NDArraysRegressionFixture) -> None:
-    """Test superfluid weight for EGX."""
+def test_superfluid_weight_dressed_graphene(ndarrays_regression: NDArraysRegressionFixture) -> None:
+    """Test superfluid weight for dressed_graphene."""
     t_gr = 1
     t_x = 0.01
     v = 1
@@ -19,7 +19,7 @@ def test_superfluid_weight_egx(ndarrays_regression: NDArraysRegressionFixture) -
     graphene_lattice = geometry.GrapheneLattice(lattice_constant=np.sqrt(3))
     bz_grid = graphene_lattice.generate_bz_grid(10, 10)
 
-    egx_h = mean_field.hamiltonians.DressedGraphene(
+    dressed_graphene_h = mean_field.hamiltonians.DressedGraphene(
         parameters=parameters.DressedGrapheneParameters(
             hopping_gr=t_gr,
             hopping_x=t_x,
@@ -31,7 +31,7 @@ def test_superfluid_weight_egx(ndarrays_regression: NDArraysRegressionFixture) -
         )
     )
 
-    d_s_conv, d_s_geom = mean_field.superfluid_weight(h=egx_h, k_grid=bz_grid)
+    d_s_conv, d_s_geom = mean_field.superfluid_weight(h=dressed_graphene_h, k=bz_grid)
 
     ndarrays_regression.check(
         {
@@ -60,7 +60,7 @@ def test_superfluid_weight_graphene(ndarrays_regression: NDArraysRegressionFixtu
         )
     )
 
-    d_s_conv, d_s_geom = mean_field.superfluid_weight(h=graphene_h, k_grid=bz_grid)
+    d_s_conv, d_s_geom = mean_field.superfluid_weight(h=graphene_h, k=bz_grid)
 
     ndarrays_regression.check(
         {

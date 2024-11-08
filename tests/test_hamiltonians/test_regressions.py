@@ -43,7 +43,7 @@ def test_spectral_gap(ndarrays_regression: NDArraysRegressionFixture) -> None:
 
     graphene_lattice = geometry.GrapheneLattice(lattice_constant=np.sqrt(3))
     bz_grid = graphene_lattice.generate_bz_grid(10, 10)
-    egx_h = mean_field.hamiltonians.DressedGraphene(
+    dressed_graphene_h = mean_field.hamiltonians.DressedGraphene(
         parameters=parameters.DressedGrapheneParameters(
             hopping_gr=hopping,
             hopping_x=0.01,
@@ -54,9 +54,9 @@ def test_spectral_gap(ndarrays_regression: NDArraysRegressionFixture) -> None:
             delta=np.array([0, 0, 0], dtype=np.complex64),
         )
     )
-    spectral_gap_zero_gap = egx_h.calculate_spectral_gap(k=bz_grid)
+    spectral_gap_zero_gap = dressed_graphene_h.calculate_spectral_gap(k=bz_grid)
 
-    egx_h = mean_field.hamiltonians.DressedGraphene(
+    dressed_graphene_h = mean_field.hamiltonians.DressedGraphene(
         parameters=parameters.DressedGrapheneParameters(
             hopping_gr=hopping,
             hopping_x=0.01,
@@ -67,7 +67,7 @@ def test_spectral_gap(ndarrays_regression: NDArraysRegressionFixture) -> None:
             delta=np.array([1, 1, 1], dtype=np.complex64),
         )
     )
-    spectral_gap_finite_gap = egx_h.calculate_spectral_gap(k=bz_grid)
+    spectral_gap_finite_gap = dressed_graphene_h.calculate_spectral_gap(k=bz_grid)
 
     ndarrays_regression.check(
         {

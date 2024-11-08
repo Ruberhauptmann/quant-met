@@ -165,15 +165,15 @@ def test_plotting_nonint_bandstructure_graphene_with_fig_in() -> None:
 
 
 @image_comparison(
-    baseline_images=["nonint_bandstructure_egx"],
+    baseline_images=["nonint_bandstructure_dressed_graphene"],
     remove_text=True,
     extensions=["png"],
     style="mpl20",
 )
-def test_plotting_nonint_bandstructure_egx() -> None:
+def test_plotting_nonint_bandstructure_dressed_graphene() -> None:
     """Test band structure plotting function for Graphene."""
     graphene_lattice = geometry.GrapheneLattice(lattice_constant=np.sqrt(3))
-    egx_h = mean_field.hamiltonians.DressedGraphene(
+    dressed_graphene_h = mean_field.hamiltonians.DressedGraphene(
         parameters=parameters.DressedGrapheneParameters(
             hopping_gr=1,
             hopping_x=0.01,
@@ -192,7 +192,7 @@ def test_plotting_nonint_bandstructure_egx() -> None:
         points, number_of_points=1000
     )
 
-    band_structure = egx_h.calculate_bandstructure(
+    band_structure = dressed_graphene_h.calculate_bandstructure(
         band_path, overlaps=(np.array([0, 0, 1]), np.array([1, 0, 0]))
     )
 
@@ -206,15 +206,15 @@ def test_plotting_nonint_bandstructure_egx() -> None:
 
 
 @image_comparison(
-    baseline_images=["nonint_bandstructure_egx"],
+    baseline_images=["nonint_bandstructure_dressed_graphene"],
     remove_text=True,
     extensions=["png"],
     style="mpl20",
 )
-def test_plotting_nonint_bandstructure_egx_with_fig_in() -> None:
+def test_plotting_nonint_bandstructure_dressed_graphene_with_fig_in() -> None:
     """Test plotting function with input figure."""
     graphene_lattice = geometry.GrapheneLattice(lattice_constant=np.sqrt(3))
-    egx_h = mean_field.hamiltonians.DressedGraphene(
+    dressed_graphene_h = mean_field.hamiltonians.DressedGraphene(
         parameters=parameters.DressedGrapheneParameters(
             hopping_gr=1,
             hopping_x=0.01,
@@ -234,7 +234,7 @@ def test_plotting_nonint_bandstructure_egx_with_fig_in() -> None:
         points, number_of_points=1000
     )
 
-    band_structure = egx_h.calculate_bandstructure(
+    band_structure = dressed_graphene_h.calculate_bandstructure(
         band_path, overlaps=(np.array([0, 0, 1]), np.array([1, 0, 0]))
     )
 

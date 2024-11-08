@@ -40,7 +40,7 @@ def test_hamiltonian_k_space_graphene() -> None:
         assert np.allclose(h_generated, h_compare)
 
 
-def test_hamiltonian_k_space_egx() -> None:
+def test_hamiltonian_k_space_dressed_graphene() -> None:
     """Test dressed Graphene Hamiltonian at some k points."""
     t_gr = 1
     t_x = 0.01
@@ -63,7 +63,7 @@ def test_hamiltonian_k_space_egx() -> None:
     ]
 
     for k_point, h_compare in h_at_high_symmetry_points:
-        egx_h = mean_field.hamiltonians.DressedGraphene(
+        dressed_graphene_h = mean_field.hamiltonians.DressedGraphene(
             parameters=parameters.DressedGrapheneParameters(
                 hopping_gr=t_gr,
                 hopping_x=t_x,
@@ -73,7 +73,7 @@ def test_hamiltonian_k_space_egx() -> None:
                 hubbard_int_orbital_basis=[0.0, 0.0, 0.0],
             )
         )
-        h_generated = egx_h.hamiltonian(k_point)
+        h_generated = dressed_graphene_h.hamiltonian(k_point)
         assert np.allclose(h_generated, h_compare)
 
 
@@ -105,11 +105,11 @@ def test_hamiltonian_k_space_one_band() -> None:
         assert np.allclose(h_generated, h_compare)
 
 
-def test_gap_equation_egx_nonint() -> None:
+def test_gap_equation_dressed_graphene_nonint() -> None:
     """Test gap equation for dressed Graphene model."""
     graphene_lattice = geometry.GrapheneLattice(lattice_constant=np.sqrt(3))
 
-    egx_h = mean_field.hamiltonians.DressedGraphene(
+    dressed_graphene_h = mean_field.hamiltonians.DressedGraphene(
         parameters=parameters.DressedGrapheneParameters(
             hopping_gr=1,
             hopping_x=0.01,
@@ -120,6 +120,6 @@ def test_gap_equation_egx_nonint() -> None:
         )
     )
     assert np.allclose(
-        egx_h.gap_equation(k=graphene_lattice.generate_bz_grid(ncols=30, nrows=30)),
+        dressed_graphene_h.gap_equation(k=graphene_lattice.generate_bz_grid(ncols=30, nrows=30)),
         np.zeros(3, dtype=np.complex64),
     )

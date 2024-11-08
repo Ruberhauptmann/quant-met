@@ -13,7 +13,7 @@ from quant_met.parameters import GenericParameters
 
 def superfluid_weight(
     h: BaseHamiltonian[GenericParameters],
-    k_grid: npt.NDArray[np.float64],
+    k: npt.NDArray[np.float64],
 ) -> tuple[npt.NDArray[np.complex64], npt.NDArray[np.complex64]]:
     """Calculate the superfluid weight.
 
@@ -21,7 +21,7 @@ def superfluid_weight(
     ----------
     h : :class:`~quant_met.mean_field.Hamiltonian`
         Hamiltonian.
-    k_grid : :class:`numpy.ndarray`
+    k : :class:`numpy.ndarray`
         List of k points.
 
     Returns
@@ -37,10 +37,10 @@ def superfluid_weight(
 
     for i, direction_1 in enumerate(["x", "y"]):
         for j, direction_2 in enumerate(["x", "y"]):
-            for k in k_grid:
-                c_mnpq = _c_factor(h, k)
-                j_up = _current_operator(h, direction_1, k)
-                j_down = _current_operator(h, direction_2, -k)
+            for k_point in k:
+                c_mnpq = _c_factor(h, k_point)
+                j_up = _current_operator(h, direction_1, k_point)
+                j_down = _current_operator(h, direction_2, -k_point)
                 for m in range(h.number_of_bands):
                     for n in range(h.number_of_bands):
                         for p in range(h.number_of_bands):

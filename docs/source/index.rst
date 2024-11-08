@@ -5,9 +5,26 @@
 Quant-Met
 =========
 
-Version: |version|
+**Version**: |release|
 
 .. grid:: 1 1 2 2
+    :gutter: 2 3 4 4
+
+    .. grid-item-card::
+        :text-align: center
+
+        **User Guide**
+        ^^^
+
+        Some notebooks with examples
+
+        +++
+
+        .. button-ref:: user_guide
+            :color: primary
+            :click-parent:
+
+            To the user guide
 
     .. grid-item-card::
         :text-align: center
@@ -35,7 +52,7 @@ Version: |version|
 
         +++
 
-        .. button-ref:: examples
+        .. button-ref:: reference/index
             :color: primary
             :click-parent:
 
@@ -47,6 +64,8 @@ Version: |version|
    :maxdepth: 2
    :hidden:
 
+   user_guide
    examples
    reference/index
+   development
    changelog

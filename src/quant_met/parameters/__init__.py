@@ -8,33 +8,37 @@ Parameter Classes
 
 Main class holding all the parameters for the calculation.
 
-- :class:`Parameters<quant_met.parameters.Parameters>`
-
 Classes holding the configuration for the Hamiltonians.
+
+.. autosummary::
+    :toctree: generated/parameters/hamiltonians
+
+    hamiltonians
 
 .. autosummary::
    :toctree: generated/parameters/
 
     Parameters  # noqa
-    DressedGrapheneParameters
-    GrapheneParameters
-    OneBandParameters
-    TwoBandParameters
-    ThreeBandParameters
+    Control  # noqa
+    KPoints  # noqa
 """  # noqa: D205, D400
 
 from .hamiltonians import (
     DressedGrapheneParameters,
     GenericParameters,
     GrapheneParameters,
+    HamiltonianParameters,
     OneBandParameters,
     ThreeBandParameters,
     TwoBandParameters,
 )
-from .main import Parameters
+from .main import Control, KPoints, Parameters
 
 __all__ = [
     "Parameters",
+    "Control",
+    "KPoints",
+    "HamiltonianParameters",
     "DressedGrapheneParameters",
     "GrapheneParameters",
     "OneBandParameters",
