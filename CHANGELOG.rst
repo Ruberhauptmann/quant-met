@@ -2,6 +2,16 @@
 ..
 .. SPDX-License-Identifier: MIT
 
+.. _changelog-0.0.12:
+
+0.0.12 — 2024-11-09
+-------------------
+
+Changed
+^^^^^^^
+
+- Use numpy allclose function in covergence criterium
+
 .. _changelog-0.0.11:
 
 0.0.11 — 2024-11-08
