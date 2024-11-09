@@ -77,13 +77,9 @@ def self_consistency_loop(
 
         new_gap = h.gap_equation(k=k_space_grid)
 
-        if not np.allclose(h.delta_orbital_basis, 0):
-            delta_change = np.abs(h.delta_orbital_basis - new_gap) / np.abs(h.delta_orbital_basis)
-        else:
-            delta_change = np.abs(h.delta_orbital_basis - new_gap)
         logger.debug("New gaps computed: %s", new_gap)
 
-        if (delta_change < epsilon).all():
+        if np.allclose(h.delta_orbital_basis, new_gap, atol=1e-10, rtol=epsilon):
             h.delta_orbital_basis = new_gap
             logger.info("Convergence achieved after %d iterations.", iteration_count)
             return h
@@ -91,4 +87,4 @@ def self_consistency_loop(
         mixing_greed = 0.2
         h.delta_orbital_basis = mixing_greed * new_gap + (1 - mixing_greed) * h.delta_orbital_basis
         logger.debug("Updated gaps: %s", h.delta_orbital_basis)
-        logger.debug("Change in gaps: %s", delta_change)
+        logger.debug("Change in gaps: %s", np.abs(h.delta_orbital_basis - new_gap))
