@@ -437,12 +437,31 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
             - numpy.ndarray: The density of states corresponding to each energy level.
         """
         bands, _ = self.diagonalize_bdg(k=k)
-        energies = np.linspace(start=np.min(bands), stop=np.max(bands), num=5000)
+        gap_fraction = 10
+        energies = np.concatenate(
+            [
+                np.linspace(
+                    start=np.min(bands),
+                    stop=-gap_fraction * np.max(np.abs(self.delta_orbital_basis)),
+                    num=100,
+                ),
+                np.linspace(
+                    start=-gap_fraction * np.max(np.abs(self.delta_orbital_basis)),
+                    stop=gap_fraction * np.max(np.abs(self.delta_orbital_basis)),
+                    num=200,
+                ),
+                np.linspace(
+                    start=gap_fraction * np.max(np.abs(self.delta_orbital_basis)),
+                    stop=np.max(bands),
+                    num=100,
+                ),
+            ]
+        )
         density_of_states = np.zeros(shape=energies.shape, dtype=np.float64)
 
         for i, energy in enumerate(energies):
             density_of_states[i] = np.sum(
-                _gaussian(x=(energy - bands.flatten()), sigma=1e-2)
+                _gaussian(x=(energy - bands.flatten()), sigma=0.01)
             ) / len(k)
         return energies, density_of_states
 
@@ -466,13 +485,15 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
         """
         energies, density_of_states = self.calculate_density_of_states(k=k)
 
-        coherence_peaks = np.where(np.isclose(density_of_states, np.max(density_of_states)))[0]
+        coherence_peaks = np.where(
+            np.isclose(density_of_states, np.max(density_of_states), rtol=1e-2)
+        )[0]
 
-        gap_region = density_of_states[coherence_peaks[0] : coherence_peaks[1] + 1] / np.max(
+        gap_region = density_of_states[coherence_peaks[0] : coherence_peaks[-1] + 1] / np.max(
             density_of_states
         )
-        energies_gap_region = energies[coherence_peaks[0] : coherence_peaks[1] + 1]
-        zero_indeces = np.where(gap_region <= 1e-10)[0]
+        energies_gap_region = energies[coherence_peaks[0] : coherence_peaks[-1] + 1]
+        zero_indeces = np.where(gap_region <= 1e-6)[0]
         if len(zero_indeces) == 0:
             gap = 0
         else:
@@ -481,6 +502,48 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
             ).item()
 
         return gap
+
+    def calculate_free_energy(self, k: npt.NDArray[np.float64]) -> float:
+        """Calculate the free energy for the Hamiltonian.
+
+        Parameters
+        ----------
+        k
+
+        Returns
+        -------
+        free_energy
+
+        """
+        number_k_points = len(k)
+        bdg_energies, _ = self.diagonalize_bdg(k)
+        integral: float = 0
+
+        if np.isinf(self.beta):
+            k_array = -np.array(
+                [np.sum(np.abs(bdg_energies[k_index])) for k_index in range(number_k_points)]
+            )
+
+            integral += -np.sum(k_array, axis=-1) / number_k_points + np.sum(
+                np.power(np.abs(self.delta_orbital_basis), 2) / self.hubbard_int_orbital_basis
+            )
+        else:
+            k_array = (
+                -1
+                / (2 * self.beta)
+                * np.array(
+                    [
+                        np.sum(np.log(1 + np.exp(-self.beta * bdg_energies[k_index])))
+                        for k_index in range(number_k_points)
+                    ]
+                )
+            )
+
+            integral += -np.sum(k_array, axis=-1) / number_k_points + 0.5 * np.sum(
+                np.power(np.abs(self.delta_orbital_basis), 2) / self.hubbard_int_orbital_basis
+            )
+
+        return integral
 
 
 def _gaussian(x: npt.NDArray[np.float64], sigma: float) -> npt.NDArray[np.float64]:
