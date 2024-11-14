@@ -10,14 +10,14 @@ model:
   chemical_potential: 0.0
   hubbard_int_orbital_basis: [1.0, 1.0, 1.0]
   lattice_constant: 3
-  beta: 100
+  beta: 1
   q: [0, 0]
 
 control:
-  calculation: scf
+  calculation: crit-temp
   prefix: test
   outdir: test/
-  conv_treshold: 1e-6
+  conv_treshold: 1e-3
 
 k_points:
   nk1: 30

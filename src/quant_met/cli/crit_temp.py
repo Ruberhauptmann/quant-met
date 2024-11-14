@@ -15,21 +15,21 @@ from ._utils import _hamiltonian_factory
 logger = logging.getLogger(__name__)
 
 
-def scf(parameters: Parameters) -> None:
+def crit_temp(parameters: Parameters) -> None:
     """Self-consistent calculation for the order parameter.
 
     Parameters
     ----------
     parameters: Parameters
         An instance of Parameters containing control settings, the model,
-        and k-point specifications for the self-consistency calculation.
+        and k-point specifications for the T_C calculation.
     """
     result_path = Path(parameters.control.outdir)
     result_path.mkdir(exist_ok=True, parents=True)
 
     h = _hamiltonian_factory(parameters=parameters.model, classname=parameters.model.name)
 
-    solved_h = mean_field.self_consistency_loop(
+    delta_vs_temp, critical_temperatures = mean_field.search_crit_temp(
         h=h,
         k_space_grid=h.lattice.generate_bz_grid(
             ncols=parameters.k_points.nk1, nrows=parameters.k_points.nk2
@@ -38,9 +38,8 @@ def scf(parameters: Parameters) -> None:
         max_iter=parameters.control.max_iter,
     )
 
-    logger.info("Self-consistency loop completed successfully.")
-    logger.debug("Obtained delta values: %s", solved_h.delta_orbital_basis)
+    logger.info("Search for T_C completed successfully.")
+    logger.debug("Obtained T_Cs: %s", critical_temperatures)
 
     result_file = result_path / f"{parameters.control.prefix}.hdf5"
-    solved_h.save(filename=result_file)
     logger.info("Results saved to %s", result_file)
