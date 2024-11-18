@@ -31,6 +31,8 @@ class Control(BaseModel):
     prefix: str
     outdir: pathlib.Path
     conv_treshold: float
+    max_iter: int = 1000
+    n_temp_points: int = 50
 
 
 class KPoints(BaseModel):

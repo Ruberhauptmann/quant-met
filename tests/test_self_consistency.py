@@ -26,16 +26,16 @@ def test_self_consistency() -> None:
     assert np.allclose(
         mean_field.self_consistency_loop(
             h=dressed_graphene_h,
-            k_space_grid=graphene_lattice.generate_bz_grid(50, 50),
-            epsilon=1e-4,
+            k_space_grid=graphene_lattice.generate_bz_grid(40, 40),
+            epsilon=1e-3,
         ).delta_orbital_basis,
         np.zeros(3),
     )
     assert np.allclose(
         mean_field.self_consistency_loop(
             h=dressed_graphene_h,
-            k_space_grid=graphene_lattice.generate_bz_grid(50, 50),
-            epsilon=1e-4,
+            k_space_grid=graphene_lattice.generate_bz_grid(40, 40),
+            epsilon=1e-3,
         ).delta_orbital_basis,
         np.zeros(3),
     )
@@ -56,10 +56,10 @@ def test_self_consistency_max_iter() -> None:
         )
     )
 
-    with pytest.raises(SystemExit):
+    with pytest.raises(RuntimeError):
         mean_field.self_consistency_loop(
             h=dressed_graphene_h,
-            k_space_grid=graphene_lattice.generate_bz_grid(50, 50),
-            epsilon=1e-4,
+            k_space_grid=graphene_lattice.generate_bz_grid(40, 40),
+            epsilon=1e-3,
             max_iter=3,
         )

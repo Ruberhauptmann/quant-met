@@ -1,0 +1,21 @@
+# SPDX-FileCopyrightText: 2024 Tjark Sievers
+#
+# SPDX-License-Identifier: MIT
+
+model:
+  name: OneBand
+  hopping: 1
+  chemical_potential: 0.0
+  hubbard_int_orbital_basis: [5.0]
+  lattice_constant: 1
+
+control:
+  calculation: crit-temp
+  prefix: test
+  outdir: test/
+  conv_treshold: 1e-3
+  n_temp_points: 1
+
+k_points:
+  nk1: 30
+  nk2: 30
