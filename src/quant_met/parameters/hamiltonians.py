@@ -15,7 +15,7 @@ Classes holding the configuration for the Hamiltonians.
     DressedGrapheneParameters
     GrapheneParameters
     OneBandParameters
-    TwobandParameters
+    TwoBandParameters
     ThreeBandParameters
 """  # noqa: D205, D400
 
@@ -65,7 +65,7 @@ class HamiltonianParameters(BaseModel):
 
     name: str
     beta: float = Field(default=np.inf, description="Inverse temperature")
-    q: NDArray[Shape["2"], int | float] | None = Field(
+    q: NDArray[Shape["2"], float] | None = Field(
         default=None, description="Momentum of Cooper pairs"
     )
     hubbard_int_orbital_basis: NDArray = Field(
