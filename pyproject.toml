@@ -28,6 +28,7 @@ h5py = "^3.12.1"
 pydantic = "^2.9.2"
 click = "^8.1.7"
 numpydantic = "^1.6.4"
+tables = "^3.10.1"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.7.0"

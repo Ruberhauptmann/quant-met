@@ -7,6 +7,8 @@
 import logging
 from pathlib import Path
 
+import h5py
+
 from quant_met import mean_field
 from quant_met.parameters import Parameters
 
@@ -29,17 +31,25 @@ def crit_temp(parameters: Parameters) -> None:
 
     h = _hamiltonian_factory(parameters=parameters.model, classname=parameters.model.name)
 
-    delta_vs_temp, critical_temperatures = mean_field.search_crit_temp(
+    delta_vs_temp, critical_temperatures, fit_fig = mean_field.search_crit_temp(
         h=h,
         k_space_grid=h.lattice.generate_bz_grid(
             ncols=parameters.k_points.nk1, nrows=parameters.k_points.nk2
         ),
         epsilon=parameters.control.conv_treshold,
         max_iter=parameters.control.max_iter,
+        n_temp_points=parameters.control.n_temp_points,
     )
 
     logger.info("Search for T_C completed successfully.")
-    logger.debug("Obtained T_Cs: %s", critical_temperatures)
+    logger.info("Obtained T_Cs: %s", critical_temperatures)
+
+    fit_fig.savefig(result_path / f"{parameters.control.prefix}_T_C_fit.pdf", bbox_inches="tight")
 
     result_file = result_path / f"{parameters.control.prefix}.hdf5"
+    delta_vs_temp.to_hdf(result_file, key="delta_vs_temp")
+    with h5py.File(result_file, mode="a") as file:
+        for orbital, crit_temp_orbital in enumerate(critical_temperatures):
+            file.attrs[f"T_C_{orbital}"] = crit_temp_orbital
+
     logger.info("Results saved to %s", result_file)

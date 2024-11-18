@@ -3,20 +3,18 @@
 # SPDX-License-Identifier: MIT
 
 model:
-  name: DressedGraphene
-  hopping_gr: 1
-  hopping_x: 0.01
-  hopping_x_gr_a: 1
+  name: OneBand
+  hopping: 1
   chemical_potential: 0.0
-  hubbard_int_orbital_basis: [1.0, 1.0, 1.0]
-  lattice_constant: 3
+  hubbard_int_orbital_basis: [5.0]
+  lattice_constant: 1
 
 control:
   calculation: crit-temp
   prefix: test
   outdir: test/
   conv_treshold: 1e-3
-  n_temp_points: 15
+  n_temp_points: 1
 
 k_points:
   nk1: 30
