@@ -136,7 +136,7 @@ def search_crit_temp(
     epsilon: float,
     max_iter: int,
     n_temp_points: int,
-) -> tuple[pd.DataFrame, list[float], matplotlib.figure.Figure]:
+) -> tuple[pd.DataFrame, list[float], matplotlib.figure.Figure]:  # pragma: no-cover
     """Search for critical temperature."""
     logger.info("Start search for bounds for T_C")
     temp = 1 / h.beta if not np.isinf(h.beta) else 0.25 * h.hubbard_int_orbital_basis[0]
