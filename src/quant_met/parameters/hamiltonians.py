@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: MIT
 
 """
-Hamiltonian Parameter Classes
-=============================
+hamiltonians
+============
 
 Classes holding the configuration for the Hamiltonians.
 

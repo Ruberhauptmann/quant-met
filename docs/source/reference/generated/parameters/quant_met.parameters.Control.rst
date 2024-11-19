@@ -1,9 +1,14 @@
-.. SPDX-FileCopyrightText: 2024 Tjark Sievers
+﻿.. SPDX-FileCopyrightText: 2024 Tjark Sievers
 ..
 .. SPDX-License-Identifier: MIT
 
-﻿quant\_met.parameters.Control
-=============================
+.. raw:: html
+
+   <div class="prename">quant_met.parameters.</div>
+   <div class="empty"></div>
+
+Control
+============================
 
 .. currentmodule:: quant_met.parameters
 

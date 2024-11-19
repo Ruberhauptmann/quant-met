@@ -17,6 +17,7 @@ Classes holding the configuration for the Hamiltonians.
 
 .. autosummary::
    :toctree: generated/parameters/
+   :template: autosummary/pydantic.rst
 
     Parameters  # noqa
     Control  # noqa
