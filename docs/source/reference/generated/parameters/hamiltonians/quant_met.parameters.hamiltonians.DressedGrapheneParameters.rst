@@ -1,4 +1,4 @@
-.. SPDX-FileCopyrightText: 2024 Tjark Sievers
+﻿.. SPDX-FileCopyrightText: 2024 Tjark Sievers
 ..
 .. SPDX-License-Identifier: MIT
 
@@ -13,8 +13,8 @@ DressedGrapheneParameters
 .. currentmodule:: quant_met.parameters.hamiltonians
 
 .. autopydantic_model:: DressedGrapheneParameters
-   :settings-show-json: False
-   :settings-show-config-summary: False
-   :settings-show-validator-members: False
-   :settings-show-validator-summary: False
+   :model-show-json: False
+   :model-show-config-summary: False
+   :model-show-validator-members: False
+   :model-show-validator-summary: False
    :field-list-validators: False

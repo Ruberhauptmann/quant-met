@@ -50,28 +50,16 @@ def validate_float(value: float, info: ValidationInfo) -> float:
 
 
 class HamiltonianParameters(BaseModel):
-    """Base class for Hamiltonian parameters.
-
-    Attributes
-    ----------
-    name : str
-        The name of the Hamiltonian model (e.g., "Graphene", "DressedGraphene").
-    beta : float
-        The inverse temperature; default is set to infinity.
-    q : :class:`numpy.ndarray` | None
-        An optional numpy array representing the momentum of Cooper pairs.
-    hubbard_int_orbital_basis : :class:`numpy.ndarray`
-        A numpy array representing the Hubbard interactions in the orbital basis.
-    """
+    """Base class for Hamiltonian parameters."""
 
     name: str
-    beta: float = Field(default=np.inf, description="Inverse temperature")
-    q: NDArray[Shape["2"], float] | None = Field(
-        default=None, description="Momentum of Cooper pairs"
-    )
-    hubbard_int_orbital_basis: NDArray = Field(
-        ..., description="Hubbard interaction in orbital basis"
-    )
+    """The name of the Hamiltonian model (e.g., "Graphene", "DressedGraphene")."""
+    hubbard_int_orbital_basis: NDArray
+    """A numpy array representing the Hubbard interactions in the orbital basis."""
+    beta: float = np.inf
+    """The inverse temperature; default is set to infinity."""
+    q: NDArray[Shape["2"], float] | None = None
+    """An optional numpy array representing the momentum of Cooper pairs."""
 
 
 class DressedGrapheneParameters(HamiltonianParameters):

@@ -51,6 +51,8 @@ numpydoc = "^1.7.0"
 ruff = "^0.5.0"
 types-pyyaml = "^6.0.12.20240917"
 autodoc-pydantic = "^2.2.0"
+pytest-integration = "^0.2.3"
+pytest-mock = "^3.14.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -60,12 +62,9 @@ build-backend = "poetry.core.masonry.api"
 [tool.ruff]
 line-length = 100
 force-exclude = true
-#extend-exclude = ["tests", "docs/source/conf.py"]
 extend-exclude = ["docs/source/conf.py"]
 
 [tool.ruff.lint]
-#select = []
-#select = ["D", "E", "F", "I", "W"]
 select = ["ALL"]
 ignore = [
     "D203", # one-blank-line-before-class
@@ -80,9 +79,5 @@ ignore = [
     "T201", # Warn about print statements
 ]
 
-
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
-
-#[format]
-#docstring-code-format = true

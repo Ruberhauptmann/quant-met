@@ -17,7 +17,7 @@ from ._utils import _hamiltonian_factory
 logger = logging.getLogger(__name__)
 
 
-def crit_temp(parameters: Parameters) -> None:  # pragma: no-cover
+def crit_temp(parameters: Parameters) -> None:
     """Self-consistent calculation for the order parameter.
 
     Parameters

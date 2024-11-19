@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-name: Test
+name: Unit tests
 
 on:
   pull_request:
@@ -44,7 +44,7 @@ jobs:
       - name: Setup test suite
         run: tox -vv --notest
       - name: Run test suite
-        run: tox --skip-pkg-install
+        run: tox --skip-pkg-install -- -without-slow-integration
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@v2
         with:
