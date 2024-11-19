@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-name: Unit tests
+name: Integration tests
 
 on:
   pull_request:
