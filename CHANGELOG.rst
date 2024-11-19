@@ -2,6 +2,16 @@
 ..
 .. SPDX-License-Identifier: MIT
 
+.. _changelog-0.0.13:
+
+0.0.13 — 2024-11-19
+-------------------
+
+Added
+^^^^^
+
+- Routine to search for transition temperature
+
 .. _changelog-0.0.12:
 
 0.0.12 — 2024-11-09

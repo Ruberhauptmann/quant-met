@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT
 
 # quant-met
 
-[![Test](https://github.com/Ruberhauptmann/quant-met/actions/workflows/test.yml/badge.svg)](https://github.com/Ruberhauptmann/quant-met/actions/workflows/test.yml)
+[![Test](https://github.com/Ruberhauptmann/quant-met/actions/workflows/unit_tests.yml/badge.svg)](https://github.com/Ruberhauptmann/quant-met/actions/workflows/unit_tests.yml)
 [![Coverage Status](https://coveralls.io/repos/github/Ruberhauptmann/quant-met/badge.svg?branch=main)](https://coveralls.io/github/Ruberhauptmann/quant-met?branch=main)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/quant-met)](https://pypi.org/project/quant-met/)
 [![PyPI - Version](https://img.shields.io/pypi/v/quant-met)](https://pypi.org/project/quant-met/)
