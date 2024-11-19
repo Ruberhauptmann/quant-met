@@ -43,8 +43,8 @@ def test_no_valid_calculation(tmp_path: Path) -> None:
         assert result.exit_code == 1
 
 
-def test_scf_mock(tmp_path: Path, mocker: MockerFixture) -> None:
-    """Test invalid calculation."""
+def test_crit_temp_mock(tmp_path: Path, mocker: MockerFixture) -> None:
+    """Test crit-temp calculation with mock."""
     runner = CliRunner()
     parameters = {
         "model": {
@@ -71,6 +71,44 @@ def test_scf_mock(tmp_path: Path, mocker: MockerFixture) -> None:
             yaml.dump(parameters, f)
         mock_search_crit_temp = mocker.patch("quant_met.mean_field.search_crit_temp")
         mock_search_crit_temp.return_value = (MagicMock(), [0.1, 0.2], MagicMock())
+        result = runner.invoke(cli, ["input.yaml", "--debug"])
+        assert result.exit_code == 0
         result = runner.invoke(cli, ["input.yaml"])
-        mean_field.search_crit_temp.assert_called_once()
+        mean_field.search_crit_temp.assert_called()
+        assert result.exit_code == 0
+
+
+def test_scf_mock(tmp_path: Path, mocker: MockerFixture) -> None:
+    """Test scf calculation with mock."""
+    runner = CliRunner()
+    parameters = {
+        "model": {
+            "name": "DressedGraphene",
+            "hopping_gr": 1,
+            "hopping_x": 0.01,
+            "hopping_x_gr_a": 1,
+            "chemical_potential": 0.0,
+            "hubbard_int_orbital_basis": [0.0, 0.0, 0.0],
+            "lattice_constant": 3,
+        },
+        "control": {
+            "calculation": "scf",
+            "prefix": "test",
+            "outdir": "test/",
+            "beta": 100,
+            "conv_treshold": 1e-2,
+        },
+        "k_points": {"nk1": 30, "nk2": 30},
+    }
+    with runner.isolated_filesystem(temp_dir=tmp_path):
+        with Path("input.yaml").open("w") as f:
+            yaml.dump(parameters, f)
+        mock_search_self_consistency_loop = mocker.patch(
+            "quant_met.mean_field.self_consistency_loop"
+        )
+        mock_search_self_consistency_loop.return_value = MagicMock()
+        result = runner.invoke(cli, ["input.yaml", "--debug"])
+        assert result.exit_code == 0
+        result = runner.invoke(cli, ["input.yaml"])
+        mean_field.self_consistency_loop.assert_called()
         assert result.exit_code == 0
