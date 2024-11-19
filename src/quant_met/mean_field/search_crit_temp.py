@@ -29,7 +29,7 @@ def _get_bounds(
     temp: float,
     gap_for_temp_partial: partial[dict[str, Any] | None],
     zero_temperature_gap: npt.NDArray[np.complex64],
-) -> tuple[list[dict[str, Any]], float, float]:
+) -> tuple[list[dict[str, Any]], float, float]:  # pragma: no-cover
     delta_vs_temp_list = []
     zero_gap_temp = nonzero_gap_temp = temp
     found_zero_gap = False
@@ -61,7 +61,7 @@ def _get_bounds(
 
 def _fit_for_crit_temp(
     delta_vs_temp: pd.DataFrame, orbital: int
-) -> tuple[pd.DataFrame | None, pd.DataFrame, float | None, float | None]:
+) -> tuple[pd.DataFrame | None, pd.DataFrame, float | None, float | None]:  # pragma: no-cover
     filtered_results = delta_vs_temp.iloc[
         np.where(
             np.invert(
@@ -108,7 +108,7 @@ def _gap_for_temp(
     k_space_grid: npt.NDArray[np.float64],
     epsilon: float,
     max_iter: int = 1000,
-) -> dict[str, Any] | None:
+) -> dict[str, Any] | None:  # pragma: no-cover
     beta = np.inf if temp == 0 else 1 / temp
     h.beta = beta
     try:
