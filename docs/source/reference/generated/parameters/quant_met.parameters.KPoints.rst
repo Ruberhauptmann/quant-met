@@ -13,3 +13,8 @@ KPoints
 .. currentmodule:: quant_met.parameters
 
 .. autopydantic_model:: KPoints
+   :settings-show-json: False
+   :settings-show-config-summary: False
+   :settings-show-validator-members: False
+   :settings-show-validator-summary: False
+   :field-list-validators: False

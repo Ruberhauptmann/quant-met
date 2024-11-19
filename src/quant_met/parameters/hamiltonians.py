@@ -10,6 +10,7 @@ Classes holding the configuration for the Hamiltonians.
 
 .. autosummary::
    :toctree:
+   :template: autosummary/pydantic.rst
 
     HamiltonianParameters
     DressedGrapheneParameters

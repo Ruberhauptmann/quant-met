@@ -2,9 +2,19 @@
 ..
 .. SPDX-License-Identifier: MIT
 
-quant\_met.parameters.hamiltonians.TwoBandParameters
-====================================================
+.. raw:: html
+
+   <div class="prename">quant_met.parameters.hamiltonians.</div>
+   <div class="empty"></div>
+
+TwoBandParameters
+===================================================
 
 .. currentmodule:: quant_met.parameters.hamiltonians
 
 .. autopydantic_model:: TwoBandParameters
+   :settings-show-json: False
+   :settings-show-config-summary: False
+   :settings-show-validator-members: False
+   :settings-show-validator-summary: False
+   :field-list-validators: False
