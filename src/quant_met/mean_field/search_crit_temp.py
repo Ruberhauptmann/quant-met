@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
-from scipy.stats import stats
+from scipy import stats
 
 from quant_met import plotting
 from quant_met.parameters import GenericParameters

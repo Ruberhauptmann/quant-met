@@ -9,7 +9,7 @@ Hamiltonian Parameter Classes
 Classes holding the configuration for the Hamiltonians.
 
 .. autosummary::
-   :toctree: generated/parameters/
+   :toctree:
 
     HamiltonianParameters
     DressedGrapheneParameters
