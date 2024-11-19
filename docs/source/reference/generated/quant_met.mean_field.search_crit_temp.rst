@@ -4,12 +4,12 @@
 
 .. raw:: html
 
-   <div class="prename">quant_met.plotting.</div>
+   <div class="prename">quant_met.mean_field.</div>
    <div class="empty"></div>
 
-plot_bandstructure
+search_crit_temp
 =====================================
 
-.. currentmodule:: quant_met.plotting
+.. currentmodule:: quant_met.mean_field
 
-.. autofunction:: plot_bandstructure
+.. autofunction:: search_crit_temp

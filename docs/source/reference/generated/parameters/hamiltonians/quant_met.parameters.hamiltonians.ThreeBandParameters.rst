@@ -4,15 +4,15 @@
 
 .. raw:: html
 
-   <div class="prename">quant_met.parameters.</div>
+   <div class="prename">quant_met.parameters.hamiltonians.</div>
    <div class="empty"></div>
 
-KPoints
-============================
+ThreeBandParameters
+=====================================================
 
-.. currentmodule:: quant_met.parameters
+.. currentmodule:: quant_met.parameters.hamiltonians
 
-.. autopydantic_model:: KPoints
+.. autopydantic_model:: ThreeBandParameters
    :model-show-json: False
    :model-show-config-summary: False
    :model-show-validator-members: False
