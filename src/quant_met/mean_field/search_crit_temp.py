@@ -26,14 +26,16 @@ logger = logging.getLogger(__name__)
 
 
 def _get_bounds(
-    temp: float,
+    initial_temp: float,
     gap_for_temp_partial: partial[dict[str, Any] | None],
     zero_temperature_gap: npt.NDArray[np.complex64],
 ) -> tuple[list[dict[str, Any]], float, float]:  # pragma: no cover
     delta_vs_temp_list = []
-    zero_gap_temp = nonzero_gap_temp = temp
+    zero_gap_temp = nonzero_gap_temp = 0.0
     found_zero_gap = False
     found_nonzero_gap = False
+    temp = initial_temp
+    direction = "down"
     iterations = 0
     while (found_zero_gap and found_nonzero_gap) is False and iterations < 100:
         logger.info("Trying temperature: %s", temp)
@@ -51,10 +53,28 @@ def _get_bounds(
                 temp = 2 * temp
                 logger.info("Found temperature with nonzero gap.")
                 found_nonzero_gap = True
-            else:
+            elif direction == "down":
+                logger.info(
+                    "Gap is neither zero nor equal to the nonzero gap. Reducing temperature."
+                )
                 temp = 0.5 * temp
+            else:
+                logger.info(
+                    "Gap is neither zero nor equal to the nonzero gap. Increasing temperature."
+                )
+                temp = 2 * temp
         else:
-            temp = 0.5 * temp
+            logger.info("No data found for temperature %s. Reducing temperature.", temp)
+            temp = 0.7 * temp
+        if found_zero_gap and not found_nonzero_gap and temp > initial_temp:
+            logger.info("Switching direction to decrease temperature.")
+            temp = initial_temp / 2
+            direction = "down"
+        if found_nonzero_gap and not found_zero_gap and temp < initial_temp:
+            logger.info("Switching direction to increase temperature.")
+            temp = 2 * initial_temp
+            direction = "up"
+
         iterations += 1
     return delta_vs_temp_list, zero_gap_temp, nonzero_gap_temp
 
@@ -148,10 +168,10 @@ def search_crit_temp(
         _gap_for_temp, h=h, k_space_grid=k_space_grid, epsilon=epsilon, max_iter=max_iter
     )
 
+    logger.info("Calculating zero temperature gap")
     data_dict = gap_for_temp_partial(0)
     assert data_dict is not None
 
-    logger.info("Calculating zero temperature gap")
     zero_temperature_gap = np.array(
         [data_dict[key] for key in data_dict if key.startswith("delta")]
     )

@@ -44,12 +44,17 @@ def crit_temp(parameters: Parameters) -> None:
     logger.info("Search for T_C completed successfully.")
     logger.info("Obtained T_Cs: %s", critical_temperatures)
 
-    fit_fig.savefig(result_path / f"{parameters.control.prefix}_T_C_fit.pdf", bbox_inches="tight")
+    fit_fig.savefig(
+        result_path / f"{parameters.control.prefix}_critical_temperatures_fit.pdf",
+        bbox_inches="tight",
+    )
 
-    result_file = result_path / f"{parameters.control.prefix}.hdf5"
+    result_file = result_path / f"{parameters.control.prefix}_critical_temperatures.hdf5"
     delta_vs_temp.to_hdf(result_file, key="delta_vs_temp")
     with h5py.File(result_file, mode="a") as file:
         for orbital, crit_temp_orbital in enumerate(critical_temperatures):
             file.attrs[f"T_C_{orbital}"] = crit_temp_orbital
+    hamiltonian_file = result_path / f"{parameters.control.prefix}_sample_hamiltonian.hdf5"
+    h.save(hamiltonian_file)
 
     logger.info("Results saved to %s", result_file)
