@@ -8,7 +8,7 @@ requires-python = ">=3.11,<3.13"
 
 [tool.poetry]
 name = "quant-met"
-version = "0.0.13"
+version = "0.0.14"
 description = "Calculate superconductivity in flat-band systems."
 authors = ["Tjark Sievers <tsievers@physnet.uni-hamburg.de>"]
 homepage = "https://quant-met.tjarksievers.de"
