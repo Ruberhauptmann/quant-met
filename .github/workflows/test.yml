@@ -7,6 +7,9 @@ name: Call unit tests
 on:
   pull_request:
 
+permissions:
+  pull-requests: write
+
 jobs:
   call-test:
     uses: ./.github/workflows/unit_tests.yml
