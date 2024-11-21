@@ -3,11 +3,18 @@
 # SPDX-License-Identifier: MIT
 
 name: Publish python package
+
 on:
   push:
     tags:
       - "*.*.*"
+
+permissions:
+  pull-requests: write
+
 jobs:
+  integration-tests:
+    uses: ./.github/workflows/integration_tests.yml
   build:
     runs-on: ubuntu-latest
     steps:
