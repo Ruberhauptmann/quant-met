@@ -2,6 +2,16 @@
 ..
 .. SPDX-License-Identifier: MIT
 
+.. _changelog-0.0.15:
+
+0.0.15 — 2024-11-21
+-------------------
+
+Fixed
+^^^^^
+
+- Fixed some cases of the crit_temp routine going into the wrong direction
+
 .. _changelog-0.0.14:
 
 0.0.14 — 2024-11-20
