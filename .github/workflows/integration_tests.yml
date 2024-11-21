@@ -8,8 +8,6 @@ on:
   workflow_call:
   pull_request:
   push:
-    tags:
-      - '*'
     branches:
       - 'main'
 
