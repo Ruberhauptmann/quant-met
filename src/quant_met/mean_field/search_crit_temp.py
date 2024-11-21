@@ -44,15 +44,15 @@ def _get_bounds(
             delta_vs_temp_list.append(data_dict)
             gap = np.array([data_dict[key] for key in data_dict if key.startswith("delta")])
             if np.allclose(gap, 0):
-                zero_gap_temp = temp
-                temp = 0.5 * temp
                 logger.info("Found temperature with zero gap.")
+                zero_gap_temp = temp
                 found_zero_gap = True
-            elif np.allclose(gap, zero_temperature_gap):
-                nonzero_gap_temp = temp
-                temp = 2 * temp
+                temp = 0.5 * temp
+            elif np.allclose(gap, zero_temperature_gap, atol=np.min(np.abs(zero_temperature_gap))):
                 logger.info("Found temperature with nonzero gap.")
+                nonzero_gap_temp = temp
                 found_nonzero_gap = True
+                temp = 2 * temp
             elif direction == "down":
                 logger.info(
                     "Gap is neither zero nor equal to the nonzero gap. Reducing temperature."
@@ -63,14 +63,18 @@ def _get_bounds(
                     "Gap is neither zero nor equal to the nonzero gap. Increasing temperature."
                 )
                 temp = 2 * temp
-        else:
+        elif direction == "down":
             logger.info("No data found for temperature %s. Reducing temperature.", temp)
-            temp = 0.7 * temp
-        if found_zero_gap and not found_nonzero_gap and temp > initial_temp:
+            temp = 0.5 * temp
+        else:
+            logger.info("No data found for temperature %s. Increasing temperature.", temp)
+            temp = 2 * temp
+
+        if found_zero_gap and direction == "up" and not found_nonzero_gap:
             logger.info("Switching direction to decrease temperature.")
             temp = initial_temp / 2
             direction = "down"
-        if found_nonzero_gap and not found_zero_gap and temp < initial_temp:
+        if found_nonzero_gap and direction == "down" and not found_zero_gap:
             logger.info("Switching direction to increase temperature.")
             temp = 2 * initial_temp
             direction = "up"
