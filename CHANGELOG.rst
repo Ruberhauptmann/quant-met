@@ -2,6 +2,16 @@
 ..
 .. SPDX-License-Identifier: MIT
 
+.. _changelog-0.0.16:
+
+0.0.16 — 2024-11-22
+-------------------
+
+Fixed
+^^^^^
+
+- Fit for critical temperatures
+
 .. _changelog-0.0.15:
 
 0.0.15 — 2024-11-21
