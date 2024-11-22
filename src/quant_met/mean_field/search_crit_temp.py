@@ -93,13 +93,12 @@ def _fit_for_crit_temp(
                     np.isclose(
                         np.abs(delta_vs_temp[f"delta_{orbital}"]) ** 2,
                         0,
-                        atol=1000 * (np.abs(delta_vs_temp[f"delta_{orbital}"]) ** 2).min(),
-                        rtol=1e-3,
+                        rtol=0.05,
                     ),
                     np.isclose(
                         np.abs(delta_vs_temp[f"delta_{orbital}"]) ** 2,
                         (np.abs(delta_vs_temp[f"delta_{orbital}"]) ** 2).max(),
-                        rtol=1e-3,
+                        rtol=1e-2,
                     ),
                 )
             )
