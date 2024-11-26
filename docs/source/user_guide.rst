@@ -4,3 +4,9 @@
 
 User Guide
 ==========
+
+A first self-consistency calculation
+------------------------------------
+
+Search for T_C
+--------------
