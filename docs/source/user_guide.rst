@@ -5,11 +5,8 @@
 User Guide
 ==========
 
-
-Search for T_C
---------------
-
 .. toctree::
-   :hidden:
+    :caption: CLI
 
+   user_guide/first-scf
    user_guide/first-scf
