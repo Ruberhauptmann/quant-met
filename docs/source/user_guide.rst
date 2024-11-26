@@ -12,4 +12,4 @@ Search for T_C
 .. toctree::
    :hidden:
 
-   user_guide/first_scf
+   user_guide/first-scf
