@@ -5,8 +5,11 @@
 User Guide
 ==========
 
-A first self-consistency calculation
-------------------------------------
 
 Search for T_C
 --------------
+
+.. toctree::
+   :hidden:
+
+   user_guide/first_scf
