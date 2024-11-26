@@ -14,4 +14,4 @@ User Guide
 .. toctree::
    :caption: Other examples
 
-   examples/band_structures.ipynb
+   examples/band_structures
