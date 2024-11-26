@@ -9,4 +9,12 @@ User Guide
     :caption: CLI
 
    user_guide/first-scf
-   user_guide/first-scf
+   user_guide/search_T_C
+
+.. nbgallery::
+    :caption: Examples
+    :name: example-gallery
+    :glob:
+    :reversed:
+
+    examples/*
