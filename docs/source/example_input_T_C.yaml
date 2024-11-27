@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: 2024 Tjark Sievers
+#
+# SPDX-License-Identifier: MIT
+
+model:
+  name: DressedGraphene
+  hopping_gr: 1
+  hopping_x: 0
+  hopping_x_gr_a: 0.00
+  chemical_potential: 0.0
+  hubbard_int_orbital_basis: [0.1756, 0.1756, 0.1756]
+  lattice_constant: 3
+
+control:
+  calculation: crit-temp
+  prefix: test
+  outdir: test/
+  conv_treshold: 1e-2
+  n_temp_points: 30
+
+k_points:
+  nk1: 40
+  nk2: 40

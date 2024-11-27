@@ -5,7 +5,6 @@
 """Self-consistency loop."""
 
 import logging
-import sys
 
 import numpy as np
 import numpy.typing as npt
@@ -71,7 +70,8 @@ def self_consistency_loop(
     while True:
         iteration_count += 1
         if iteration_count > max_iter:
-            sys.exit("Maximum number of iterations reached.")
+            msg = "Maximum number of iterations reached."
+            raise RuntimeError(msg)
 
         logger.debug("Iteration %d: Computing new gaps.", iteration_count)
 

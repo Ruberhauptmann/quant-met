@@ -33,6 +33,7 @@ extensions = [
     "nbsphinx",
     "sphinx_gallery.load_style",
     "sphinx_design",
+    "sphinxcontrib.autodoc_pydantic"
 ]
 
 intersphinx_mapping = {

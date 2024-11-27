@@ -8,7 +8,13 @@ import pathlib
 
 from pydantic import BaseModel, Field
 
-from .hamiltonians import DressedGrapheneParameters, GrapheneParameters, OneBandParameters
+from .hamiltonians import (
+    DressedGrapheneParameters,
+    GrapheneParameters,
+    OneBandParameters,
+    ThreeBandParameters,
+    TwoBandParameters,
+)
 
 
 class Control(BaseModel):
@@ -31,6 +37,8 @@ class Control(BaseModel):
     prefix: str
     outdir: pathlib.Path
     conv_treshold: float
+    max_iter: int = 1000
+    n_temp_points: int = 50
 
 
 class KPoints(BaseModel):
@@ -63,7 +71,11 @@ class Parameters(BaseModel):
     """
 
     control: Control
-    model: DressedGrapheneParameters | GrapheneParameters | OneBandParameters = Field(
-        ..., discriminator="name"
-    )
+    model: (
+        DressedGrapheneParameters
+        | GrapheneParameters
+        | OneBandParameters
+        | TwoBandParameters
+        | ThreeBandParameters
+    ) = Field(..., discriminator="name")
     k_points: KPoints

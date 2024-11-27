@@ -6,15 +6,15 @@
 
 .. raw:: html
 
-   <div class="prename">quant_met.parameters.</div>
+   <div class="prename">quant_met.parameters.hamiltonians.</div>
    <div class="empty"></div>
 
-Parameters
-===============================
+HamiltonianParameters
+=======================================================
 
-.. currentmodule:: quant_met.parameters
+.. currentmodule:: quant_met.parameters.hamiltonians
 
-.. autopydantic_model:: Parameters
+.. autopydantic_model:: HamiltonianParameters
    :model-show-json: False
    :model-show-config-summary: False
    :model-show-validator-members: False

@@ -2,6 +2,51 @@
 ..
 .. SPDX-License-Identifier: MIT
 
+.. _changelog-0.0.16:
+
+0.0.16 — 2024-11-22
+-------------------
+
+Fixed
+^^^^^
+
+- Fit for critical temperatures
+
+.. _changelog-0.0.15:
+
+0.0.15 — 2024-11-21
+-------------------
+
+Fixed
+^^^^^
+
+- Fixed some cases of the crit_temp routine going into the wrong direction
+
+.. _changelog-0.0.14:
+
+0.0.14 — 2024-11-20
+-------------------
+
+Changed
+^^^^^^^
+
+- crit-temp routine now saves a sample Hamiltonian besides the critical temperatures
+
+Fixed
+^^^^^
+
+- Search for T_C bounds, so that it does not loop anymore in certain cases
+
+.. _changelog-0.0.13:
+
+0.0.13 — 2024-11-19
+-------------------
+
+Added
+^^^^^
+
+- Routine to search for transition temperature
+
 .. _changelog-0.0.12:
 
 0.0.12 — 2024-11-09
