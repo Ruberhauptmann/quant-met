@@ -9,6 +9,7 @@ import numpy.typing as npt
 
 from quant_met.mean_field.hamiltonians.base_hamiltonian import BaseHamiltonian
 from quant_met.parameters import GenericParameters
+from quant_met.utils import fermi_dirac
 
 
 def superfluid_weight(
@@ -35,12 +36,20 @@ def superfluid_weight(
     s_weight_conv = np.zeros(shape=(2, 2), dtype=np.complex64)
     s_weight_geom = np.zeros(shape=(2, 2), dtype=np.complex64)
 
+    c_mnpq_cache = {}
+
     for i, direction_1 in enumerate(["x", "y"]):
         for j, direction_2 in enumerate(["x", "y"]):
             for k_point in k:
-                c_mnpq = _c_factor(h, k_point)
+                k_tuple = tuple(k_point)
+
+                if k_tuple not in c_mnpq_cache:
+                    c_mnpq_cache[k_tuple] = _c_factor(h, k_point)
+                c_mnpq = c_mnpq_cache[k_tuple]
+
                 j_up = _current_operator(h, direction_1, k_point)
                 j_down = _current_operator(h, direction_2, -k_point)
+
                 for m in range(h.number_of_bands):
                     for n in range(h.number_of_bands):
                         for p in range(h.number_of_bands):
@@ -95,8 +104,9 @@ def _c_factor(
                         for j in range(2 * h.number_of_bands):
                             if bdg_energies[i] != bdg_energies[j]:
                                 c_tmp += (
-                                    _fermi_dirac(bdg_energies[i]) - _fermi_dirac(bdg_energies[j])
-                                ) / (bdg_energies[j] - bdg_energies[i])
+                                    fermi_dirac(bdg_energies[i], h.beta)
+                                    - fermi_dirac(bdg_energies[j], h.beta)
+                                ) / (bdg_energies[i] - bdg_energies[j])
                             else:
                                 c_tmp -= _fermi_dirac_derivative()
 
@@ -114,10 +124,3 @@ def _c_factor(
 
 def _fermi_dirac_derivative() -> float:
     return 0
-
-
-def _fermi_dirac(energy: np.float64) -> np.float64:
-    if energy > 0:
-        return np.float64(0)
-
-    return np.float64(1)
