@@ -7,20 +7,23 @@
 API Reference
 =============
 
-- :ref:`mean_field <mean_field>`
-- :ref:`parameters <parameters>`
-- :ref:`geometry <geometry>`
-- :ref:`cli <cli>`
-- :ref:`plotting <plotting>`
-- :ref:`utils <utils>`
+.. toctree::
+   :maxdepth: 1
+   :caption: Mean field
+
+   quant_met.mean_field <mean_field>
 
 .. toctree::
    :maxdepth: 1
-   :hidden:
+   :caption: Command Line Interface
 
-   quant_met.mean_field <mean_field>
-   quant_met.parameters <parameters>
-   quant_met.geometry <geometry>
    quant_met.cli <cli>
+   quant_met.parameters <parameters>
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Utilities
+
+   quant_met.geometry <geometry>
    quant_met.plotting <plotting>
    quant_met.utils <utils>
