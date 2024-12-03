@@ -36,6 +36,34 @@ def test_density_of_states(ndarrays_regression: NDArraysRegressionFixture) -> No
     )
 
 
+def test_free_energy(ndarrays_regression: NDArraysRegressionFixture) -> None:
+    """Regression test for free energy."""
+    hopping = 1
+    chemical_potential = 0
+
+    graphene_lattice = geometry.GrapheneLattice(lattice_constant=np.sqrt(3))
+    bz_grid = graphene_lattice.generate_bz_grid(10, 10)
+    graphene_h = mean_field.hamiltonians.Graphene(
+        parameters=parameters.GrapheneParameters(
+            hopping=hopping,
+            lattice_constant=graphene_lattice.lattice_constant,
+            chemical_potential=chemical_potential,
+            hubbard_int_orbital_basis=[1.0, 1.0],
+            delta=np.array([1, 1], dtype=np.complex64),
+        )
+    )
+
+    graphene_h.beta = 50
+    free_energy_finite_temperature = graphene_h.calculate_free_energy(k=bz_grid)
+
+    ndarrays_regression.check(
+        {
+            "free_energy_finite_temperature": free_energy_finite_temperature,
+        },
+        default_tolerance={"atol": 1e-8, "rtol": 1e-8},
+    )
+
+
 def test_spectral_gap(ndarrays_regression: NDArraysRegressionFixture) -> None:
     """Regression test for calculation of spectral gap."""
     hopping = 1
