@@ -69,3 +69,19 @@ def generate_uniform_grid(
     )
 
     return grid
+
+
+def fermi_dirac(energy: npt.NDArray[np.float64], beta: float) -> npt.NDArray[np.float64]:
+    """Fermi dirac distribution.
+
+    Parameters
+    ----------
+    energy
+    beta
+
+    Returns
+    -------
+    fermi_dirac
+
+    """
+    return np.where(energy < 0, 1.0, 0.0) if np.isinf(beta) else 1 / (1 + np.exp(beta * energy))

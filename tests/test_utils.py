@@ -71,3 +71,11 @@ def test_generate_uniform_grid_errors() -> None:
             corner_2=np.array([0, 0]),
             origin=np.array([0, 0]),
         )
+
+
+def test_fermi_dirac() -> None:
+    """Test the Fermi-Dirac distribution."""
+    result = utils.fermi_dirac(np.array([-1, 0, 1]), 1)
+    assert np.allclose(result, np.array([0.73105858, 0.5, 0.26894142]))
+    result = utils.fermi_dirac(np.array([-1, 0, 1]), np.inf)
+    assert np.all(result == np.array([1.0, 0.0, 0.0]))
