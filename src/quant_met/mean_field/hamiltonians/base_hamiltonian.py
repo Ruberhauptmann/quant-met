@@ -519,29 +519,20 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
         bdg_energies, _ = self.diagonalize_bdg(k)
         integral: float = 0
 
-        if np.isinf(self.beta):
-            k_array = -np.array(
-                [np.sum(np.abs(bdg_energies[k_index])) for k_index in range(number_k_points)]
+        k_array = (
+            1
+            / self.beta
+            * np.array(
+                [
+                    np.sum(np.log(1 + np.exp(-self.beta * bdg_energies[k_index])))
+                    for k_index in range(number_k_points)
+                ]
             )
+        )
 
-            integral += -np.sum(k_array, axis=-1) / number_k_points + np.sum(
-                np.power(np.abs(self.delta_orbital_basis), 2) / self.hubbard_int_orbital_basis
-            )
-        else:
-            k_array = (
-                -1
-                / (2 * self.beta)
-                * np.array(
-                    [
-                        np.sum(np.log(1 + np.exp(-self.beta * bdg_energies[k_index])))
-                        for k_index in range(number_k_points)
-                    ]
-                )
-            )
-
-            integral += -np.sum(k_array, axis=-1) / number_k_points + 0.5 * np.sum(
-                np.power(np.abs(self.delta_orbital_basis), 2) / self.hubbard_int_orbital_basis
-            )
+        integral += -np.sum(k_array, axis=-1) / number_k_points + 0.5 * np.sum(
+            np.power(np.abs(self.delta_orbital_basis), 2) / self.hubbard_int_orbital_basis
+        )
 
         return integral
 

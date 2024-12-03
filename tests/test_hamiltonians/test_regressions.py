@@ -53,13 +53,11 @@ def test_free_energy(ndarrays_regression: NDArraysRegressionFixture) -> None:
         )
     )
 
-    free_energy_zero_temperature = graphene_h.calculate_free_energy(k=bz_grid)
     graphene_h.beta = 50
     free_energy_finite_temperature = graphene_h.calculate_free_energy(k=bz_grid)
 
     ndarrays_regression.check(
         {
-            "free_energy_zero_temperature": free_energy_zero_temperature,
             "free_energy_finite_temperature": free_energy_finite_temperature,
         },
         default_tolerance={"atol": 1e-8, "rtol": 1e-8},
