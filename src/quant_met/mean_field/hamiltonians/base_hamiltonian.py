@@ -16,6 +16,7 @@ import pandas as pd
 from quant_met.geometry import BaseLattice
 from quant_met.mean_field._utils import _check_valid_array
 from quant_met.parameters.hamiltonians import GenericParameters, HamiltonianParameters
+from quant_met.utils import fermi_dirac
 
 GenericHamiltonian = TypeVar("GenericHamiltonian", bound="BaseHamiltonian[HamiltonianParameters]")
 
@@ -361,7 +362,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
                     sum_tmp += (
                         np.conjugate(bdg_wavefunctions[k_index, i, j])
                         * bdg_wavefunctions[k_index, i + self.number_of_bands, j]
-                        * _fermi_dirac(bdg_energies[k_index, j].item(), self.beta)
+                        * fermi_dirac(bdg_energies[k_index, j].item(), self.beta)
                     )
             delta[i] = (-self.hubbard_int_orbital_basis[i] * sum_tmp / len(k)).conjugate()
 
@@ -536,16 +537,53 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
 
         return integral
 
+    def calculate_current_density(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
+        """Calculate the current density.
+
+        Parameters
+        ----------
+        k
+
+        Returns
+        -------
+        current_density
+
+        """
+        bdg_energies, bdg_wavefunctions = self.diagonalize_bdg(k=k)
+        h_der_x = self.hamiltonian_derivative(k=k, direction="x")
+        h_der_y = self.hamiltonian_derivative(k=k, direction="y")
+
+        current = np.zeros(2, dtype=np.complex128)
+
+        matrix_x = np.zeros((3, 3), dtype=np.complex128)
+        matrix_y = np.zeros((3, 3), dtype=np.complex128)
+
+        for k_index in range(len(k)):
+            for i in range(self.number_of_bands):
+                for j in range(self.number_of_bands):
+                    for n in range(2 * self.number_of_bands):
+                        matrix_x[i, j] += (
+                            h_der_x[k_index, i, j]
+                            * np.conjugate(bdg_wavefunctions[k_index, i, n])
+                            * bdg_wavefunctions[k_index, j, n]
+                            * fermi_dirac(bdg_energies[k_index, n].item(), self.beta)
+                        )
+                        matrix_y[i, j] *= (
+                            h_der_y[k_index, i, j]
+                            * np.conjugate(bdg_wavefunctions[k_index, i, n])
+                            * bdg_wavefunctions[k_index, j, n]
+                            * fermi_dirac(bdg_energies[k_index, n].item(), self.beta)
+                        )
+
+        current[0] = np.sum(matrix_x, axis=None)
+        current[1] = np.sum(matrix_y, axis=None)
+        assert np.allclose(np.imag(current), 0, atol=1e-14)
+
+        return (2 * np.real(current)) / len(k)
+
 
 def _gaussian(x: npt.NDArray[np.float64], sigma: float) -> npt.NDArray[np.float64]:
     gaussian: npt.NDArray[np.float64] = np.exp(-(x**2) / (2 * sigma**2)) / np.sqrt(
         2 * np.pi * sigma**2
     )
     return gaussian
-
-
-def _fermi_dirac(energy: float, beta: float | None) -> float:
-    fermi_dirac: float = (
-        (1 if energy < 0 else 0) if beta is None else 1 / (1 + np.exp(beta * energy))
-    )
-    return fermi_dirac
