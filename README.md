@@ -18,16 +18,6 @@ More information:
 - Documentation: [quant-met.tjarksievers.de](https://quant-met.tjarksievers.de)
 - [User guide](https://quant-met.tjarksievers.de/en/latest/user_guide.html)
 
-## Cite
-
-If you are using this software,
-
-https://doi.org/10.5281/zenodo.13378526
-
-Tjark Sievers. (2024). Ruberhauptmann/quant-met: Version 0.0.16 (0.0.16). Zenodo. https://doi.org/10.5281/zenodo.14204736
-
- @software{Tjark Sievers, title={Ruberhauptmann/quant-met: Version 0.0.16}, DOI={10.5281/zenodo.14204736}, publisher={Zenodo}, author={Tjark Sievers} }
-
 
 ## Contributing
 
