@@ -7,6 +7,7 @@
 import numpy as np
 import pytest
 from pydantic import ValidationError
+
 from quant_met import mean_field, parameters
 
 

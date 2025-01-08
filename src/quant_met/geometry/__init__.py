@@ -32,4 +32,4 @@ from .bz_path import generate_bz_path
 from .graphene import GrapheneLattice
 from .square import SquareLattice
 
-__all__ = ["generate_bz_path", "BaseLattice", "GrapheneLattice", "SquareLattice"]
+__all__ = ["BaseLattice", "GrapheneLattice", "SquareLattice", "generate_bz_path"]

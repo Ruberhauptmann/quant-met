@@ -28,8 +28,8 @@ from .plotting import (
 )
 
 __all__ = [
-    "scatter_into_bz",
     "format_plot",
     "plot_bandstructure",
     "plot_superfluid_weight",
+    "scatter_into_bz",
 ]

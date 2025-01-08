@@ -30,4 +30,4 @@ from .one_band_tight_binding import OneBand
 from .three_band_tight_binding import ThreeBand
 from .two_band_tight_binding import TwoBand
 
-__all__ = ["BaseHamiltonian", "Graphene", "DressedGraphene", "OneBand", "TwoBand", "ThreeBand"]
+__all__ = ["BaseHamiltonian", "DressedGraphene", "Graphene", "OneBand", "ThreeBand", "TwoBand"]

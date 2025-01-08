@@ -5,6 +5,7 @@
 """Test Hamiltonian with fixed values."""
 
 import numpy as np
+
 from quant_met import geometry, mean_field, parameters
 
 

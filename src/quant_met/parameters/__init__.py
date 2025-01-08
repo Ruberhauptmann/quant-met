@@ -36,14 +36,14 @@ from .hamiltonians import (
 from .main import Control, KPoints, Parameters
 
 __all__ = [
-    "Parameters",
     "Control",
-    "KPoints",
-    "HamiltonianParameters",
     "DressedGrapheneParameters",
-    "GrapheneParameters",
-    "OneBandParameters",
-    "TwoBandParameters",
-    "ThreeBandParameters",
     "GenericParameters",
+    "GrapheneParameters",
+    "HamiltonianParameters",
+    "KPoints",
+    "OneBandParameters",
+    "Parameters",
+    "ThreeBandParameters",
+    "TwoBandParameters",
 ]

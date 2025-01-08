@@ -9,10 +9,11 @@ from pathlib import Path
 import pytest
 import yaml
 from click.testing import CliRunner
+
 from quant_met.cli import cli
 
 
-@pytest.mark.slow_integration_test()
+@pytest.mark.slow_integration_test
 def test_scf(tmp_path: Path) -> None:
     """Test scf calculation via cli."""
     runner = CliRunner()

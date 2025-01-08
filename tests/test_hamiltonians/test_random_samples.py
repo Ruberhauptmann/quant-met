@@ -19,9 +19,10 @@ from hypothesis.strategies import (
     tuples,
 )
 from pydantic import BaseModel
+from scipy import linalg
+
 from quant_met import parameters
 from quant_met.mean_field.hamiltonians import BaseHamiltonian
-from scipy import linalg
 
 register_type_strategy(
     parameters.OneBandParameters,

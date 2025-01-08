@@ -6,6 +6,7 @@
 
 import numpy as np
 import pytest
+
 from quant_met import geometry, mean_field, parameters
 
 

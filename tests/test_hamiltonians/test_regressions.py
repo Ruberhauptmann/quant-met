@@ -6,6 +6,7 @@
 
 import numpy as np
 from pytest_regressions.ndarrays_regression import NDArraysRegressionFixture
+
 from quant_met import geometry, mean_field, parameters
 
 
