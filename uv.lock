@@ -2061,6 +2061,26 @@ wheels = [
 ]
 
 [[package]]
+name = "pytest-codspeed"
+version = "3.1.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "cffi" },
+    { name = "pytest" },
+    { name = "rich" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6a/5f/d03f78b4ba6df28ab78fe49b70319f9d5c2d6c15c966c18038b3a534b729/pytest_codspeed-3.1.1.tar.gz", hash = "sha256:bed35cc6a381786af70ccbcec35a1bbc4c1246da7d63151aba799ae2bb655fe4", size = 18214 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ff/26/bcfe1613fbbaf1d21ca8d2ed4fd2e1f38b8dde3b96fdf5782d97ce66976d/pytest_codspeed-3.1.1-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:4d988c795c0f69f9713fa291b99ccaaf74686dbaa3ad5fc47a60a3c46e041953", size = 26014 },
+    { url = "https://files.pythonhosted.org/packages/b0/70/c861427beabb7103a1eac435b8b755e62261936585d21e1124e80010fb38/pytest_codspeed-3.1.1-cp311-cp311-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:f9cb7b25ddab46ecc1dcef3ae8c3443e08bc72c6200bcc5f7a7d589e550744b6", size = 24647 },
+    { url = "https://files.pythonhosted.org/packages/3b/5d/cdfec392635c681bca9b1321930089fcf26fdbdd6279479890ddf6523f43/pytest_codspeed-3.1.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:8f5709d2078e33e70f9f87156c7ff3a3ed30874ce0a51019ebc0996826f2af4f", size = 26383 },
+    { url = "https://files.pythonhosted.org/packages/08/e0/2104c26c008e376c3973c48be08c6f23cd869831fb374ed5614dd8183ee0/pytest_codspeed-3.1.1-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:0cbc9ea51856a3600668fd58e4e01cb158855712df484eb96dfe32d06e24be52", size = 25141 },
+    { url = "https://files.pythonhosted.org/packages/9a/9a/f63000ef81880b871d1a498612103c27b7c32fb93db9e37838f406b38c08/pytest_codspeed-3.1.1-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:54c6fb0d60d86be814696e847d032f93044978b9f3042934296f95681f4996f3", size = 26382 },
+    { url = "https://files.pythonhosted.org/packages/af/86/fbf3315eff4d666fe7c957ef34e7406e49ceb819b3e8607cc561c3e0c3d4/pytest_codspeed-3.1.1-cp313-cp313-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:6b5e98eb63af069d91bd9e6c3a35d2db47f1023e1b5e00eb8270e3153f3470d9", size = 25132 },
+    { url = "https://files.pythonhosted.org/packages/f7/7b/4c016c23c7437f1e552392dd27c64c714692bd8adb534151fbf1dcf3481b/pytest_codspeed-3.1.1-py3-none-any.whl", hash = "sha256:4736340678464f525dde539e42049e526758931cc688c9aa69a4b7e3da613aa0", size = 14209 },
+]
+
+[[package]]
 name = "pytest-cov"
 version = "6.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2317,6 +2337,7 @@ lint = [
 test = [
     { name = "hypothesis" },
     { name = "pytest" },
+    { name = "pytest-codspeed" },
     { name = "pytest-cov" },
     { name = "pytest-integration" },
     { name = "pytest-mock" },
@@ -2364,6 +2385,7 @@ lint = [
 test = [
     { name = "hypothesis", specifier = ">=6.123.9" },
     { name = "pytest", specifier = ">=8.3.4" },
+    { name = "pytest-codspeed", specifier = ">=3.1.1" },
     { name = "pytest-cov", specifier = ">=6.0.0" },
     { name = "pytest-integration", specifier = ">=0.2.3" },
     { name = "pytest-mock", specifier = ">=3.14.0" },
@@ -2421,6 +2443,19 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/da/88/f270de456dd7d11dcc808abfa291ecdd3f45ff44e3b549ffa01b126464d0/rfc3986_validator-0.1.1.tar.gz", hash = "sha256:3d44bde7921b3b9ec3ae4e3adca370438eccebc676456449b145d533b240d055", size = 6760 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/9e/51/17023c0f8f1869d8806b979a2bffa3f861f26a3f1a66b094288323fba52f/rfc3986_validator-0.1.1-py2.py3-none-any.whl", hash = "sha256:2f235c432ef459970b4306369336b9d5dbdda31b510ca1e327636e01f528bfa9", size = 4242 },
+]
+
+[[package]]
+name = "rich"
+version = "13.9.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "markdown-it-py" },
+    { name = "pygments" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ab/3a/0316b28d0761c6734d6bc14e770d85506c986c85ffb239e688eeaab2c2bc/rich-13.9.4.tar.gz", hash = "sha256:439594978a49a09530cff7ebc4b5c7103ef57baf48d5ea3184f21d9a2befa098", size = 223149 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/19/71/39c7c0d87f8d4e6c020a393182060eaefeeae6c01dab6a84ec346f2567df/rich-13.9.4-py3-none-any.whl", hash = "sha256:6049d5e6ec054bf2779ab3358186963bac2ea89175919d699e378b99738c2a90", size = 242424 },
 ]
 
 [[package]]
