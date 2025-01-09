@@ -22,6 +22,6 @@ def test_benchmark_self_consistency_one_band(benchmark) -> None:
     benchmark(lambda: mean_field.self_consistency_loop(
         h=one_band_h,
         k_space_grid=k_space_grid,
-        delta_init=np.array([1]),
+        delta_init=np.array([1], dtype=np.complex64),
         epsilon=1e-2,
     ))
