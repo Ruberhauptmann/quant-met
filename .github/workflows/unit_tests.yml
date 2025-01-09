@@ -38,15 +38,3 @@ jobs:
         run: uv tool run tox -- --without-slow-integration
       - name: Coveralls
         uses: coverallsapp/github-action@v2
-        with:
-            parallel: false
-
-  finish:
-    needs: test
-    if: ${{ always() }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Coveralls Finished
-        uses: coverallsapp/github-action@v2
-        with:
-          parallel-finished: true
