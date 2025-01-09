@@ -25,7 +25,7 @@ class BaseLattice(ABC):
 
     @property
     @abstractmethod
-    def bz_corners(self) -> npt.NDArray[np.float64]:  # pragma: no cover
+    def bz_corners(self) -> npt.NDArray[np.floating]:  # pragma: no cover
         """Corners of the BZ."""
         raise NotImplementedError
 
@@ -33,7 +33,7 @@ class BaseLattice(ABC):
     @abstractmethod
     def reciprocal_basis(
         self,
-    ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:  # pragma: no cover
+    ) -> tuple[npt.NDArray[np.floating], npt.NDArray[np.floating]]:  # pragma: no cover
         """Reciprocal basis vectors."""
         raise NotImplementedError
 
@@ -41,11 +41,11 @@ class BaseLattice(ABC):
     @abstractmethod
     def high_symmetry_points(
         self,
-    ) -> tuple[tuple[npt.NDArray[np.float64], str], ...]:  # pragma: no cover
+    ) -> tuple[tuple[npt.NDArray[np.floating], str], ...]:  # pragma: no cover
         """Tuple of high symmetry points and names."""
         raise NotImplementedError
 
-    def generate_bz_grid(self, ncols: int, nrows: int) -> npt.NDArray[np.float64]:
+    def generate_bz_grid(self, ncols: int, nrows: int) -> npt.NDArray[np.floating]:
         """Generate a grid in the BZ.
 
         Parameters
@@ -72,8 +72,8 @@ class BaseLattice(ABC):
     def generate_high_symmetry_path(
         self, number_of_points: int
     ) -> tuple[
-        npt.NDArray[np.float64],
-        npt.NDArray[np.float64],
+        npt.NDArray[np.floating],
+        npt.NDArray[np.floating],
         list[float],
         list[str],
     ]:

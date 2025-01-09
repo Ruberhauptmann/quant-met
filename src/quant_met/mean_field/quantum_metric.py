@@ -12,8 +12,8 @@ from quant_met.parameters import GenericParameters
 
 
 def quantum_metric(
-    h: BaseHamiltonian[GenericParameters], k: npt.NDArray[np.float64], bands: list[int]
-) -> npt.NDArray[np.float64]:
+    h: BaseHamiltonian[GenericParameters], k: npt.NDArray[np.floating], bands: list[int]
+) -> npt.NDArray[np.floating]:
     """Calculate the quantum metric (geometric tensor) for specified bands.
 
     This function computes the quantum geometric tensor associated with
@@ -43,7 +43,7 @@ def quantum_metric(
 
     number_k_points = len(k)
 
-    quantum_geom_tensor = np.zeros(shape=(2, 2), dtype=np.complex64)
+    quantum_geom_tensor = np.zeros(shape=(2, 2), dtype=np.complexfloating)
 
     for band in bands:
         for i, direction_1 in enumerate(["x", "y"]):

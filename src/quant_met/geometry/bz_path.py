@@ -9,11 +9,11 @@ import numpy.typing as npt
 
 
 def _generate_part_of_path(
-    p_0: npt.NDArray[np.float64],
-    p_1: npt.NDArray[np.float64],
+    p_0: npt.NDArray[np.floating],
+    p_1: npt.NDArray[np.floating],
     n: int,
     length_whole_path: int,
-) -> npt.NDArray[np.float64]:
+) -> npt.NDArray[np.floating]:
     distance = np.linalg.norm(p_1 - p_0)
     number_of_points = int(n * distance / length_whole_path) + 1
 
@@ -26,10 +26,10 @@ def _generate_part_of_path(
 
 
 def generate_bz_path(
-    points: list[tuple[npt.NDArray[np.float64], str]], number_of_points: int = 1000
+    points: list[tuple[npt.NDArray[np.floating], str]], number_of_points: int = 1000
 ) -> tuple[
-    npt.NDArray[np.float64],
-    npt.NDArray[np.float64],
+    npt.NDArray[np.floating],
+    npt.NDArray[np.floating],
     list[float],
     list[str],
 ]:

@@ -26,7 +26,7 @@ class DressedGraphene(BaseHamiltonian[DressedGrapheneParameters]):
         self.hubbard_int_orbital_basis = parameters.hubbard_int_orbital_basis
         self.chemical_potential = parameters.chemical_potential
         if parameters.delta is not None:
-            self.delta_orbital_basis = np.astype(parameters.delta, np.complex64)
+            self.delta_orbital_basis = parameters.delta.as_type(np.complexfloating)
 
     def setup_lattice(self, parameters: DressedGrapheneParameters) -> BaseLattice:  # noqa: D102
         return GrapheneLattice(lattice_constant=parameters.lattice_constant)
@@ -35,7 +35,7 @@ class DressedGraphene(BaseHamiltonian[DressedGrapheneParameters]):
     def get_parameters_model(cls) -> type[DressedGrapheneParameters]:  # noqa: D102
         return DressedGrapheneParameters
 
-    def hamiltonian(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:  # noqa: D102
+    def hamiltonian(self, k: npt.NDArray[np.floating]) -> npt.NDArray[np.complexfloating]:  # noqa: D102
         assert _check_valid_array(k)
 
         t_gr = self.hopping_gr
@@ -46,7 +46,7 @@ class DressedGraphene(BaseHamiltonian[DressedGrapheneParameters]):
         if k.ndim == 1:
             k = np.expand_dims(k, axis=0)
 
-        h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complex64)
+        h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complexfloating)
 
         h[:, 0, 1] = -t_gr * (
             np.exp(1j * k[:, 1] * a / np.sqrt(3))
@@ -73,8 +73,8 @@ class DressedGraphene(BaseHamiltonian[DressedGrapheneParameters]):
         return h.squeeze()
 
     def hamiltonian_derivative(  # noqa: D102
-        self, k: npt.NDArray[np.float64], direction: str
-    ) -> npt.NDArray[np.complex64]:
+        self, k: npt.NDArray[np.floating], direction: str
+    ) -> npt.NDArray[np.complexfloating]:
         assert _check_valid_array(k)
         assert direction in ["x", "y"]
 
@@ -84,7 +84,7 @@ class DressedGraphene(BaseHamiltonian[DressedGrapheneParameters]):
         if k.ndim == 1:
             k = np.expand_dims(k, axis=0)
 
-        h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complex64)
+        h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complexfloating)
 
         if direction == "x":
             h[:, 0, 1] = (

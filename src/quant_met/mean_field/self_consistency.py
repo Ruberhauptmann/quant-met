@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 def self_consistency_loop(
     h: BaseHamiltonian[GenericParameters],
-    k_space_grid: npt.NDArray[np.float64],
+    k_space_grid: npt.NDArray[np.floating],
     epsilon: float,
     max_iter: int = 1000,
 ) -> BaseHamiltonian[GenericParameters]:
@@ -59,7 +59,7 @@ def self_consistency_loop(
     logger.info("Starting self-consistency loop.")
 
     rng = np.random.default_rng()
-    delta_init = np.zeros(shape=h.delta_orbital_basis.shape, dtype=np.complex64)
+    delta_init = np.zeros(shape=h.delta_orbital_basis.shape, dtype=np.complexfloating)
     delta_init += (0.2 * rng.random(size=h.delta_orbital_basis.shape) - 1) + 1.0j * (
         0.2 * rng.random(size=h.delta_orbital_basis.shape) - 1
     )
@@ -80,7 +80,7 @@ def self_consistency_loop(
         logger.debug("New gaps computed: %s", new_gap)
 
         if np.allclose(h.delta_orbital_basis, new_gap, atol=1e-10, rtol=epsilon):
-            h.delta_orbital_basis = new_gap
+            h.delta_orbital_basis = new_gap  # type: ignore
             logger.info("Convergence achieved after %d iterations.", iteration_count)
             return h
 

@@ -34,13 +34,13 @@ class SquareLattice(BaseLattice):
         return self._lattice_constant
 
     @property
-    def bz_corners(self) -> npt.NDArray[np.float64]:  # noqa: D102  # pragma: no cover
+    def bz_corners(self) -> npt.NDArray[np.floating]:  # noqa: D102  # pragma: no cover
         return self._bz_corners
 
     @property
-    def reciprocal_basis(self) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:  # noqa: D102
+    def reciprocal_basis(self) -> tuple[npt.NDArray[np.floating], npt.NDArray[np.floating]]:  # noqa: D102
         return self._reciprocal_basis
 
     @property
-    def high_symmetry_points(self) -> tuple[tuple[npt.NDArray[np.float64], str], ...]:  # noqa: D102
+    def high_symmetry_points(self) -> tuple[tuple[npt.NDArray[np.floating], str], ...]:  # noqa: D102
         return self._high_symmetry_points
