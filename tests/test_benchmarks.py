@@ -7,7 +7,7 @@ import numpy as np
 
 
 @pytest.mark.slow_integration_test
-def test_benchmark_self_consistency_one_band(benchmark) -> None:
+def test_benchmark_gap_equation(benchmark) -> None:
     """Benchmark self-consistency for the one band model."""
     one_band_h = mean_field.hamiltonians.OneBand(
         parameters=parameters.OneBandParameters(
@@ -19,9 +19,6 @@ def test_benchmark_self_consistency_one_band(benchmark) -> None:
     )
     k_space_grid = one_band_h.lattice.generate_bz_grid(ncols=30, nrows=30)
 
-    benchmark(lambda: mean_field.self_consistency_loop(
-        h=one_band_h,
-        k_space_grid=k_space_grid,
-        delta_init=np.array([1], dtype=np.complex64),
-        epsilon=1e-2,
-    ))
+    benchmark(lambda: one_band_h.gap_equation(
+        k=k_space_grid)
+    )
