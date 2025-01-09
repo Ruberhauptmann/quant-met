@@ -7,6 +7,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.testing.decorators import image_comparison
+
 from quant_met import geometry, mean_field, parameters, plotting
 
 

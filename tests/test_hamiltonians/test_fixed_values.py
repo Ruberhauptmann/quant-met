@@ -18,12 +18,12 @@ def test_hamiltonian_k_space_graphene() -> None:
             graphene_lattice.Gamma,
             np.array(
                 [[-chemical_potential, -3 * t_gr], [-3 * t_gr, -chemical_potential]],
-                dtype=np.complex64,
+                dtype=np.complex128,
             ),
         ),
         (
             graphene_lattice.K,
-            np.array([[-chemical_potential, 0], [0, -chemical_potential]], dtype=np.complex64),
+            np.array([[-chemical_potential, 0], [0, -chemical_potential]], dtype=np.complex128),
         ),
     ]
 
@@ -57,7 +57,7 @@ def test_hamiltonian_k_space_dressed_graphene() -> None:
                     [-3 * t_gr, -chemical_potential, 0],
                     [v, 0, -chemical_potential - 6 * t_x],
                 ],
-                dtype=np.complex64,
+                dtype=np.complex128,
             ),
         ),
     ]
@@ -87,7 +87,7 @@ def test_hamiltonian_k_space_one_band() -> None:
             square_lattice.Gamma,
             np.array(
                 [[-4 - chemical_potential]],
-                dtype=np.complex64,
+                dtype=np.complex128,
             ),
         ),
     ]
@@ -121,5 +121,5 @@ def test_gap_equation_dressed_graphene_nonint() -> None:
     )
     assert np.allclose(
         dressed_graphene_h.gap_equation(k=graphene_lattice.generate_bz_grid(ncols=30, nrows=30)),
-        np.zeros(3, dtype=np.complex64),
+        np.zeros(3, dtype=np.complex128),
     )

@@ -65,7 +65,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
         self.lattice = self.setup_lattice(parameters)
         self.hubbard_int_orbital_basis = parameters.hubbard_int_orbital_basis
         self.number_of_bands = len(self.hubbard_int_orbital_basis)
-        self.delta_orbital_basis = np.zeros(self.number_of_bands, dtype=np.complex64)
+        self.delta_orbital_basis = np.zeros(self.number_of_bands, dtype=np.complex128)
 
     @abstractmethod
     def setup_lattice(self, parameters: GenericParameters) -> BaseLattice:  # pragma: no cover
@@ -98,8 +98,8 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
 
     @abstractmethod
     def hamiltonian(
-        self, k: npt.NDArray[np.float64]
-    ) -> npt.NDArray[np.complex64]:  # pragma: no cover
+        self, k: npt.NDArray[np.floating]
+    ) -> npt.NDArray[np.complexfloating]:  # pragma: no cover
         """Return the normal state Hamiltonian.
 
         Parameters
@@ -115,8 +115,8 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
 
     @abstractmethod
     def hamiltonian_derivative(
-        self, k: npt.NDArray[np.float64], direction: str
-    ) -> npt.NDArray[np.complex64]:  # pragma: no cover
+        self, k: npt.NDArray[np.floating], direction: str
+    ) -> npt.NDArray[np.complexfloating]:  # pragma: no cover
         """Calculate the spatial derivative of the Hamiltonian.
 
         Parameters
@@ -175,7 +175,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
         parameters = parameters_model.model_validate(config_dict)
         return cls(parameters=parameters)
 
-    def bdg_hamiltonian(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:
+    def bdg_hamiltonian(self, k: npt.NDArray[np.floating]) -> npt.NDArray[np.complexfloating]:
         """Generate the Bogoliubov-de Gennes (BdG) Hamiltonian.
 
         The BdG Hamiltonian incorporates pairing interactions and is used to
@@ -198,7 +198,8 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
             k = np.expand_dims(k, axis=0)
 
         h = np.zeros(
-            (k.shape[0], 2 * self.number_of_bands, 2 * self.number_of_bands), dtype=np.complex64
+            (k.shape[0], 2 * self.number_of_bands, 2 * self.number_of_bands),
+            dtype=np.complex128,
         )
 
         h[:, 0 : self.number_of_bands, 0 : self.number_of_bands] = self.hamiltonian(k)
@@ -220,8 +221,8 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
         return h.squeeze()
 
     def bdg_hamiltonian_derivative(
-        self, k: npt.NDArray[np.float64], direction: str
-    ) -> npt.NDArray[np.complex64]:
+        self, k: npt.NDArray[np.floating], direction: str
+    ) -> npt.NDArray[np.complexfloating]:
         """Calculate the derivative of the BdG Hamiltonian.
 
         This method computes the spatial derivative of the Bogoliubov-de Gennes
@@ -244,7 +245,8 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
             k = np.expand_dims(k, axis=0)
 
         h = np.zeros(
-            (k.shape[0], 2 * self.number_of_bands, 2 * self.number_of_bands), dtype=np.complex64
+            (k.shape[0], 2 * self.number_of_bands, 2 * self.number_of_bands),
+            dtype=np.complex128,
         )
 
         h[:, 0 : self.number_of_bands, 0 : self.number_of_bands] = self.hamiltonian_derivative(
@@ -259,8 +261,8 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
         return h.squeeze()
 
     def diagonalize_nonint(
-        self, k: npt.NDArray[np.float64]
-    ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
+        self, k: npt.NDArray[np.floating]
+    ) -> tuple[npt.NDArray[np.floating], npt.NDArray[np.floating]]:
         """Diagonalizes the normal state Hamiltonian.
 
         This method computes the eigenvalues and eigenvectors of the normal state
@@ -297,8 +299,8 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
 
     def diagonalize_bdg(
         self,
-        k: npt.NDArray[np.float64],
-    ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.complex64]]:
+        k: npt.NDArray[np.floating],
+    ) -> tuple[npt.NDArray[np.floating], npt.NDArray[np.complexfloating]]:
         """Diagonalizes the BdG Hamiltonian.
 
         This method computes the eigenvalues and eigenvectors of the Bogoliubov-de
@@ -324,7 +326,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
 
         bdg_wavefunctions = np.zeros(
             (len(k), 2 * self.number_of_bands, 2 * self.number_of_bands),
-            dtype=np.complex64,
+            dtype=np.complex128,
         )
         bdg_energies = np.zeros((len(k), 2 * self.number_of_bands))
 
@@ -335,8 +337,8 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
 
     def gap_equation(
         self,
-        k: npt.NDArray[np.float64],
-    ) -> npt.NDArray[np.complex64]:
+        k: npt.NDArray[np.floating],
+    ) -> npt.NDArray[np.complexfloating]:
         """Calculate the gap equation.
 
         The gap equation determines the order parameter for superconductivity by
@@ -353,7 +355,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
             New pairing gap in orbital basis, adjusted to remove global phase.
         """
         bdg_energies, bdg_wavefunctions = self.diagonalize_bdg(k=k)
-        delta = np.zeros(self.number_of_bands, dtype=np.complex64)
+        delta = np.zeros(self.number_of_bands, dtype=np.complex128)
 
         for i in range(self.number_of_bands):
             sum_tmp = 0
@@ -366,15 +368,15 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
                     )
             delta[i] = (-self.hubbard_int_orbital_basis[i] * sum_tmp / len(k)).conjugate()
 
-        delta_without_phase: npt.NDArray[np.complex64] = delta * np.exp(
+        delta_without_phase: npt.NDArray[np.complexfloating] = delta * np.exp(
             -1j * np.angle(delta[np.argmax(np.abs(delta))])
         )
         return delta_without_phase
 
     def calculate_bandstructure(
         self,
-        k: npt.NDArray[np.float64],
-        overlaps: tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]] | None = None,
+        k: npt.NDArray[np.floating],
+        overlaps: tuple[npt.NDArray[np.floating], npt.NDArray[np.floating]] | None = None,
     ) -> pd.DataFrame:
         """Calculate the band structure.
 
@@ -402,24 +404,24 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
         energies, wavefunctions = self.diagonalize_nonint(k)
 
         for i, (energy_k, wavefunction_k) in enumerate(zip(energies, wavefunctions, strict=False)):
-            if self.number_of_bands == 1:
+            if np.ndim(energy_k) == 0:
                 results.loc[i, "band"] = energy_k
             else:
                 for band_index in range(self.number_of_bands):
-                    results.loc[i, f"band_{band_index}"] = energy_k[band_index]
+                    results.loc[i, f"band_{band_index}"] = energy_k[band_index]  # type: ignore[index]
 
                     if overlaps is not None:
                         results.loc[i, f"wx_{band_index}"] = (
-                            np.abs(np.dot(wavefunction_k[:, band_index], overlaps[0])) ** 2
-                            - np.abs(np.dot(wavefunction_k[:, band_index], overlaps[1])) ** 2
+                            np.abs(np.dot(wavefunction_k[:, band_index], overlaps[0])) ** 2  # type: ignore[index]
+                            - np.abs(np.dot(wavefunction_k[:, band_index], overlaps[1])) ** 2  # type: ignore[index]
                         )
 
         return results
 
     def calculate_density_of_states(
         self,
-        k: npt.NDArray[np.float64],
-    ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
+        k: npt.NDArray[np.floating],
+    ) -> tuple[npt.NDArray[np.floating], npt.NDArray[np.floating]]:
         """Calculate the density of states (DOS).
 
         This method computes the density of states by evaluating the eigenvalues
@@ -458,7 +460,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
                 ),
             ]
         )
-        density_of_states = np.zeros(shape=energies.shape, dtype=np.float64)
+        density_of_states = np.zeros(shape=energies.shape, dtype=np.floating)
 
         for i, energy in enumerate(energies):
             density_of_states[i] = np.sum(
@@ -466,7 +468,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
             ) / len(k)
         return energies, density_of_states
 
-    def calculate_spectral_gap(self, k: npt.NDArray[np.float64]) -> float:
+    def calculate_spectral_gap(self, k: npt.NDArray[np.floating]) -> float:
         """Calculate the spectral gap.
 
         This method evaluates the spectral gap of the system by examining the
@@ -504,7 +506,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
 
         return gap
 
-    def calculate_free_energy(self, k: npt.NDArray[np.float64]) -> float:
+    def calculate_free_energy(self, k: npt.NDArray[np.floating]) -> float:
         """Calculate the free energy for the Hamiltonian.
 
         Parameters
@@ -537,7 +539,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
 
         return integral
 
-    def calculate_current_density(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
+    def calculate_current_density(self, k: npt.NDArray[np.floating]) -> npt.NDArray[np.floating]:
         """Calculate the current density.
 
         Parameters
@@ -582,8 +584,8 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
         return (2 * np.real(current)) / len(k)
 
 
-def _gaussian(x: npt.NDArray[np.float64], sigma: float) -> npt.NDArray[np.float64]:
-    gaussian: npt.NDArray[np.float64] = np.exp(-(x**2) / (2 * sigma**2)) / np.sqrt(
+def _gaussian(x: npt.NDArray[np.floating], sigma: float) -> npt.NDArray[np.floating]:
+    gaussian: npt.NDArray[np.floating] = np.exp(-(x**2) / (2 * sigma**2)) / np.sqrt(
         2 * np.pi * sigma**2
     )
     return gaussian

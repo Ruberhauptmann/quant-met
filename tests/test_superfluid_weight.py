@@ -27,7 +27,7 @@ def test_superfluid_weight_dressed_graphene(ndarrays_regression: NDArraysRegress
             lattice_constant=graphene_lattice.lattice_constant,
             chemical_potential=chemical_potential,
             hubbard_int_orbital_basis=[1.0, 1.0, 1.0],
-            delta=np.array([1, 1, 1], dtype=np.complex64),
+            delta=np.array([1, 1, 1], dtype=np.complex128),
         )
     )
 
@@ -57,7 +57,7 @@ def test_superfluid_weight_graphene(ndarrays_regression: NDArraysRegressionFixtu
             lattice_constant=graphene_lattice.lattice_constant,
             chemical_potential=chemical_potential,
             hubbard_int_orbital_basis=[1.0, 1.0],
-            delta=np.array([1, 1], dtype=np.complex64),
+            delta=np.array([1, 1], dtype=np.complex128),
         )
     )
 

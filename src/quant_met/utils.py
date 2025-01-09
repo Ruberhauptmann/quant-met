@@ -24,10 +24,10 @@ import numpy.typing as npt
 def generate_uniform_grid(
     ncols: int,
     nrows: int,
-    corner_1: npt.NDArray[np.float64],
-    corner_2: npt.NDArray[np.float64],
-    origin: npt.NDArray[np.float64],
-) -> npt.NDArray[np.float64]:
+    corner_1: npt.NDArray[np.floating],
+    corner_2: npt.NDArray[np.floating],
+    origin: npt.NDArray[np.floating],
+) -> npt.NDArray[np.floating]:
     """
     Generate a uniform grid of points in 2D.
 
@@ -57,7 +57,7 @@ def generate_uniform_grid(
         msg = "Vectors to the corners cannot be zero."
         raise ValueError(msg)
 
-    grid: npt.NDArray[np.float64] = np.concatenate(
+    grid: npt.NDArray[np.floating] = np.concatenate(
         [
             np.linspace(
                 origin[0] + i / (nrows - 1) * corner_2,
@@ -71,7 +71,7 @@ def generate_uniform_grid(
     return grid
 
 
-def fermi_dirac(energy: npt.NDArray[np.float64], beta: float) -> npt.NDArray[np.float64]:
+def fermi_dirac(energy: npt.NDArray[np.floating], beta: float) -> npt.NDArray[np.floating]:
     """Fermi dirac distribution.
 
     Parameters

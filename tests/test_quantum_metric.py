@@ -27,7 +27,7 @@ def test_quantum_metric_dressed_graphene(ndarrays_regression: NDArraysRegression
             lattice_constant=graphene_lattice.lattice_constant,
             chemical_potential=chemical_potential,
             hubbard_int_orbital_basis=[1.0, 1.0, 1.0],
-            delta=np.array([1, 1, 1], dtype=np.complex64),
+            delta=np.array([1, 1, 1], dtype=np.complex128),
         )
     )
 
@@ -58,7 +58,7 @@ def test_quantum_metric_graphene(ndarrays_regression: NDArraysRegressionFixture)
             lattice_constant=graphene_lattice.lattice_constant,
             chemical_potential=chemical_potential,
             hubbard_int_orbital_basis=[1.0, 1.0],
-            delta=np.array([1, 1], dtype=np.complex64),
+            delta=np.array([1, 1], dtype=np.complex128),
         )
     )
 

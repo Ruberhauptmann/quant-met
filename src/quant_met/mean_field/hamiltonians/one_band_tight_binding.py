@@ -22,7 +22,7 @@ class OneBand(BaseHamiltonian[OneBandParameters]):
         self.hopping = parameters.hopping
         self.chemical_potential = parameters.chemical_potential
         if parameters.delta is not None:
-            self.delta_orbital_basis = np.astype(parameters.delta, np.complex64)
+            self.delta_orbital_basis = parameters.delta.astype(np.complex128)
 
     def setup_lattice(self, parameters: OneBandParameters) -> SquareLattice:  # noqa: D102
         return SquareLattice(lattice_constant=parameters.lattice_constant)
@@ -31,7 +31,7 @@ class OneBand(BaseHamiltonian[OneBandParameters]):
     def get_parameters_model(cls) -> type[OneBandParameters]:  # noqa: D102
         return OneBandParameters
 
-    def hamiltonian(self, k: npt.NDArray[np.float64]) -> npt.NDArray[np.complex64]:  # noqa: D102
+    def hamiltonian(self, k: npt.NDArray[np.floating]) -> npt.NDArray[np.complexfloating]:  # noqa: D102
         assert _check_valid_array(k)
         hopping = self.hopping
         lattice_constant = self.lattice.lattice_constant
@@ -39,7 +39,7 @@ class OneBand(BaseHamiltonian[OneBandParameters]):
         if k.ndim == 1:
             k = np.expand_dims(k, axis=0)
 
-        h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complex64)
+        h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complex128)
 
         h[:, 0, 0] = (
             -2 * hopping * (np.cos(k[:, 1] * lattice_constant) + np.cos(k[:, 0] * lattice_constant))
@@ -49,8 +49,8 @@ class OneBand(BaseHamiltonian[OneBandParameters]):
         return h
 
     def hamiltonian_derivative(  # noqa: D102
-        self, k: npt.NDArray[np.float64], direction: str
-    ) -> npt.NDArray[np.complex64]:
+        self, k: npt.NDArray[np.floating], direction: str
+    ) -> npt.NDArray[np.complexfloating]:
         assert _check_valid_array(k)
         assert direction in ["x", "y"]
 
@@ -59,7 +59,7 @@ class OneBand(BaseHamiltonian[OneBandParameters]):
         if k.ndim == 1:
             k = np.expand_dims(k, axis=0)
 
-        h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complex64)
+        h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complex128)
 
         if direction == "x":
             h[:, 0, 0] = -2 * hopping * lattice_constant * np.sin(lattice_constant * k[:, 0])

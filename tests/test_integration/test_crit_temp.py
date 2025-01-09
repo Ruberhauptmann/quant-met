@@ -9,10 +9,11 @@ from pathlib import Path
 import pytest
 import yaml
 from click.testing import CliRunner
+
 from quant_met.cli import cli
 
 
-@pytest.mark.slow_integration_test()
+@pytest.mark.slow_integration_test
 def test_crit_temp(tmp_path: Path) -> None:
     """Test crit_temp calculation via cli."""
     runner = CliRunner()
@@ -40,7 +41,7 @@ def test_crit_temp(tmp_path: Path) -> None:
         assert result.exit_code == 0
 
 
-@pytest.mark.slow_integration_test()
+@pytest.mark.slow_integration_test
 def test_crit_temp_small_number_of_points(tmp_path: Path) -> None:
     """Test crit_temp calculation via cli."""
     runner = CliRunner()

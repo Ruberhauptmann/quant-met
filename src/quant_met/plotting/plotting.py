@@ -36,9 +36,9 @@ def format_plot(
 
 
 def scatter_into_bz(
-    bz_corners: list[npt.NDArray[np.float64]],
-    k_points: npt.NDArray[np.float64],
-    data: npt.NDArray[np.float64] | None = None,
+    bz_corners: list[npt.NDArray[np.floating]],
+    k_points: npt.NDArray[np.floating],
+    data: npt.NDArray[np.floating] | None = None,
     data_label: str | None = None,
     fig_in: matplotlib.figure.Figure | None = None,
     ax_in: matplotlib.axes.Axes | None = None,
@@ -89,11 +89,11 @@ def scatter_into_bz(
 
 
 def plot_bandstructure(
-    bands: npt.NDArray[np.float64],
-    k_point_list: npt.NDArray[np.float64],
+    bands: npt.NDArray[np.floating],
+    k_point_list: npt.NDArray[np.floating],
     ticks: list[float],
     labels: list[str],
-    overlaps: npt.NDArray[np.float64] | None = None,
+    overlaps: npt.NDArray[np.floating] | None = None,
     overlap_labels: list[str] | None = None,
     fig_in: matplotlib.figure.Figure | None = None,
     ax_in: matplotlib.axes.Axes | None = None,
@@ -167,9 +167,9 @@ def plot_bandstructure(
 
 
 def plot_superfluid_weight(
-    x_data: npt.NDArray[np.float64],
-    sf_weight_geom: npt.NDArray[np.float64],
-    sf_weight_conv: npt.NDArray[np.float64],
+    x_data: npt.NDArray[np.floating],
+    sf_weight_geom: npt.NDArray[np.floating],
+    sf_weight_conv: npt.NDArray[np.floating],
     fig_in: matplotlib.figure.Figure | None = None,
     ax_in: matplotlib.axes.Axes | None = None,
 ) -> matplotlib.figure.Figure:

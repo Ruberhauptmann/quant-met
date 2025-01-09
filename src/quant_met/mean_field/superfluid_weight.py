@@ -14,8 +14,8 @@ from quant_met.utils import fermi_dirac
 
 def superfluid_weight(
     h: BaseHamiltonian[GenericParameters],
-    k: npt.NDArray[np.float64],
-) -> tuple[npt.NDArray[np.complex64], npt.NDArray[np.complex64]]:
+    k: npt.NDArray[np.floating],
+) -> tuple[npt.NDArray[np.complexfloating], npt.NDArray[np.complexfloating]]:
     """Calculate the superfluid weight.
 
     Parameters
@@ -33,8 +33,8 @@ def superfluid_weight(
         Geometric contribution to the superfluid weight.
 
     """
-    s_weight_conv = np.zeros(shape=(2, 2), dtype=np.complex64)
-    s_weight_geom = np.zeros(shape=(2, 2), dtype=np.complex64)
+    s_weight_conv = np.zeros(shape=(2, 2), dtype=np.complexfloating)
+    s_weight_geom = np.zeros(shape=(2, 2), dtype=np.complexfloating)
 
     c_mnpq_cache = {}
 
@@ -64,9 +64,9 @@ def superfluid_weight(
 
 
 def _current_operator(
-    h: BaseHamiltonian[GenericParameters], direction: str, k: npt.NDArray[np.float64]
-) -> npt.NDArray[np.complex64]:
-    j = np.zeros(shape=(h.number_of_bands, h.number_of_bands), dtype=np.complex64)
+    h: BaseHamiltonian[GenericParameters], direction: str, k: npt.NDArray[np.floating]
+) -> npt.NDArray[np.complexfloating]:
+    j = np.zeros(shape=(h.number_of_bands, h.number_of_bands), dtype=np.complexfloating)
 
     _, bloch = h.diagonalize_nonint(k=k)
 
@@ -82,8 +82,8 @@ def _current_operator(
 
 
 def _c_factor(
-    h: BaseHamiltonian[GenericParameters], k: npt.NDArray[np.float64]
-) -> npt.NDArray[np.complex64]:
+    h: BaseHamiltonian[GenericParameters], k: npt.NDArray[np.floating]
+) -> npt.NDArray[np.complexfloating]:
     bdg_energies, bdg_functions = h.diagonalize_bdg(k)
     c_mnpq = np.zeros(
         shape=(
@@ -92,7 +92,7 @@ def _c_factor(
             h.number_of_bands,
             h.number_of_bands,
         ),
-        dtype=np.complex64,
+        dtype=np.complexfloating,
     )
 
     for m in range(h.number_of_bands):

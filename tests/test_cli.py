@@ -10,6 +10,7 @@ from unittest.mock import MagicMock
 import yaml
 from click.testing import CliRunner
 from pytest_mock import MockerFixture
+
 from quant_met import mean_field
 from quant_met.cli import cli
 

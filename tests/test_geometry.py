@@ -6,10 +6,11 @@
 
 import numpy as np
 import pytest
+
 from quant_met import geometry
 
 
-@pytest.fixture()
+@pytest.fixture
 def _patch_abstract(monkeypatch: pytest.MonkeyPatch) -> None:
     """Patch the abstract methods."""
     monkeypatch.setattr(geometry.BaseLattice, "__abstractmethods__", set())

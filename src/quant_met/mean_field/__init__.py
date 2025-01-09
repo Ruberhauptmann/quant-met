@@ -35,9 +35,9 @@ from .self_consistency import self_consistency_loop
 from .superfluid_weight import superfluid_weight
 
 __all__ = [
-    "superfluid_weight",
-    "quantum_metric",
-    "self_consistency_loop",
-    "search_crit_temp",
     "hamiltonians",
+    "quantum_metric",
+    "search_crit_temp",
+    "self_consistency_loop",
+    "superfluid_weight",
 ]

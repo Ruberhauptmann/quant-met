@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 def _get_bounds(
     initial_temp: float,
     gap_for_temp_partial: partial[dict[str, Any] | None],
-    zero_temperature_gap: npt.NDArray[np.complex64],
+    zero_temperature_gap: npt.NDArray[np.complexfloating],
 ) -> tuple[list[dict[str, Any]], float, float]:  # pragma: no cover
     delta_vs_temp_list = []
     zero_gap_temp = nonzero_gap_temp = 0.0
@@ -128,7 +128,7 @@ def _fit_for_crit_temp(
 def _gap_for_temp(
     temp: float,
     h: BaseHamiltonian[GenericParameters],
-    k_space_grid: npt.NDArray[np.float64],
+    k_space_grid: npt.NDArray[np.floating],
     epsilon: float,
     max_iter: int = 1000,
 ) -> dict[str, Any] | None:  # pragma: no cover
@@ -155,7 +155,7 @@ def _gap_for_temp(
 
 def search_crit_temp(
     h: BaseHamiltonian[GenericParameters],
-    k_space_grid: npt.NDArray[np.float64],
+    k_space_grid: npt.NDArray[np.floating],
     epsilon: float,
     max_iter: int,
     n_temp_points: int,
