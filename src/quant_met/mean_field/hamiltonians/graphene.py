@@ -42,7 +42,9 @@ class Graphene(BaseHamiltonian[GrapheneParameters]):
         if k.ndim == 1:
             k = np.expand_dims(k, axis=0)
 
-        h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complexfloating)
+        h = np.zeros(
+            (k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complexfloating
+        )
 
         h[:, 0, 1] = -hopping * (
             np.exp(1j * k[:, 1] * lattice_constant / np.sqrt(3))
@@ -67,7 +69,9 @@ class Graphene(BaseHamiltonian[GrapheneParameters]):
         if k.ndim == 1:
             k = np.expand_dims(k, axis=0)
 
-        h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complexfloating)
+        h = np.zeros(
+            (k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complexfloating
+        )
 
         if direction == "x":
             h[:, 0, 1] = (

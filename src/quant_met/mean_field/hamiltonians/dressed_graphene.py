@@ -46,7 +46,9 @@ class DressedGraphene(BaseHamiltonian[DressedGrapheneParameters]):
         if k.ndim == 1:
             k = np.expand_dims(k, axis=0)
 
-        h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complexfloating)
+        h = np.zeros(
+            (k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complexfloating
+        )
 
         h[:, 0, 1] = -t_gr * (
             np.exp(1j * k[:, 1] * a / np.sqrt(3))
@@ -84,7 +86,9 @@ class DressedGraphene(BaseHamiltonian[DressedGrapheneParameters]):
         if k.ndim == 1:
             k = np.expand_dims(k, axis=0)
 
-        h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complexfloating)
+        h = np.zeros(
+            (k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complexfloating
+        )
 
         if direction == "x":
             h[:, 0, 1] = (

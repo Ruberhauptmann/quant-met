@@ -39,7 +39,9 @@ class ThreeBand(BaseHamiltonian[ThreeBandParameters]):
         if k.ndim == 1:
             k = np.expand_dims(k, axis=0)
 
-        h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complexfloating)
+        h = np.zeros(
+            (k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complexfloating
+        )
 
         h[:, 0, 0] = (
             -2 * hopping * (np.cos(k[:, 1] * lattice_constant) + np.cos(k[:, 0] * lattice_constant))
@@ -70,7 +72,9 @@ class ThreeBand(BaseHamiltonian[ThreeBandParameters]):
         if k.ndim == 1:
             k = np.expand_dims(k, axis=0)
 
-        h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complexfloating)
+        h = np.zeros(
+            (k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complexfloating
+        )
 
         if direction == "x":
             h[:, 0, 0] = -2 * hopping * lattice_constant * np.sin(lattice_constant * k[:, 0])

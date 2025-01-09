@@ -198,7 +198,8 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
             k = np.expand_dims(k, axis=0)
 
         h = np.zeros(
-            (k.shape[0], 2 * self.number_of_bands, 2 * self.number_of_bands), dtype=np.complexfloating
+            (k.shape[0], 2 * self.number_of_bands, 2 * self.number_of_bands),
+            dtype=np.complexfloating,
         )
 
         h[:, 0 : self.number_of_bands, 0 : self.number_of_bands] = self.hamiltonian(k)
@@ -244,7 +245,8 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
             k = np.expand_dims(k, axis=0)
 
         h = np.zeros(
-            (k.shape[0], 2 * self.number_of_bands, 2 * self.number_of_bands), dtype=np.complexfloating
+            (k.shape[0], 2 * self.number_of_bands, 2 * self.number_of_bands),
+            dtype=np.complexfloating,
         )
 
         h[:, 0 : self.number_of_bands, 0 : self.number_of_bands] = self.hamiltonian_derivative(
@@ -406,12 +408,12 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
                 results.loc[i, "band"] = energy_k
             else:
                 for band_index in range(self.number_of_bands):
-                    results.loc[i, f"band_{band_index}"] = energy_k[band_index]  # type: ignore
+                    results.loc[i, f"band_{band_index}"] = energy_k[band_index]  # type: ignore[index]
 
                     if overlaps is not None:
                         results.loc[i, f"wx_{band_index}"] = (
-                            np.abs(np.dot(wavefunction_k[:, band_index], overlaps[0])) ** 2  # type: ignore
-                            - np.abs(np.dot(wavefunction_k[:, band_index], overlaps[1])) ** 2  # type: ignore
+                            np.abs(np.dot(wavefunction_k[:, band_index], overlaps[0])) ** 2  # type: ignore[index]
+                            - np.abs(np.dot(wavefunction_k[:, band_index], overlaps[1])) ** 2  # type: ignore[index]
                         )
 
         return results

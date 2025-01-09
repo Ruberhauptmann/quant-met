@@ -80,7 +80,7 @@ def self_consistency_loop(
         logger.debug("New gaps computed: %s", new_gap)
 
         if np.allclose(h.delta_orbital_basis, new_gap, atol=1e-10, rtol=epsilon):
-            h.delta_orbital_basis = new_gap  # type: ignore
+            h.delta_orbital_basis = new_gap  # type: ignore[assignment]
             logger.info("Convergence achieved after %d iterations.", iteration_count)
             return h
 

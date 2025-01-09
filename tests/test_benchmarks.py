@@ -1,5 +1,6 @@
-import pytest
 from statistics import median
+
+import pytest
 
 
 @pytest.mark.benchmark
