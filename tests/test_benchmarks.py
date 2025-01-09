@@ -1,13 +1,10 @@
 # SPDX-FileCopyrightText: 2024 Tjark Sievers
 #
 # SPDX-License-Identifier: MIT
-import pytest
-from quant_met import geometry, mean_field, parameters
-import numpy as np
+from quant_met import mean_field, parameters
 
 
-@pytest.mark.benchmark()
-def test_benchmark_self_consistency_one_band() -> None:
+def test_benchmark_self_consistency_one_band(benchmark) -> None:
     """Benchmark self-consistency for the one band model."""
     one_band_h = mean_field.hamiltonians.OneBand(
         parameters=parameters.OneBandParameters(
@@ -17,9 +14,10 @@ def test_benchmark_self_consistency_one_band() -> None:
             hubbard_int_orbital_basis=[1.0],
         )
     )
+    k_space_grid = one_band_h.lattice.generate_bz_grid(ncols=30, nrows=30)
 
-    mean_field.self_consistency_loop(
+    benchmark(mean_field.self_consistency_loop(
         h=one_band_h,
-        k_space_grid=one_band_h.lattice.generate_bz_grid(ncols=30, nrows=30),
+        k_space_grid=k_space_grid,
         epsilon=1e-2,
-    )
+    ))
