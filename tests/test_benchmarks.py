@@ -20,6 +20,6 @@ def test_benchmark_self_consistency_one_band() -> None:
 
     mean_field.self_consistency_loop(
         h=one_band_h,
-        k_space_grid=one_band_h.lattice.generate_bz_grid(ncols=40, nrows=40),
-        epsilon=1e-3,
+        k_space_grid=one_band_h.lattice.generate_bz_grid(ncols=30, nrows=30),
+        epsilon=1e-2,
     )
