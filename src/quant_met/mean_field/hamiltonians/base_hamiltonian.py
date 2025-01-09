@@ -12,6 +12,7 @@ import h5py
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
+from numba import jit
 
 from quant_met.geometry import BaseLattice
 from quant_met.mean_field._utils import _check_valid_array
@@ -335,8 +336,32 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
 
         return bdg_energies.squeeze(), bdg_wavefunctions.squeeze()
 
-    def gap_equation(
-        self,
+    def gap_equation(self, k: npt.NDArray[np.floating]) -> npt.NDArray[np.complexfloating]:
+        """Gap equation.
+
+        Parameters
+        ----------
+        k : :class:`numpy.ndarray`
+            k grid
+
+        Returns
+        -------
+        New delta
+        """
+        bdg_energies, bdg_wavefunctions = self.diagonalize_bdg(k=k)
+        delta = np.zeros(self.number_of_bands, dtype=np.complex128)
+        return self.gap_equation_loop(
+            bdg_energies, bdg_wavefunctions, delta, self.beta, self.hubbard_int_orbital_basis, k
+        )
+
+    @staticmethod
+    @jit
+    def gap_equation_loop(
+        bdg_energies: npt.NDArray[np.float64],
+        bdg_wavefunctions: npt.NDArray[np.complex128],
+        delta: npt.NDArray[np.float64],
+        beta: float,
+        hubbard_int_orbital_basis: npt.NDArray[np.float64],
         k: npt.NDArray[np.floating],
     ) -> npt.NDArray[np.complexfloating]:
         """Calculate the gap equation.
@@ -346,6 +371,16 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
 
         Parameters
         ----------
+        bdg_energies : :class:`numpy.ndarray`
+            BdG energies
+        bdg_wavefunctions : :class:`numpy.ndarray`
+            BdG wavefunctions
+        delta : :class:`numpy.ndarray`
+            Delta
+        beta : :class:`float`
+            Beta
+        hubbard_int_orbital_basis : :class:`numpy.ndarray`
+            Hubard interaction in orbital basis
         k : :class:`numpy.ndarray`
             List of k points in reciprocal space.
 
@@ -354,19 +389,17 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
         :class:`numpy.ndarray`
             New pairing gap in orbital basis, adjusted to remove global phase.
         """
-        bdg_energies, bdg_wavefunctions = self.diagonalize_bdg(k=k)
-        delta = np.zeros(self.number_of_bands, dtype=np.complex128)
-
-        for i in range(self.number_of_bands):
+        number_of_bands = len(delta)
+        for i in range(number_of_bands):
             sum_tmp = 0
-            for j in range(2 * self.number_of_bands):
+            for j in range(2 * number_of_bands):
                 for k_index in range(len(k)):
                     sum_tmp += (
                         np.conjugate(bdg_wavefunctions[k_index, i, j])
-                        * bdg_wavefunctions[k_index, i + self.number_of_bands, j]
-                        * fermi_dirac(bdg_energies[k_index, j].item(), self.beta)
+                        * bdg_wavefunctions[k_index, i + number_of_bands, j]
+                        * fermi_dirac(bdg_energies[k_index, j].item(), beta)
                     )
-            delta[i] = (-self.hubbard_int_orbital_basis[i] * sum_tmp / len(k)).conjugate()
+            delta[i] = (-hubbard_int_orbital_basis[i] * sum_tmp / len(k)).conjugate()
 
         delta_without_phase: npt.NDArray[np.complexfloating] = delta * np.exp(
             -1j * np.angle(delta[np.argmax(np.abs(delta))])
