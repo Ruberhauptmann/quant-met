@@ -25,7 +25,7 @@ class Graphene(BaseHamiltonian[GrapheneParameters]):
         self.hopping = parameters.hopping
         self.chemical_potential = parameters.chemical_potential
         if parameters.delta is not None:
-            self.delta_orbital_basis = parameters.delta.as_type(np.complexfloating)
+            self.delta_orbital_basis = parameters.delta.astype(np.complex128)
 
     def setup_lattice(self, parameters: GrapheneParameters) -> GrapheneLattice:  # noqa: D102
         return GrapheneLattice(lattice_constant=parameters.lattice_constant)
@@ -42,9 +42,7 @@ class Graphene(BaseHamiltonian[GrapheneParameters]):
         if k.ndim == 1:
             k = np.expand_dims(k, axis=0)
 
-        h = np.zeros(
-            (k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complexfloating
-        )
+        h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complex128)
 
         h[:, 0, 1] = -hopping * (
             np.exp(1j * k[:, 1] * lattice_constant / np.sqrt(3))
@@ -69,9 +67,7 @@ class Graphene(BaseHamiltonian[GrapheneParameters]):
         if k.ndim == 1:
             k = np.expand_dims(k, axis=0)
 
-        h = np.zeros(
-            (k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complexfloating
-        )
+        h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complex128)
 
         if direction == "x":
             h[:, 0, 1] = (

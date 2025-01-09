@@ -6,7 +6,6 @@
 
 import numpy as np
 from pytest_regressions.ndarrays_regression import NDArraysRegressionFixture
-
 from quant_met import geometry, mean_field, parameters
 
 
@@ -23,7 +22,7 @@ def test_density_of_states(ndarrays_regression: NDArraysRegressionFixture) -> No
             lattice_constant=graphene_lattice.lattice_constant,
             chemical_potential=chemical_potential,
             hubbard_int_orbital_basis=[1.0, 1.0],
-            delta=np.array([1, 1], dtype=np.complex64),
+            delta=np.array([1, 1], dtype=np.complex128),
         )
     )
 
@@ -50,7 +49,7 @@ def test_free_energy(ndarrays_regression: NDArraysRegressionFixture) -> None:
             lattice_constant=graphene_lattice.lattice_constant,
             chemical_potential=chemical_potential,
             hubbard_int_orbital_basis=[1.0, 1.0],
-            delta=np.array([1, 1], dtype=np.complex64),
+            delta=np.array([1, 1], dtype=np.complex128),
         )
     )
 
@@ -78,7 +77,7 @@ def test_current(ndarrays_regression: NDArraysRegressionFixture) -> None:
             lattice_constant=graphene_lattice.lattice_constant,
             chemical_potential=chemical_potential,
             hubbard_int_orbital_basis=[1.0, 1.0],
-            delta=np.array([1, 1], dtype=np.complex64),
+            delta=np.array([1, 1], dtype=np.complex128),
         )
     )
 
@@ -106,7 +105,7 @@ def test_spectral_gap(ndarrays_regression: NDArraysRegressionFixture) -> None:
             lattice_constant=graphene_lattice.lattice_constant,
             chemical_potential=chemical_potential,
             hubbard_int_orbital_basis=[1.0, 1.0, 1.0],
-            delta=np.array([0, 0, 0], dtype=np.complex64),
+            delta=np.array([0, 0, 0], dtype=np.complex128),
         )
     )
     spectral_gap_zero_gap = dressed_graphene_h.calculate_spectral_gap(k=bz_grid)
@@ -119,7 +118,7 @@ def test_spectral_gap(ndarrays_regression: NDArraysRegressionFixture) -> None:
             lattice_constant=graphene_lattice.lattice_constant,
             chemical_potential=chemical_potential,
             hubbard_int_orbital_basis=[1.0, 1.0, 1.0],
-            delta=np.array([1, 1, 1], dtype=np.complex64),
+            delta=np.array([1, 1, 1], dtype=np.complex128),
         )
     )
     spectral_gap_finite_gap = dressed_graphene_h.calculate_spectral_gap(k=bz_grid)
@@ -146,7 +145,7 @@ def test_hamiltonian_derivative_graphene(ndarrays_regression: NDArraysRegression
             lattice_constant=graphene_lattice.lattice_constant,
             chemical_potential=chemical_potential,
             hubbard_int_orbital_basis=[1.0, 1.0],
-            delta=np.array([1, 1], dtype=np.complex64),
+            delta=np.array([1, 1], dtype=np.complex128),
         )
     )
 
@@ -175,7 +174,7 @@ def test_hamiltonian_derivative_one_band(ndarrays_regression: NDArraysRegression
             lattice_constant=square_lattice.lattice_constant,
             chemical_potential=chemical_potential,
             hubbard_int_orbital_basis=[1.0],
-            delta=np.array([1], dtype=np.complex64),
+            delta=np.array([1], dtype=np.complex128),
         )
     )
 
@@ -208,7 +207,7 @@ def test_hamiltonian_two_band(ndarrays_regression: NDArraysRegressionFixture) ->
             lattice_constant=square_lattice.lattice_constant,
             chemical_potential=chemical_potential,
             hubbard_int_orbital_basis=[1.0, 1.0],
-            delta=np.array([1.0, 1.0], dtype=np.complex64),
+            delta=np.array([1.0, 1.0], dtype=np.complex128),
         )
     )
 
@@ -245,7 +244,7 @@ def test_hamiltonian_three_band(ndarrays_regression: NDArraysRegressionFixture) 
             lattice_constant=square_lattice.lattice_constant,
             chemical_potential=chemical_potential,
             hubbard_int_orbital_basis=[1.0, 1.0, 1.0],
-            delta=np.array([1.0, 1.0, 1.0], dtype=np.complex64),
+            delta=np.array([1.0, 1.0, 1.0], dtype=np.complex128),
         )
     )
 
@@ -284,7 +283,7 @@ def test_bdg_hamiltonian_derivative_graphene(
             lattice_constant=graphene_lattice.lattice_constant,
             chemical_potential=chemical_potential,
             hubbard_int_orbital_basis=[1.0, 1.0],
-            delta=np.array([1, 1], dtype=np.complex64),
+            delta=np.array([1, 1], dtype=np.complex128),
         )
     )
 

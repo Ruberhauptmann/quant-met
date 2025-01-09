@@ -65,7 +65,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
         self.lattice = self.setup_lattice(parameters)
         self.hubbard_int_orbital_basis = parameters.hubbard_int_orbital_basis
         self.number_of_bands = len(self.hubbard_int_orbital_basis)
-        self.delta_orbital_basis = np.zeros(self.number_of_bands, dtype=np.complexfloating)
+        self.delta_orbital_basis = np.zeros(self.number_of_bands, dtype=np.complex128)
 
     @abstractmethod
     def setup_lattice(self, parameters: GenericParameters) -> BaseLattice:  # pragma: no cover
@@ -199,7 +199,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
 
         h = np.zeros(
             (k.shape[0], 2 * self.number_of_bands, 2 * self.number_of_bands),
-            dtype=np.complexfloating,
+            dtype=np.complex128,
         )
 
         h[:, 0 : self.number_of_bands, 0 : self.number_of_bands] = self.hamiltonian(k)
@@ -246,7 +246,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
 
         h = np.zeros(
             (k.shape[0], 2 * self.number_of_bands, 2 * self.number_of_bands),
-            dtype=np.complexfloating,
+            dtype=np.complex128,
         )
 
         h[:, 0 : self.number_of_bands, 0 : self.number_of_bands] = self.hamiltonian_derivative(
@@ -326,7 +326,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
 
         bdg_wavefunctions = np.zeros(
             (len(k), 2 * self.number_of_bands, 2 * self.number_of_bands),
-            dtype=np.complexfloating,
+            dtype=np.complex128,
         )
         bdg_energies = np.zeros((len(k), 2 * self.number_of_bands))
 
@@ -355,7 +355,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
             New pairing gap in orbital basis, adjusted to remove global phase.
         """
         bdg_energies, bdg_wavefunctions = self.diagonalize_bdg(k=k)
-        delta = np.zeros(self.number_of_bands, dtype=np.complexfloating)
+        delta = np.zeros(self.number_of_bands, dtype=np.complex128)
 
         for i in range(self.number_of_bands):
             sum_tmp = 0

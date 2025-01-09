@@ -89,10 +89,10 @@ class DressedGrapheneParameters(HamiltonianParameters):
     hopping_x_gr_a: float = Field(..., description="Hybridization")
     lattice_constant: float = Field(..., description="Lattice constant")
     chemical_potential: float = Field(..., description="Chemical potential")
-    hubbard_int_orbital_basis: NDArray[Shape["3"], np.floating] = Field(
+    hubbard_int_orbital_basis: NDArray[Shape["3"], np.float64] = Field(
         ..., description="Hubbard interaction in orbital basis"
     )
-    delta: NDArray[Shape["3"], np.complexfloating] | None = Field(
+    delta: NDArray[Shape["3"], np.complex128] | None = Field(
         default=None, description="Initial value for gaps in orbital space"
     )
 
@@ -112,10 +112,10 @@ class GrapheneParameters(HamiltonianParameters):
     hopping: float
     lattice_constant: float
     chemical_potential: float
-    hubbard_int_orbital_basis: NDArray[Shape["2"], np.floating] = Field(
+    hubbard_int_orbital_basis: NDArray[Shape["2"], np.float64] = Field(
         ..., description="Hubbard interaction in orbital basis"
     )
-    delta: NDArray[Shape["2"], np.complexfloating] | None = None
+    delta: NDArray[Shape["2"], np.complex128] | None = None
 
     _check_positive_values = field_validator("hopping", "lattice_constant")(check_positive_values)
 
@@ -134,7 +134,7 @@ class OneBandParameters(HamiltonianParameters):
     hubbard_int_orbital_basis: NDArray[Shape["1"], np.floating] = Field(
         ..., description="Hubbard interaction in orbital basis"
     )
-    delta: NDArray[Shape["1"], np.complexfloating] | None = None
+    delta: NDArray[Shape["1"], np.complex128] | None = None
 
     _check_positive_values = field_validator("hopping", "lattice_constant")(check_positive_values)
 
@@ -150,7 +150,7 @@ class TwoBandParameters(HamiltonianParameters):
     hopping: float
     lattice_constant: float
     chemical_potential: float
-    hubbard_int_orbital_basis: NDArray[Shape["2"], np.floating] = Field(
+    hubbard_int_orbital_basis: NDArray[Shape["2"], np.float64] = Field(
         ..., description="Hubbard interaction in orbital basis"
     )
     delta: NDArray[Shape["2"], np.complexfloating] | None = None
@@ -169,10 +169,10 @@ class ThreeBandParameters(HamiltonianParameters):
     hopping: float
     lattice_constant: float
     chemical_potential: float
-    hubbard_int_orbital_basis: NDArray[Shape["3"], np.floating] = Field(
+    hubbard_int_orbital_basis: NDArray[Shape["3"], np.float64] = Field(
         ..., description="Hubbard interaction in orbital basis"
     )
-    delta: NDArray[Shape["3"], np.complexfloating] | None = None
+    delta: NDArray[Shape["3"], np.complex128] | None = None
 
     _check_positive_values = field_validator("hopping", "lattice_constant")(check_positive_values)
 

@@ -59,7 +59,7 @@ def self_consistency_loop(
     logger.info("Starting self-consistency loop.")
 
     rng = np.random.default_rng()
-    delta_init = np.zeros(shape=h.delta_orbital_basis.shape, dtype=np.complexfloating)
+    delta_init = np.zeros(shape=h.delta_orbital_basis.shape, dtype=np.complex128)
     delta_init += (0.2 * rng.random(size=h.delta_orbital_basis.shape) - 1) + 1.0j * (
         0.2 * rng.random(size=h.delta_orbital_basis.shape) - 1
     )

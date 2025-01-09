@@ -7,7 +7,6 @@
 from pathlib import Path
 
 import numpy as np
-
 from quant_met import mean_field, parameters
 
 
@@ -19,7 +18,7 @@ def test_save_graphene(tmp_path: Path) -> None:
             lattice_constant=np.sqrt(3),
             chemical_potential=-1,
             hubbard_int_orbital_basis=[1.0, 1.0],
-            delta=np.ones(2, dtype=np.complex64),
+            delta=np.ones(2, dtype=np.complex128),
         )
     )
     file_path = tmp_path / "test.hdf5"
@@ -40,7 +39,7 @@ def test_save_graphene_with_beta_and_q(tmp_path: Path) -> None:
             hubbard_int_orbital_basis=[1.0, 1.0],
             q=np.ones(2, dtype=np.float64),
             beta=100,
-            delta=np.ones(2, dtype=np.complex64),
+            delta=np.ones(2, dtype=np.complex128),
         )
     )
     file_path = tmp_path / "test.hdf5"
@@ -61,7 +60,7 @@ def test_save_dressed_graphene(tmp_path: Path) -> None:
             lattice_constant=np.sqrt(3),
             chemical_potential=0,
             hubbard_int_orbital_basis=[1.0, 1.0, 1.0],
-            delta=np.ones(3, dtype=np.complex64),
+            delta=np.ones(3, dtype=np.complex128),
         )
     )
     file_path = tmp_path / "test.hdf5"
@@ -84,7 +83,7 @@ def test_save_dressed_graphene_with_q_and_beta(tmp_path: Path) -> None:
             hubbard_int_orbital_basis=[1.0, 1.0, 1.0],
             q=np.ones(2, dtype=np.float64),
             beta=100,
-            delta=np.ones(3, dtype=np.complex64),
+            delta=np.ones(3, dtype=np.complex128),
         )
     )
     file_path = tmp_path / "test.hdf5"
@@ -103,7 +102,7 @@ def test_save_one_band(tmp_path: Path) -> None:
             lattice_constant=1,
             chemical_potential=0,
             hubbard_int_orbital_basis=[1.0],
-            delta=np.ones(1, dtype=np.complex64),
+            delta=np.ones(1, dtype=np.complex128),
         )
     )
     file_path = tmp_path / "test.hdf5"
@@ -124,7 +123,7 @@ def test_save_one_band_with_q_and_beta(tmp_path: Path) -> None:
             hubbard_int_orbital_basis=[1.0],
             q=np.ones(2, dtype=np.float64),
             beta=100,
-            delta=np.ones(1, dtype=np.complex64),
+            delta=np.ones(1, dtype=np.complex128),
         )
     )
     file_path = tmp_path / "test.hdf5"
@@ -143,7 +142,7 @@ def test_save_two_band(tmp_path: Path) -> None:
             lattice_constant=1,
             chemical_potential=0,
             hubbard_int_orbital_basis=[1.0, 1.0],
-            delta=np.ones(2, dtype=np.complex64),
+            delta=np.ones(2, dtype=np.complex128),
         )
     )
     file_path = tmp_path / "test.hdf5"
@@ -182,7 +181,7 @@ def test_save_three_band(tmp_path: Path) -> None:
             lattice_constant=1,
             chemical_potential=0,
             hubbard_int_orbital_basis=[1.0, 1.0, 1.0],
-            delta=np.ones(3, dtype=np.complex64),
+            delta=np.ones(3, dtype=np.complex128),
         )
     )
     file_path = tmp_path / "test.hdf5"
