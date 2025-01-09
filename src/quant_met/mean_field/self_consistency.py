@@ -19,6 +19,7 @@ def self_consistency_loop(
     h: BaseHamiltonian[GenericParameters],
     k_space_grid: npt.NDArray[np.floating],
     epsilon: float,
+    delta_init: npt.NDArray[np.floating] | None = None,
     max_iter: int = 1000,
 ) -> BaseHamiltonian[GenericParameters]:
     """Self-consistently solves the gap equation for a given Hamiltonian.
@@ -35,11 +36,13 @@ def self_consistency_loop(
 
     k_space_grid : :class:`numpy.ndarray`
         A grid of points in the Brillouin zone at which the gap equation is evaluated.
-        See
 
     epsilon : float
         The convergence criterion. The loop will terminate when the change
         in the delta orbital basis is less than this value.
+
+    delta_init : :class:`numpy.ndarray`
+        Initial gaps in orbital basis.
 
     max_iter : int
         Maximal number of iterations, default 300.
@@ -58,11 +61,12 @@ def self_consistency_loop(
     """
     logger.info("Starting self-consistency loop.")
 
-    rng = np.random.default_rng()
-    delta_init = np.zeros(shape=h.delta_orbital_basis.shape, dtype=np.complex128)
-    delta_init += (0.2 * rng.random(size=h.delta_orbital_basis.shape) - 1) + 1.0j * (
-        0.2 * rng.random(size=h.delta_orbital_basis.shape) - 1
-    )
+    if delta_init is None:
+        rng = np.random.default_rng()
+        delta_init = np.zeros(shape=h.delta_orbital_basis.shape, dtype=np.complex128)
+        delta_init += (0.2 * rng.random(size=h.delta_orbital_basis.shape) - 1) + 1.0j * (
+            0.2 * rng.random(size=h.delta_orbital_basis.shape) - 1
+        )
     h.delta_orbital_basis = delta_init
     logger.debug("Initial gaps set to: %s", h.delta_orbital_basis)
 
