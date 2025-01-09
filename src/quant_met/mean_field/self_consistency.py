@@ -19,8 +19,8 @@ def self_consistency_loop(
     h: BaseHamiltonian[GenericParameters],
     k_space_grid: npt.NDArray[np.floating],
     epsilon: float,
-    delta_init: npt.NDArray[np.complexfloating] | None = None,
     max_iter: int = 1000,
+    delta_init: npt.NDArray[np.complex128] | None = None,
 ) -> BaseHamiltonian[GenericParameters]:
     """Self-consistently solves the gap equation for a given Hamiltonian.
 
@@ -67,7 +67,7 @@ def self_consistency_loop(
         delta_init += (0.2 * rng.random(size=h.delta_orbital_basis.shape) - 1) + 1.0j * (
             0.2 * rng.random(size=h.delta_orbital_basis.shape) - 1
         )
-    h.delta_orbital_basis = delta_init
+    h.delta_orbital_basis = delta_init  # type: ignore[assignment]
     logger.debug("Initial gaps set to: %s", h.delta_orbital_basis)
 
     iteration_count = 0

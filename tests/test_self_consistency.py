@@ -56,6 +56,6 @@ def test_self_consistency_max_iter() -> None:
             h=dressed_graphene_h,
             k_space_grid=graphene_lattice.generate_bz_grid(40, 40),
             epsilon=1e-3,
-            delta_init=np.array([0], dtype=np.complex64),
             max_iter=3,
+            delta_init=np.array([0], dtype=np.complex64),
         )
