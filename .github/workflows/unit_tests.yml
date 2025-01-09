@@ -36,5 +36,7 @@ jobs:
         run: uv pip install tox-gh>=1.2
       - name: Run test suite
         run: uv tool run tox -- --without-slow-integration
-      - name: Upload coverage to Coveralls
+      - name: Coveralls
         uses: coverallsapp/github-action@v2
+        with:
+            parallel: false
