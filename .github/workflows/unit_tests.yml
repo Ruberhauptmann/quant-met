@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-name: Unit tests
+name: Unit tests, linting and type checking
 
 on:
   workflow_call:
