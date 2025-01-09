@@ -53,7 +53,7 @@ def test_self_consistency_max_iter() -> None:
             max_iter=3,
         )
     with pytest.raises(RuntimeError):
-            mean_field.self_consistency_loop(
+        mean_field.self_consistency_loop(
             h=dressed_graphene_h,
             k_space_grid=graphene_lattice.generate_bz_grid(40, 40),
             epsilon=1e-3,
