@@ -404,7 +404,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
         energies, wavefunctions = self.diagonalize_nonint(k)
 
         for i, (energy_k, wavefunction_k) in enumerate(zip(energies, wavefunctions, strict=False)):
-            if np.ndim(energy_k == 0):
+            if np.ndim(energy_k) == 0:
                 results.loc[i, "band"] = energy_k
             else:
                 for band_index in range(self.number_of_bands):
