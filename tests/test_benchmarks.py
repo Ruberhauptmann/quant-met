@@ -31,7 +31,7 @@ def test_benchmark_self_consistency_one_band(benchmark) -> None:
 def test_benchmark_self_consistency_two_band(benchmark) -> None:
     """Benchmark self-consistency for the two band model."""
     one_band_h = mean_field.hamiltonians.TwoBand(
-        parameters=parameters.OneBandParameters(
+        parameters=parameters.TwoBandParameters(
             hopping=1,
             lattice_constant=1,
             chemical_potential=0,
