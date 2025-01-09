@@ -66,7 +66,7 @@ def test_benchmark_gap_equation_dressed_graphene(benchmark) -> None:
         parameters=parameters.DressedGrapheneParameters(
             hopping_gr=1,
             hopping_x=0.01,
-            hopping_gr_a_x=1,
+            hopping_x_gr_a=1,
             lattice_constant=1,
             chemical_potential=0,
             hubbard_int_orbital_basis=[1.0, 1.0, 1.0],
