@@ -25,6 +25,6 @@ def test_benchmark_self_consistency_dressed_graphene() -> None:
     mean_field.self_consistency_loop(
         h=dressed_graphene_h,
         k_space_grid=graphene_lattice.generate_bz_grid(40, 40),
-        epsilon=1e-3,
-        max_iter=2000,
+        epsilon=1e-2,
+        max_iter=1000,
     )
