@@ -1,3 +1,13 @@
+
+.. _changelog-0.0.18:
+
+0.0.18 — 2025-01-10
+-------------------
+
+Added
+^^^^^
+
+- Control parameter to calculate SC current, superfluid weight and free energy in scf calculation
 .. SPDX-FileCopyrightText: 2024 Tjark Sievers
 ..
 .. SPDX-License-Identifier: MIT
