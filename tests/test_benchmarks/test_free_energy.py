@@ -20,7 +20,7 @@ def test_benchmark_free_energy_dressed_graphene(benchmark) -> None:
             delta=np.array([1.0, 1.0, 1.0], dtype=np.complex128)
         )
     )
-    k_space_grid = dressed_graphene_h.lattice.generate_bz_grid(ncols=30, nrows=30)
+    k_space_grid = dressed_graphene_h.lattice.generate_bz_grid(ncols=10, nrows=10)
 
     benchmark(lambda: dressed_graphene_h.calculate_free_energy(
         k=k_space_grid)
