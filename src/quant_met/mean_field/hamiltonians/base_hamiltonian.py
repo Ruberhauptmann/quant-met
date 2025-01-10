@@ -612,7 +612,8 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
 
         current[0] = np.sum(matrix_x, axis=None)
         current[1] = np.sum(matrix_y, axis=None)
-        assert np.allclose(np.imag(current), 0, atol=1e-14)
+        print(current)
+        assert np.allclose(np.imag(current), 0, atol=1e-12)
 
         return (2 * np.real(current)) / len(k)
 

@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2024 Tjark Sievers
 #
 # SPDX-License-Identifier: MIT
+
 import numpy as np
 
 from quant_met import mean_field, parameters

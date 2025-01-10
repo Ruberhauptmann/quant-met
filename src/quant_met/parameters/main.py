@@ -39,6 +39,7 @@ class Control(BaseModel):
     conv_treshold: float
     max_iter: int = 1000
     n_temp_points: int = 50
+    calculate_additional: bool = False
 
 
 class KPoints(BaseModel):
