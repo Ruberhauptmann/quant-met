@@ -134,7 +134,6 @@ def test_benchmark_superfluid_weight_two_band(benchmark) -> None:
     )
     k_space_grid = one_band_h.lattice.generate_bz_grid(ncols=10, nrows=10)
 
-    benchmark(lambda: mean_field.superfluid_weight(
-        h=one_band_h,
+    benchmark(lambda: one_band_h.calculate_superfluid_weight(
         k=k_space_grid)
-              )
+    )
