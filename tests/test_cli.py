@@ -5,13 +5,13 @@
 """Tests for the command line interface."""
 
 from pathlib import Path
-from unittest.mock import MagicMock
+from unittest.mock import Mock, MagicMock
 
 import yaml
 from click.testing import CliRunner
 from pytest_mock import MockerFixture
 
-from quant_met import mean_field
+from quant_met import mean_field, parameters
 from quant_met.cli import cli
 
 
@@ -82,16 +82,17 @@ def test_crit_temp_mock(tmp_path: Path, mocker: MockerFixture) -> None:
 def test_scf_mock(tmp_path: Path, mocker: MockerFixture) -> None:
     """Test scf calculation with mock."""
     runner = CliRunner()
-    parameters = {
-        "model": {
-            "name": "DressedGraphene",
-            "hopping_gr": 1,
-            "hopping_x": 0.01,
-            "hopping_x_gr_a": 1,
-            "chemical_potential": 0.0,
-            "hubbard_int_orbital_basis": [0.0, 0.0, 0.0],
-            "lattice_constant": 3,
-        },
+    model_parameters = {
+        "name": "DressedGraphene",
+        "hopping_gr": 1,
+        "hopping_x": 0.01,
+        "hopping_x_gr_a": 1,
+        "chemical_potential": 0.0,
+        "hubbard_int_orbital_basis": [0.0, 0.0, 0.0],
+        "lattice_constant": 3,
+    }
+    test_parameters = {
+        "model": model_parameters,
         "control": {
             "calculation": "scf",
             "prefix": "test",
@@ -104,13 +105,30 @@ def test_scf_mock(tmp_path: Path, mocker: MockerFixture) -> None:
     }
     with runner.isolated_filesystem(temp_dir=tmp_path):
         with Path("input.yaml").open("w") as f:
-            yaml.dump(parameters, f)
+            yaml.dump(test_parameters, f)
         mock_search_self_consistency_loop = mocker.patch(
             "quant_met.mean_field.self_consistency_loop"
         )
-        mock_search_self_consistency_loop.return_value = MagicMock()
+        mock_search_self_consistency_loop.return_value = mean_field.hamiltonians.DressedGraphene(
+            parameters=parameters.DressedGrapheneParameters(
+                **model_parameters
+            )
+        )
         result = runner.invoke(cli, ["input.yaml", "--debug"])
+        mean_field.self_consistency_loop.assert_called()
         assert result.exit_code == 0
+    with runner.isolated_filesystem(temp_dir=tmp_path):
+        test_parameters['control']['calculate_additional'] = False
+        with Path("input.yaml").open("w") as f:
+            yaml.dump(test_parameters, f)
+        mock_search_self_consistency_loop = mocker.patch(
+            "quant_met.mean_field.self_consistency_loop"
+        )
+        mock_search_self_consistency_loop.return_value = mean_field.hamiltonians.DressedGraphene(
+            parameters=parameters.DressedGrapheneParameters(
+                **model_parameters
+            )
+        )
         result = runner.invoke(cli, ["input.yaml"])
         mean_field.self_consistency_loop.assert_called()
         assert result.exit_code == 0

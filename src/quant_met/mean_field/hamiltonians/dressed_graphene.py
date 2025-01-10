@@ -26,7 +26,7 @@ class DressedGraphene(BaseHamiltonian[DressedGrapheneParameters]):
         self.hubbard_int_orbital_basis = parameters.hubbard_int_orbital_basis
         self.chemical_potential = parameters.chemical_potential
         if parameters.delta is not None:
-            self.delta_orbital_basis = parameters.delta.astype(np.complexfloating)
+            self.delta_orbital_basis = parameters.delta.astype(np.complex128)
 
     def setup_lattice(self, parameters: DressedGrapheneParameters) -> BaseLattice:  # noqa: D102
         return GrapheneLattice(lattice_constant=parameters.lattice_constant)

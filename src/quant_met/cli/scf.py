@@ -52,7 +52,7 @@ def scf(parameters: Parameters) -> None:
         logger.info("Calculating additional things.")
         current = solved_h.calculate_current_density(k=k_space_grid)
         free_energy = solved_h.calculate_free_energy(k=k_space_grid)
-        sf_weight_conv, sf_weight_geom = mean_field.superfluid_weight(h=solved_h, k=k_space_grid)
+        sf_weight_conv, sf_weight_geom = solved_h.calculate_superfluid_weight(k=k_space_grid)
 
         with h5py.File(result_file, "a") as f:
             f.attrs["current_x"] = current[0]

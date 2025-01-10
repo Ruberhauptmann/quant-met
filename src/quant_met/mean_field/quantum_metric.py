@@ -43,7 +43,7 @@ def quantum_metric(
 
     number_k_points = len(k)
 
-    quantum_geom_tensor = np.zeros(shape=(2, 2), dtype=np.complexfloating)
+    quantum_geom_tensor = np.zeros(shape=(2, 2), dtype=np.complex128)
 
     for band in bands:
         for i, direction_1 in enumerate(["x", "y"]):

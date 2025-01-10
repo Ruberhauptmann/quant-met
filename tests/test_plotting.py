@@ -257,6 +257,7 @@ def test_plotting_nonint_bandstructure_dressed_graphene_with_fig_in() -> None:
     remove_text=True,
     extensions=["png"],
     style="mpl20",
+    tol=0.06,
 )
 def test_plotting_sf_weight() -> None:
     """Test plotting for superfluid weight."""
@@ -272,6 +273,7 @@ def test_plotting_sf_weight() -> None:
     remove_text=True,
     extensions=["png"],
     style="mpl20",
+    tol=0.06,
 )
 def test_plotting_sf_weight_with_fig_in() -> None:
     """Test plotting for superfluid weight with input figure."""

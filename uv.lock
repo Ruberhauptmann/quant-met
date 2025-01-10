@@ -2319,7 +2319,7 @@ wheels = [
 
 [[package]]
 name = "quant-met"
-version = "0.0.17.dev0"
+version = "0.0.17"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
