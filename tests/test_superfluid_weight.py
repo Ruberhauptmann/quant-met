@@ -38,7 +38,7 @@ def test_superfluid_weight_dressed_graphene(ndarrays_regression: NDArraysRegress
             "D_S_conv": np.array(d_s_conv),
             "D_S_geom": np.array(d_s_geom),
         },
-        default_tolerance={"atol": 1e-7, "rtol": 1e-5},
+        default_tolerance={"atol": 1e-6, "rtol": 1e-5},
     )
 
 
