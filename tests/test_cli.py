@@ -98,6 +98,7 @@ def test_scf_mock(tmp_path: Path, mocker: MockerFixture) -> None:
             "outdir": "test/",
             "beta": 100,
             "conv_treshold": 1e-2,
+            "calculate_additional": True
         },
         "k_points": {"nk1": 30, "nk2": 30},
     }
