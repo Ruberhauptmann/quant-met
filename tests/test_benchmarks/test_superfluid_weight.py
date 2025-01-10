@@ -7,15 +7,15 @@ import pytest
 
 
 @pytest.mark.slow_integration_test
-def test_benchmark_superfluid_weight_one_band(benchmark) -> None:
+def test_benchmark_superfluid_weight_two_band(benchmark) -> None:
     """Benchmark superfluid weight for the dressed graphene model."""
-    one_band_h = mean_field.hamiltonians.OneBand(
-        parameters=parameters.OneBandParameters(
+    one_band_h = mean_field.hamiltonians.TwoBand(
+        parameters=parameters.TwoBandParameters(
             hopping=1,
             lattice_constant=1,
             chemical_potential=0,
-            hubbard_int_orbital_basis=[1.0],
-            delta=np.array([1.0], dtype=np.complex128)
+            hubbard_int_orbital_basis=[1.0, 1.0],
+            delta=np.array([1.0, 1.0], dtype=np.complex128)
         )
     )
     k_space_grid = one_band_h.lattice.generate_bz_grid(ncols=10, nrows=10)
