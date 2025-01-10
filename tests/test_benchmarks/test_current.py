@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2024 Tjark Sievers
 #
 # SPDX-License-Identifier: MIT
+import numpy as np
+
 from quant_met import mean_field, parameters
 import pytest
 
@@ -14,7 +16,7 @@ def test_benchmark_current_one_band(benchmark) -> None:
             lattice_constant=1,
             chemical_potential=0,
             hubbard_int_orbital_basis=[1.0],
-            delta=[1.0]
+            delta=np.array([1.0], dtype=np.complex128)
         )
     )
     k_space_grid = one_band_h.lattice.generate_bz_grid(ncols=30, nrows=30)
@@ -33,7 +35,7 @@ def test_benchmark_current_two_band(benchmark) -> None:
             lattice_constant=1,
             chemical_potential=0,
             hubbard_int_orbital_basis=[1.0, 1.0],
-            delta=[1.0, 1.0]
+            delta=np.array([1.0, 1.0], dtype=np.complex128)
         )
     )
     k_space_grid = two_band_h.lattice.generate_bz_grid(ncols=30, nrows=30)
@@ -52,7 +54,7 @@ def test_benchmark_current_three_band(benchmark) -> None:
             lattice_constant=1,
             chemical_potential=0,
             hubbard_int_orbital_basis=[1.0, 1.0, 1.0],
-            delta=[1.0, 1.0, 1.0]
+            delta=np.array([1.0, 1.0, 1.0], dtype=np.complex128)
         )
     )
     k_space_grid = three_band_h.lattice.generate_bz_grid(ncols=30, nrows=30)
@@ -73,7 +75,7 @@ def test_benchmark_current_dressed_graphene(benchmark) -> None:
             lattice_constant=1,
             chemical_potential=0,
             hubbard_int_orbital_basis=[1.0, 1.0, 1.0],
-            delta=[1.0, 1.0, 1.0]
+            delta=np.array([1.0, 1.0, 1.0], dtype=np.complex128)
         )
     )
     k_space_grid = dressed_graphene_h.lattice.generate_bz_grid(ncols=30, nrows=30)
