@@ -2,6 +2,28 @@
 ..
 .. SPDX-License-Identifier: MIT
 
+.. _changelog-0.0.17:
+
+0.0.17 — 2025-01-10
+-------------------
+
+Added
+^^^^^
+
+- Method to calculate free energy for a given hamiltonian
+
+- Method to calculate current density for a given Hamiltonian
+
+Changed
+^^^^^^^
+
+- Speedup of calculation of superfluid weight via caching of intermediate values
+
+Fixed
+^^^^^
+
+- Sign in calculation of superfluid weight
+
 .. _changelog-0.0.16:
 
 0.0.16 — 2024-11-22
