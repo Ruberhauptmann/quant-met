@@ -19,6 +19,7 @@ Functions
 
 import numpy as np
 import numpy.typing as npt
+from numba import jit
 
 
 def generate_uniform_grid(
@@ -71,6 +72,7 @@ def generate_uniform_grid(
     return grid
 
 
+@jit
 def fermi_dirac(energy: npt.NDArray[np.floating], beta: float) -> npt.NDArray[np.floating]:
     """Fermi dirac distribution.
 
@@ -84,4 +86,8 @@ def fermi_dirac(energy: npt.NDArray[np.floating], beta: float) -> npt.NDArray[np
     fermi_dirac
 
     """
-    return np.where(energy < 0, 1.0, 0.0) if np.isinf(beta) else 1 / (1 + np.exp(beta * energy))
+    return (
+        np.where(energy < 0, 1.0, 0.0)
+        if np.isinf(beta)
+        else np.asarray(1 / (1 + np.exp(beta * energy)))
+    )
