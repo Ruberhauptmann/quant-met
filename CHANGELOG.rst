@@ -1,3 +1,16 @@
+.. SPDX-FileCopyrightText: 2024 Tjark Sievers
+..
+.. SPDX-License-Identifier: MIT
+
+.. _changelog-0.0.19:
+
+0.0.19 — 2025-02-28
+-------------------
+
+Fixed
+^^^^^
+
+- Routine for finding T_C now work even for small absolute values of the gaps
 
 .. _changelog-0.0.18:
 
@@ -8,9 +21,6 @@ Added
 ^^^^^
 
 - Control parameter to calculate SC current, superfluid weight and free energy in scf calculation
-.. SPDX-FileCopyrightText: 2024 Tjark Sievers
-..
-.. SPDX-License-Identifier: MIT
 
 .. _changelog-0.0.17:
 
