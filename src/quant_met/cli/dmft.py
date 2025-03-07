@@ -7,7 +7,6 @@
 import logging
 from pathlib import Path
 
-import numpy as np
 from h5 import HDFArchive
 from triqs.gf import Gf, Idx
 
@@ -46,8 +45,6 @@ def dmft_scf(parameters: Parameters) -> None:
 
     xmu = h.hubbard_int_orbital_basis[0] / 2
 
-    initial_gaps = np.array([0, 0, 0])
-
     solver = dmft_loop(
         tbl=tbl,
         h=h,
@@ -62,7 +59,6 @@ def dmft_scf(parameters: Parameters) -> None:
         kmesh=kmesh,
         epsilon=parameters.control.conv_treshold,
         max_iter=parameters.control.max_iter,
-        initial_gaps=initial_gaps,
     )
 
     # Calculate local Green's function on the real axis
