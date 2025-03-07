@@ -41,6 +41,14 @@ class Control(BaseModel):
     n_temp_points: int = 50
     calculate_additional: bool = False
 
+    n_spin: int = 1
+    n_success: int = 1
+    wmixing: float = 0.5
+    n_bath: int = 2
+    n_iw: int = 1024
+    n_w: int = 4000
+    broadening: float = 0.005
+
 
 class KPoints(BaseModel):
     """Control for k points.

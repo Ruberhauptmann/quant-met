@@ -8,19 +8,25 @@ model:
   hopping_x: 0.01
   hopping_x_gr_a: 1
   chemical_potential: 0.0
-  hubbard_int_orbital_basis: [0.001, 0.001, 0.001]
+  hubbard_int_orbital_basis: [1.0, 1.0, 1.0]
   lattice_constant: 3
   q: [0.0, 0.0]
   beta: 100
 
 control:
-  calculation: scf
+  calculation: dmft-scf
   prefix: test
   outdir: test/
-  conv_treshold: 1e-6
-  max_iter: 1000
-  calculate_additional: true
+  conv_treshold: 1e-2
+  max_iter: 100
+  n_spin: 1
+  n_success: 1
+  wmixing: 0.5
+  n_bath: 2
+  n_iw: 1024
+  n_w: 4000
+  broadening: 0.005
 
 k_points:
-  nk1: 30
-  nk2: 30
+  nk1: 20
+  nk2: 20

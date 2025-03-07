@@ -603,7 +603,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
                             * bdg_wavefunctions[k_index, j, n]
                             * fermi_dirac(bdg_energies[k_index, n].item(), self.beta)
                         )
-                        matrix_y[i, j] *= (
+                        matrix_y[i, j] += (
                             h_der_y[k_index, i, j]
                             * np.conjugate(bdg_wavefunctions[k_index, i, n])
                             * bdg_wavefunctions[k_index, j, n]

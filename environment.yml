@@ -4,7 +4,14 @@
 
 name: quant-met-dev
 channels:
+  - conda-forge
   - defaults
+  - edipack
 dependencies:
-  - python=3.12.2
+  - python=3.12
   - pip
+  - triqs
+  - uv
+  - edipack2=2.0.8
+  - pip:
+      - pre-commit

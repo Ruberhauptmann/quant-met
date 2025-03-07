@@ -20,6 +20,7 @@ dependencies = [
     "numpydantic>=1.6.6",
     "pandas>=2.2.3",
     "pydantic>=2.10.4",
+    "pyyaml>=6.0.2",
     "scipy>=1.15.0",
     "tables>=3.10.2",
 ]
@@ -84,6 +85,7 @@ ignore = [
     "Q003",
     "S101", # This checks against using assert
     "PLR0913", # This checks against using more than 5 function arguments
+    "PLR0915", # This checks against too long functions
     "PLR2004", # Check against "magic values"
     "T201", # Warn about print statements
 ]
