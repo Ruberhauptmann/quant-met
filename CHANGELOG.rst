@@ -2,6 +2,16 @@
 ..
 .. SPDX-License-Identifier: MIT
 
+.. _changelog-0.0.22:
+
+0.0.22 — 2025-03-07
+-------------------
+
+Fixed
+^^^^^
+
+- Fix one wrong conjugate in calculation of SF weight
+
 .. _changelog-0.0.21:
 
 0.0.21 — 2025-03-07
@@ -12,10 +22,6 @@ Changed
 
 - Moved calculation of quantum metric into the Hamiltonian
 
-Fixed
-^^^^^
-
-- Fix one wrong conjugate in calculation of SF weight
 
 .. _changelog-0.0.20:
 
