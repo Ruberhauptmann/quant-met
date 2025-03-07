@@ -714,7 +714,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
                                     bdg_functions[i, m].conjugate()
                                     * bdg_functions[j, n]
                                     * bdg_functions[j, p].conjugate()
-                                    * bdg_functions[i, q].conjugate()
+                                    * bdg_functions[i, q]
                                 )
 
                         c_mnpq[m, n, p, q] = 2 * c_tmp
