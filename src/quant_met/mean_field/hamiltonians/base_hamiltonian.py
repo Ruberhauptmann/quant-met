@@ -763,7 +763,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
                         k=k, direction=direction_2
                     )
                     for k_index in range(len(k)):
-                        for n in [i for i in range(self.number_of_bands) if i != band]:
+                        for n in [m for m in range(self.number_of_bands) if m != band]:
                             quantum_geom_tensor[i, j] += (
                                 (
                                     bloch[k_index][:, band].conjugate()
