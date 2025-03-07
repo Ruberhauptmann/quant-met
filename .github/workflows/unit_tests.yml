@@ -32,7 +32,8 @@ jobs:
           environment-file: environment.yml
           python-version: 3.12
           auto-activate-base: false
-      - run: pip install -e .
+      - run: cd edipack2triqs && pip install .
+      - run: pip install .
       - name: Run test suite
         run: tox -- --without-slow-integration
       - name: Coveralls

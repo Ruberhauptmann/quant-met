@@ -9,12 +9,12 @@ from itertools import product
 
 import numpy as np
 import numpy.typing as npt
-from edipack2triqs.fit import BathFittingParams
-from edipack2triqs.solver import EDIpackSolver
 from triqs.gf import BlockGf, Gf, MeshBrZone
 from triqs.lattice.tight_binding import TBLattice
 from triqs.operators import c, c_dag, dagger, n
 
+from edipack2triqs.fit import BathFittingParams
+from edipack2triqs.solver import EDIpackSolver
 from quant_met.mean_field.hamiltonians import BaseHamiltonian
 from quant_met.parameters import GenericParameters
 

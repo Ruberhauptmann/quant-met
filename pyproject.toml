@@ -36,7 +36,7 @@ build-backend = "hatchling.build"
 [tool.ruff]
 line-length = 100
 force-exclude = true
-extend-exclude = ["docs/source/conf.py", "tests/"]
+extend-exclude = ["docs/source/conf.py", "tests/", "edipack2triqs/"]
 
 [tool.ruff.lint]
 select = ["ALL"]
