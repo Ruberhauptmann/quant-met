@@ -15,3 +15,24 @@ dependencies:
   - edipack2=2.0.8
   - pip:
       - pre-commit
+      - ipympl
+      - jupyter
+      - scriv
+      - numpydoc
+      - ruff
+      - hypothesis
+      - pytest-codspeed
+      - pytest
+      - pytest-cov
+      - pytest-integration
+      - pytest-mock
+      - pytest-regressions
+      - autodoc-pydantic
+      - myst-parser
+      - nbsphinx
+      - pydata-sphinx-theme
+      - sphinx
+      - sphinx-design
+      - sphinx-gallery
+      - mypy
+      - types-pyyaml

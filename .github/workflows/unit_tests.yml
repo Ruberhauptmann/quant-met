@@ -22,19 +22,15 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Setup python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: conda-incubator/setup-miniconda@v3
         with:
-          python-version: "3.12"
-      - name: Install tox and uv
-        run: python -m pip install uv
-      - name: Setup uv
-        run: uv venv
-      - name: Install tox-uv
-        run: uv tool install tox --with tox-uv
-      - name: Install tox-gh
-        run: uv pip install tox-gh>=1.2
-      - name: Run test suite
-        run: uv tool run tox -- --without-slow-integration
-      - name: Coveralls
-        uses: coverallsapp/github-action@v2
+          activate-environment: quant-met-dev
+          environment-file: environment.yml
+          python-version: 3.12
+          auto-activate-base: false
+      - run: conda list
+      #- name: Run test suite
+      #  run: uv tool run tox -- --without-slow-integration
+      #- name: Coveralls
+      #  uses: coverallsapp/github-action@v2
