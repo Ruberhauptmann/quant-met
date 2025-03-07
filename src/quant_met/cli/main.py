@@ -14,6 +14,7 @@ import yaml
 from quant_met.parameters import Parameters
 
 from .crit_temp import crit_temp
+from .dmft import dmft_scf
 from .scf import scf
 
 logger = logging.getLogger(__name__)
@@ -60,6 +61,9 @@ def cli(input_file: TextIO, *, debug: bool) -> None:
         case "crit-temp":
             logger.info("Starting T_C calculation.")
             crit_temp(params)
+        case "dmft-scf":
+            logger.info("Starting DMFT SCF calculation.")
+            dmft_scf(params)
         case _:
             logger.error("Calculation %s not found.", params.control.calculation)
             sys.exit(1)
