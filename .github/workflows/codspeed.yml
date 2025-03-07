@@ -15,19 +15,22 @@ jobs:
   benchmarks:
     name: Run benchmarks
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -el {0}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
-      - name: Install uv
-        run: pip install uv
-      - name: Install dependencies
-        run: uv venv
-      - name: Install dependencies
-        run: uv sync --group test
+          fetch-depth: 0
+      - uses: actions/checkout@v4
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: quant-met-dev
+          environment-file: environment.yml
+          python-version: 3.12
+          auto-activate-base: false
       - name: Run benchmarks
         uses: CodSpeedHQ/action@v3
         with:
           token: ${{ secrets.CODSPEED_TOKEN }}
-          run: uv run pytest tests/ --codspeed
+          run: pytest tests/ --codspeed
