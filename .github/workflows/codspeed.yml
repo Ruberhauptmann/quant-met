@@ -4,12 +4,12 @@
 
 name: CodSpeed
 
-on:
-  push:
-    branches:
-      - "main"
-  pull_request:
-  workflow_dispatch:
+#on:
+#  push:
+#    branches:
+#      - "main"
+#  pull_request:
+#  workflow_dispatch:
 
 jobs:
   benchmarks:
