@@ -2,6 +2,21 @@
 ..
 .. SPDX-License-Identifier: MIT
 
+.. _changelog-0.0.20:
+
+0.0.20 — 2025-03-07
+-------------------
+
+Added
+^^^^^
+
+- First implementation of EDIpack library for DMFT
+
+Fixed
+^^^^^
+
+- Multiplied the current in y direction in mean field instead of summing it up
+
 .. _changelog-0.0.19:
 
 0.0.19 — 2025-02-28
