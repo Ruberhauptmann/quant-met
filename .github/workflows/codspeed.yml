@@ -31,6 +31,7 @@ jobs:
           auto-activate-base: false
       - run: cd edipack2triqs && pip install .
       - run: pip install .
+      - run: conda list
       - name: Run benchmarks
         uses: CodSpeedHQ/action@v3
         with:
