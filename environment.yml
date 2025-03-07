@@ -20,6 +20,7 @@ dependencies:
       - scriv
       - numpydoc
       - ruff
+      - tox
       - hypothesis
       - pytest-codspeed
       - pytest
