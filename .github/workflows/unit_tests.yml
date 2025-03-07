@@ -29,8 +29,7 @@ jobs:
           environment-file: environment.yml
           python-version: 3.12
           auto-activate-base: false
-      - run: conda list
-      #- name: Run test suite
-      #  run: uv tool run tox -- --without-slow-integration
-      #- name: Coveralls
-      #  uses: coverallsapp/github-action@v2
+      - name: Run test suite
+        run: tox -- --without-slow-integration
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2
