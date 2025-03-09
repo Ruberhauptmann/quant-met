@@ -30,7 +30,7 @@ else
 	@echo ">>> Detected conda, but $(CONDA_ENV_NAME) is missing in $(ENV_DIR). Installing ..."
 	conda env create --file=environment.yml -n $(CONDA_ENV_NAME)
 endif
-	git clone git@github.com:krivenko/edipack2triqs.git
+	git clone https://github.com/krivenko/edipack2triqs.git
 	$(CONDA_ACTIVATE) $(CONDA_ENV_NAME) && cd edipack2triqs && pip install .
 	rm -rf edipack2triqs
 	$(CONDA_ACTIVATE) $(CONDA_ENV_NAME) && pip install -e .
