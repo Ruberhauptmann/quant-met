@@ -3,9 +3,10 @@
 # SPDX-License-Identifier: MIT
 
 import numpy as np
+import pytest
 
 from quant_met import mean_field, parameters
-import pytest
+
 
 @pytest.mark.slow_integration_test
 def test_benchmark_current_dressed_graphene(benchmark) -> None:

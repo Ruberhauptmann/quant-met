@@ -22,7 +22,7 @@ control:
   n_spin: 1
   n_success: 1
   wmixing: 0.5
-  n_bath: 2
+  n_bath: 3
   n_iw: 1024
   n_w: 4000
   broadening: 0.005

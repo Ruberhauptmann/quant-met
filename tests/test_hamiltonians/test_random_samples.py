@@ -8,16 +8,8 @@ import numpy as np
 import numpy.typing as npt
 from hypothesis import given
 from hypothesis.extra.numpy import arrays
-from hypothesis.strategies import (
-    builds,
-    floats,
-    from_type,
-    integers,
-    just,
-    one_of,
-    register_type_strategy,
-    tuples,
-)
+from hypothesis.strategies import (builds, floats, from_type, integers, just,
+                                   one_of, register_type_strategy, tuples)
 from pydantic import BaseModel
 from scipy import linalg
 
