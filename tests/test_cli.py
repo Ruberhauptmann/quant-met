@@ -5,7 +5,7 @@
 """Tests for the command line interface."""
 
 from pathlib import Path
-from unittest.mock import Mock, MagicMock
+from unittest.mock import MagicMock, Mock
 
 import yaml
 from click.testing import CliRunner

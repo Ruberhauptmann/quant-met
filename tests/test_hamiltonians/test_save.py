@@ -7,6 +7,7 @@
 from pathlib import Path
 
 import numpy as np
+
 from quant_met import mean_field, parameters
 
 

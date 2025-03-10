@@ -20,12 +20,7 @@ Functions
     plot_superfluid_weight
 """  # noqa: D205, D400
 
-from .plotting import (
-    format_plot,
-    plot_bandstructure,
-    plot_superfluid_weight,
-    scatter_into_bz,
-)
+from .plotting import format_plot, plot_bandstructure, plot_superfluid_weight, scatter_into_bz
 
 __all__ = [
     "format_plot",
