@@ -2,6 +2,16 @@
 ..
 .. SPDX-License-Identifier: MIT
 
+.. _changelog-0.0.23:
+
+0.0.23 — 2025-03-10
+-------------------
+
+Fixed
+^^^^^
+
+- Fix wrong chemical potential for Hubbard interaction in DMFT
+
 .. _changelog-0.0.22:
 
 0.0.22 — 2025-03-07
