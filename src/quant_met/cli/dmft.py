@@ -43,7 +43,7 @@ def dmft_scf(parameters: Parameters) -> None:
         h0_nambu_k[k][:n_orbitals, :n_orbitals] = enk(k)
         h0_nambu_k[k][n_orbitals:, n_orbitals:] = -enk(-k)
 
-    xmu = h.hubbard_int_orbital_basis[0] / 2
+    xmu = -h.hubbard_int_orbital_basis[0] / 2
 
     solver = dmft_loop(
         tbl=tbl,
