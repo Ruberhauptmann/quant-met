@@ -48,9 +48,13 @@ class DressedGraphene(BaseHamiltonian[DressedGrapheneParameters]):
 
         h = np.zeros((k.shape[0], self.number_of_bands, self.number_of_bands), dtype=np.complex128)
 
-        h[:, 0, 1] = -t_gr * (
-            np.exp(1j * k[:, 1] * a / np.sqrt(3))
-            + 2 * np.exp(-0.5j * a / np.sqrt(3) * k[:, 1]) * (np.cos(0.5 * a * k[:, 0]))
+        h[:, 0, 1] = (
+            -t_gr
+            * np.exp(2j * k[:, 1] * a)
+            * (
+                np.exp(1j * k[:, 1] * a / np.sqrt(3))
+                + 2 * np.exp(-0.5j * a / np.sqrt(3) * k[:, 1]) * (np.cos(0.5 * a * k[:, 0]))
+            )
         )
 
         h[:, 1, 0] = h[:, 0, 1].conjugate()
