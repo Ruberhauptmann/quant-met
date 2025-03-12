@@ -41,7 +41,7 @@ def _tbl_factory(h: BaseHamiltonian[GenericParameters]) -> TBLattice:
         0.5 * lattice_constant * np.array([1, np.sqrt(3), 0]),
         0.5 * lattice_constant * np.array([1, -np.sqrt(3), 0]),
     ]
-    orbital_positions = [(0, 0.5, 0), (0, -0.5, 0), (0, -0.5, 0)]
+    orbital_positions = [(0, 0.5, 0), (0, -0.5, 0), (0, 0.5, 0)]
     hoppings = {
         (0, 0): [
             [0, h.hopping_gr, h.hopping_x_gr_a],
