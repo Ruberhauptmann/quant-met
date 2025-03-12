@@ -359,7 +359,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
     def gap_equation_loop(
         bdg_energies: npt.NDArray[np.float64],
         bdg_wavefunctions: npt.NDArray[np.complex128],
-        delta: npt.NDArray[np.float64],
+        delta: npt.NDArray[np.complex128],
         beta: float,
         hubbard_int_orbital_basis: npt.NDArray[np.float64],
         k: npt.NDArray[np.floating],
@@ -390,16 +390,18 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
             New pairing gap in orbital basis, adjusted to remove global phase.
         """
         number_of_bands = len(delta)
+
+        result_matrix = np.zeros((2 * number_of_bands, 2 * number_of_bands), dtype=np.complex128)
+        for k_index in range(len(k)):
+            nf = np.eye(2 * number_of_bands, 2 * number_of_bands, dtype=np.complex128) * (
+                fermi_dirac(bdg_energies[k_index], beta)
+            )
+            result_matrix += bdg_wavefunctions[k_index].conj().T @ nf @ bdg_wavefunctions[k_index]
+
         for i in range(number_of_bands):
-            sum_tmp = 0
-            for j in range(2 * number_of_bands):
-                for k_index in range(len(k)):
-                    sum_tmp += (
-                        np.conjugate(bdg_wavefunctions[k_index, i, j])
-                        * bdg_wavefunctions[k_index, i + number_of_bands, j]
-                        * fermi_dirac(bdg_energies[k_index, j].item(), beta)
-                    )
-            delta[i] = (-hubbard_int_orbital_basis[i] * sum_tmp / len(k)).conjugate()
+            delta[i] = (
+                -hubbard_int_orbital_basis[i] * result_matrix[i, i + number_of_bands] / len(k)
+            )
 
         delta_without_phase: npt.NDArray[np.complexfloating] = delta * np.exp(
             -1j * np.angle(delta[np.argmax(np.abs(delta))])
