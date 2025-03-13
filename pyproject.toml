@@ -50,8 +50,11 @@ ignore = [
     "S101", # This checks against using assert
     "PLR0913", # This checks against using more than 5 function arguments
     "PLR0915", # This checks against too long functions
+    "PLR0912", # Check against too many branches
+    "C901", # Check against too complex functions
     "PLR2004", # Check against "magic values"
     "T201", # Warn about print statements
+    "PLW0603" # Warn about global updates
 ]
 
 [tool.ruff.lint.pydocstyle]

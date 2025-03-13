@@ -8,7 +8,8 @@ import logging
 from pathlib import Path
 
 from h5 import HDFArchive
-from triqs.gf import Gf, Idx
+from mpi4py import MPI
+from triqs.gf import Gf
 
 from quant_met.cli._utils import _hamiltonian_factory, _tbl_factory
 from quant_met.dmft.dmft_loop import dmft_loop
@@ -43,7 +44,13 @@ def dmft_scf(parameters: Parameters) -> None:
         h0_nambu_k[k][:n_orbitals, :n_orbitals] = enk(k)
         h0_nambu_k[k][n_orbitals:, n_orbitals:] = -enk(-k)
 
-    xmu = -h.hubbard_int_orbital_basis[0] / 2
+    ust = 0
+    jh = 0
+    xmu = (
+        h.hubbard_int_orbital_basis[0] / 2
+        + (tbl.n_orbitals - 1) * ust / 2
+        + (tbl.n_orbitals - 1) * (ust - jh) / 2
+    )
 
     solver = dmft_loop(
         tbl=tbl,
@@ -69,23 +76,21 @@ def dmft_scf(parameters: Parameters) -> None:
     g_iw, g_an_iw = get_gloc(s_iw, s_an_iw, h0_nambu_k, xmu, parameters.control.broadening, kmesh)
     g_w, g_an_w = get_gloc(s_w, s_an_w, h0_nambu_k, xmu, parameters.control.broadening, kmesh)
 
-    n_iw0 = int(0.5 * len(s_iw.mesh))
-    iw_0 = s_iw.mesh[n_iw0].value.imag
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
 
-    gap = s_an_iw[Idx(0)][0, 0].real / (1 - (s_iw[Idx(0)][0, 0].imag / iw_0))
+    if rank == 0:
+        data_dir = Path("data/DressedGraphene/dmft/sweep_V/")
+        data_dir.mkdir(parents=True, exist_ok=True)
 
-    data_dir = Path("data/DressedGraphene/dmft/sweep_V/")
-    data_dir.mkdir(parents=True, exist_ok=True)
+        # Save calculation results
+        result_file = result_path / f"{parameters.control.prefix}.hdf5"
+        with HDFArchive(f"{result_file}", "w") as ar:
+            ar["s_iw"] = s_iw
+            ar["s_an_iw"] = s_an_iw
+            ar["g_iw"] = g_iw
+            ar["g_an_iw"] = g_an_iw
+            ar["g_w"] = g_w
+            ar["g_an_w"] = g_an_w
 
-    # Save calculation results
-    result_file = result_path / f"{parameters.control.prefix}.hdf5"
-    with HDFArchive(f"{result_file}", "w") as ar:
-        ar["s_iw"] = s_iw
-        ar["s_an_iw"] = s_an_iw
-        ar["g_iw"] = g_iw
-        ar["g_an_iw"] = g_an_iw
-        ar["g_w"] = g_w
-        ar["g_an_w"] = g_an_w
-        ar["gap"] = gap
-
-    logger.info("Results saved to %s", result_file)
+        logger.info("Results saved to %s", result_file)
