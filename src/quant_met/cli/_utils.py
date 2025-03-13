@@ -41,7 +41,11 @@ def _tbl_factory(h: BaseHamiltonian[GenericParameters]) -> TBLattice:
         0.5 * lattice_constant * np.array([1, np.sqrt(3), 0]),
         0.5 * lattice_constant * np.array([1, -np.sqrt(3), 0]),
     ]
-    orbital_positions = [(0, 0.5, 0), (0, -0.5, 0), (0, 0.5, 0)]
+    orbital_positions = [
+        (0.5 * (np.sqrt(3) - 1), 0, 0),
+        (0.5 * (np.sqrt(3) + 1), 0, 0),
+        (0.5 * (np.sqrt(3) - 1), 0, 0),
+    ]
     hoppings = {
         (0, 0): [
             [0, h.hopping_gr, h.hopping_x_gr_a],
@@ -50,13 +54,13 @@ def _tbl_factory(h: BaseHamiltonian[GenericParameters]) -> TBLattice:
         ],
         (1, 0): [[0, 0, 0], [h.hopping_gr, 0, 0], [0, 0, 0]],
         (-1, 0): [[0, h.hopping_gr, 0], [0, 0, 0], [0, 0, 0]],
-        (0, 1): [[0, 0, 0], [h.hopping_gr, 0, 0], [0, 0, 0]],
-        (0, -1): [[0, h.hopping_gr, 0], [0, 0, 0], [0, 0, 0]],
+        (0, 1): [[0, h.hopping_gr, 0], [0, 0, 0], [0, 0, 0]],
+        (0, -1): [[0, 0, 0], [h.hopping_gr, 0, 0], [0, 0, 0]],
     }
 
     return TBLattice(
         units=basis_vectors,
         hoppings=hoppings,
         orbital_positions=orbital_positions,
-        orbital_names=["C1", "C2", "X"],
+        orbital_names=["A", "B", "X"],
     )

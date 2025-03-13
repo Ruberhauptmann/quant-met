@@ -4,9 +4,118 @@
 
 """Utility functions used in DMFT."""
 
+import sys
+from pathlib import Path
+
 import numpy as np
 import numpy.typing as npt
+from mpi4py import MPI
 from triqs.gf import Gf, MeshBrZone, MeshImFreq, MeshProduct, conjugate, dyson, inverse, iOmega_n
+
+
+def _check_convergence(
+    func: npt.NDArray[np.complex128], threshold: float = 1e-6, nsuccess: int = 1, nloop: int = 100
+) -> tuple[float, bool]:
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+
+    func = np.asarray(func)
+    err = 1.0
+    conv_bool = False
+    outfile = "error.err"
+
+    if globals().get("_whichiter") is None:
+        global _whichiter
+        global _gooditer
+        global _oldfunc
+
+        _whichiter = 0
+        _gooditer = 0
+        _oldfunc = np.zeros_like(func)
+
+    green = "\033[92m"
+    yellow = "\033[93m"
+    red = "\033[91m"
+    bold = "\033[1m"
+    colorend = "\033[0m"
+
+    # only the master does the calculation
+    if rank == 0:
+        errvec = np.real(np.sum(abs(func - _oldfunc), axis=-1) / np.sum(abs(func), axis=-1))
+        # first iteration
+        if _whichiter == 0:
+            errvec = np.ones_like(errvec)
+            # remove nan compoments, if some component is divided by zero
+        if np.prod(np.shape(errvec)) > 1:
+            errvec = errvec[~np.isnan(errvec)]
+        errmax = np.max(errvec)
+        errmin = np.min(errvec)
+        err = np.average(errvec)
+        _oldfunc = np.copy(func)
+        if err < threshold:
+            _gooditer += 1  # increase good iterations count
+        else:
+            _gooditer = 0  # reset good iterations count
+        _whichiter += 1
+        conv_bool = ((err < threshold) and (_gooditer > nsuccess) and (_whichiter < nloop)) or (
+            _whichiter >= nloop
+        )
+
+        # write out
+        with Path(outfile).open("a") as file:
+            file.write(f"{_whichiter} {err:.6e}\n")
+        if np.prod(np.shape(errvec)) > 1:
+            with Path(outfile + ".max").open("a") as file:
+                file.write(f"{_whichiter} {errmax:.6e}\n")
+            with Path(outfile + ".min").open("a") as file:
+                file.write(f"{_whichiter} {errmin:.6e}\n")
+            with Path(outfile + ".distribution").open("a") as file:
+                file.write(
+                    f"{_whichiter}" + " ".join([f"{x:.6e}" for x in errvec.flatten()]) + "\n"
+                )
+
+        # print convergence message:
+        if conv_bool:
+            colorprefix = bold + green
+        elif (err < threshold) and (_gooditer <= nsuccess):
+            colorprefix = bold + yellow
+        else:
+            colorprefix = bold + red
+
+        if _whichiter < nloop:
+            if np.prod(np.shape(errvec)) > 1:
+                print(colorprefix + "max error=" + colorend + f"{errmax:.6e}")
+            print(
+                colorprefix
+                + "    " * (np.prod(np.shape(errvec)) > 1)
+                + "error="
+                + colorend
+                + f"{err:.6e}"
+            )
+            if np.prod(np.shape(errvec)) > 1:
+                print(colorprefix + "min error=" + colorend + f"{errmin:.6e}")
+        else:
+            if np.prod(np.shape(errvec)) > 1:
+                print(colorprefix + "max error=" + colorend + f"{errmax:.6e}")
+            print(
+                colorprefix
+                + "    " * (np.prod(np.shape(errvec)) > 1)
+                + "error="
+                + colorend
+                + f"{err:.6e}"
+            )
+            if np.prod(np.shape(errvec)) > 1:
+                print(colorprefix + "min error=" + colorend + f"{errmin:.6e}")
+            print("Not converged after " + str(nloop) + " iterations.")
+            with Path("ERROR.README").open("a") as file:
+                file.write("Not converged after " + str(nloop) + " iterations.")
+        print("\n")
+
+    # pass to other cores:
+    conv_bool = comm.bcast(conv_bool, root=0)
+    err = comm.bcast(err, root=0)
+    sys.stdout.flush()
+    return err, conv_bool
 
 
 def get_gloc(

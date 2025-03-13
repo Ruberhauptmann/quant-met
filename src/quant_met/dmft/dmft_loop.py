@@ -18,7 +18,7 @@ from triqs.operators import c, c_dag, dagger, n
 from quant_met.mean_field.hamiltonians import BaseHamiltonian
 from quant_met.parameters import GenericParameters
 
-from .utils import _dmft_weiss_field, get_gloc
+from .utils import _check_convergence, _dmft_weiss_field, get_gloc
 
 logger = logging.getLogger(__name__)
 
@@ -80,8 +80,27 @@ def dmft_loop(
         h_loc[o1, o2] * c_dag(spin, o1) * c(spin, o2) for spin, o1, o2 in product(spins, orbs, orbs)
     )
 
+    ust = 0
+    jh = 0
+    jx = 0
+    jp = 0
+
     # Interaction part
-    hamiltonian += -h.hubbard_int_orbital_basis[0] * sum(n("up", o) * n("dn", o) for o in orbs)
+    hamiltonian += h.hubbard_int_orbital_basis[0] * sum(n("up", o) * n("dn", o) for o in orbs)
+    hamiltonian += ust * sum(
+        int(o1 != o2) * n("up", o1) * n("dn", o2) for o1, o2 in product(orbs, orbs)
+    )
+    hamiltonian += (ust - jh) * sum(
+        int(o1 < o2) * n(s, o1) * n(s, o2) for s, o1, o2 in product(spins, orbs, orbs)
+    )
+    hamiltonian -= jx * sum(
+        int(o1 != o2) * c_dag("up", o1) * c("dn", o1) * c_dag("dn", o2) * c("up", o2)
+        for o1, o2 in product(orbs, orbs)
+    )
+    hamiltonian += jp * sum(
+        int(o1 != o2) * c_dag("up", o1) * c_dag("dn", o1) * c("dn", o2) * c("up", o2)
+        for o1, o2 in product(orbs, orbs)
+    )
 
     # Matrix dimensions of eps and V: 3 orbitals x 2 bath states
     eps = np.array([[-1.0, -0.5, 0.5, 1.0] for _ in range(tbl.n_orbitals)])
@@ -119,8 +138,6 @@ def dmft_loop(
         bath_fitting_params=fit_params,
     )
 
-    gooditer = 0
-    g0_prev = np.zeros((2, 2 * n_iw, tbl.n_orbitals, tbl.n_orbitals), dtype=complex)
     for iloop in range(max_iter):
         print(f"\nLoop {iloop + 1} of {max_iter}")
 
@@ -151,39 +168,11 @@ def dmft_loop(
 
         # Check convergence of the Weiss field
         g0 = np.asarray([g0_iw.data, g0_an_iw.data])
-        errvec = np.real(np.sum(abs(g0 - g0_prev), axis=1) / np.sum(abs(g0), axis=1))
-        # First iteration
-        if iloop == 0:
-            errvec = np.ones_like(errvec)
-        errmin, err, errmax = np.min(errvec), np.average(errvec), np.max(errvec)
+        # Check convergence of the Weiss field
+        g0 = np.asarray([g0_iw.data, g0_an_iw.data])
+        err, converged = _check_convergence(g0, epsilon, n_success, max_iter)
 
-        g0_prev = np.copy(g0)
-
-        if err < epsilon:
-            gooditer += 1  # Increase good iterations count
-        else:
-            gooditer = 0  # Reset good iterations count
-
-        conv_bool = ((err < epsilon) and (gooditer > n_success) and (iloop < max_iter)) or (
-            iloop >= max_iter
-        )
-
-        # Print convergence message
-        if iloop < max_iter:
-            if errvec.size > 1:
-                print(f"max error={errmax:.6e}")
-            print("    " * (errvec.size > 1) + f"error={err:.6e}")
-            if errvec.size > 1:
-                print(f"min error={errmin:.6e}")
-        else:
-            if errvec.size > 1:
-                print(f"max error={errmax:.6e}")
-            print("    " * (errvec.size > 1) + f"error={err:.6e}")
-            if errvec.size > 1:
-                print(f"min error={errmin:.6e}")
-            print(f"Not converged after {max_iter} iterations.")
-
-        if conv_bool:
+        if converged:
             break
 
     return solver
