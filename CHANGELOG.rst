@@ -2,6 +2,25 @@
 ..
 .. SPDX-License-Identifier: MIT
 
+.. _changelog-0.0.24:
+
+0.0.24 — 2025-03-13
+-------------------
+
+Changed
+^^^^^^^
+
+- Add orbital positions into the Fourier transform
+
+- Implemented a more efficient version of the gap equation using direkt matrix multiplication
+
+Fixed
+^^^^^
+
+- Fix orbital positions in TBLattice for decorated Graphene
+
+- Fix definition of TBLattice for dressed Graphene
+
 .. _changelog-0.0.23:
 
 0.0.23 — 2025-03-10
