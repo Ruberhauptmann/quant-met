@@ -4,12 +4,12 @@
 
 model:
   name: DressedGraphene
-  hopping_gr: 1
-  hopping_x: 0
-  hopping_x_gr_a: 1.3
+  hopping_gr: 1.0
+  hopping_x: 0.0
+  hopping_x_gr_a: 0.0
   chemical_potential: 0.0
-  hubbard_int_orbital_basis: [0.01, 0.01, 0.01]
-  lattice_constant: 3
+  hubbard_int_orbital_basis: [1.0, 1.0, 1.0]
+  lattice_constant: 1.73205080757
 
 control:
   calculation: crit-temp

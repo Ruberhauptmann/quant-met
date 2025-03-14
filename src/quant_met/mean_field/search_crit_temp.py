@@ -40,27 +40,28 @@ def _get_bounds(
     while (found_zero_gap and found_nonzero_gap) is False and iterations < 100:
         logger.info("Trying temperature: %s", temp)
         data_dict = gap_for_temp_partial(temp)
+        logger.info("Result: %s", data_dict)
         if data_dict is not None:
             delta_vs_temp_list.append(data_dict)
             gap = np.array([data_dict[key] for key in data_dict if key.startswith("delta")])
-            if np.allclose(gap, 0):
+            if np.allclose(gap, 0, rtol=0, atol=0.10 * np.max(np.abs(zero_temperature_gap))):
                 logger.info("Found temperature with zero gap.")
                 zero_gap_temp = temp
                 found_zero_gap = True
                 temp = 0.5 * temp
-            elif np.allclose(gap, zero_temperature_gap, atol=np.min(np.abs(zero_temperature_gap))):
+            elif np.allclose(
+                gap, zero_temperature_gap, atol=0.10 * np.max(np.abs(zero_temperature_gap))
+            ):
                 logger.info("Found temperature with nonzero gap.")
                 nonzero_gap_temp = temp
                 found_nonzero_gap = True
                 temp = 2 * temp
             elif direction == "down":
-                logger.info(
-                    "Gap is neither zero nor equal to the nonzero gap. Reducing temperature."
-                )
+                logger.info("Gap is neither zero nor equal to the zero gap. Reducing temperature.")
                 temp = 0.5 * temp
             else:
                 logger.info(
-                    "Gap is neither zero nor equal to the nonzero gap. Increasing temperature."
+                    "Gap is neither zero nor equal to the zero gap. Increasing temperature."
                 )
                 temp = 2 * temp
         elif direction == "down":
@@ -164,7 +165,7 @@ def search_crit_temp(
 ) -> tuple[pd.DataFrame, list[float], matplotlib.figure.Figure]:  # pragma: no cover
     """Search for critical temperature."""
     logger.info("Start search for bounds for T_C")
-    temp = 1 / h.beta if not np.isinf(h.beta) else 0.25 * h.hubbard_int_orbital_basis[0]
+    temp = 1 / h.beta if not np.isinf(h.beta) else 10 * h.hubbard_int_orbital_basis[0]
 
     delta_vs_temp_list = []
     critical_temp_list = []
@@ -176,6 +177,7 @@ def search_crit_temp(
     logger.info("Calculating zero temperature gap")
     data_dict = gap_for_temp_partial(0)
     assert data_dict is not None
+    logger.info("Result: %s", data_dict)
 
     zero_temperature_gap = np.array(
         [data_dict[key] for key in data_dict if key.startswith("delta")]
