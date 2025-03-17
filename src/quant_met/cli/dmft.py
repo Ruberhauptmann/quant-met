@@ -52,7 +52,7 @@ def dmft_scf(parameters: Parameters) -> None:
         + (tbl.n_orbitals - 1) * (ust - jh) / 2
     )
 
-    solver = dmft_loop(
+    solver, gaps_and_iterations = dmft_loop(
         tbl=tbl,
         h=h,
         h0_nambu_k=h0_nambu_k,
@@ -80,9 +80,6 @@ def dmft_scf(parameters: Parameters) -> None:
     rank = comm.Get_rank()
 
     if rank == 0:
-        data_dir = Path("data/DressedGraphene/dmft/sweep_V/")
-        data_dir.mkdir(parents=True, exist_ok=True)
-
         # Save calculation results
         result_file = result_path / f"{parameters.control.prefix}.hdf5"
         with HDFArchive(f"{result_file}", "w") as ar:
@@ -92,5 +89,9 @@ def dmft_scf(parameters: Parameters) -> None:
             ar["g_an_iw"] = g_an_iw
             ar["g_w"] = g_w
             ar["g_an_w"] = g_an_w
+
+        gaps_and_iterations.to_csv(
+            result_path / f"{parameters.control.prefix}_gaps_and_iterations.csv"
+        )
 
         logger.info("Results saved to %s", result_file)
