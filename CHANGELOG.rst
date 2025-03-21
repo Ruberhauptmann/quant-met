@@ -1,3 +1,13 @@
+
+.. _changelog-0.0.25:
+
+0.0.25 — 2025-03-21
+-------------------
+
+Fixed
+^^^^^
+
+- Fix calculation of crit temp for V=0 for dressed Graphene
 .. SPDX-FileCopyrightText: 2024 Tjark Sievers
 ..
 .. SPDX-License-Identifier: MIT
