@@ -285,6 +285,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
         k_point_matrix = self.hamiltonian(k)
         if k_point_matrix.ndim == 2:
             k_point_matrix = np.expand_dims(k_point_matrix, axis=0)
+        if k.shape == (2,):
             k = np.expand_dims(k, axis=0)
 
         bloch_wavefunctions = np.zeros(
@@ -293,9 +294,16 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
         )
         band_energies = np.zeros((len(k), self.number_of_bands))
 
-        for i in range(len(k)):
-            band_energies[i], bloch_wavefunctions[i] = np.linalg.eigh(k_point_matrix[i])
+        if k_point_matrix.shape[0] == 1:
+            for i in range(len(k)):
+                band_energies[i] = np.real(k_point_matrix[i, 0, 0])
+                bloch_wavefunctions[i] = 1
+        else:
+            for i in range(len(k)):
+                band_energies[i], bloch_wavefunctions[i] = np.linalg.eigh(k_point_matrix[i])
 
+        if k_point_matrix.shape[1] == 1:
+            return band_energies[0], bloch_wavefunctions[0]
         return band_energies.squeeze(), bloch_wavefunctions.squeeze()
 
     def diagonalize_bdg(
@@ -590,8 +598,8 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
 
         current = np.zeros(2, dtype=np.complex128)
 
-        matrix_x = np.zeros((3, 3), dtype=np.complex128)
-        matrix_y = np.zeros((3, 3), dtype=np.complex128)
+        matrix_x = np.zeros((self.number_of_bands, self.number_of_bands), dtype=np.complex128)
+        matrix_y = np.zeros((self.number_of_bands, self.number_of_bands), dtype=np.complex128)
 
         for k_index in range(len(k)):
             for i in range(self.number_of_bands):
