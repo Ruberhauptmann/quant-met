@@ -9,9 +9,12 @@ from itertools import product
 
 import numpy as np
 import numpy.typing as npt
+import pandas as pd
 from edipack2triqs.fit import BathFittingParams
 from edipack2triqs.solver import EDIpackSolver
-from triqs.gf import BlockGf, Gf, MeshBrZone
+from mpi4py import MPI
+from pandas import DataFrame
+from triqs.gf import BlockGf, Gf, Idx, MeshBrZone
 from triqs.lattice.tight_binding import TBLattice
 from triqs.operators import c, c_dag, dagger, n
 
@@ -37,11 +40,12 @@ def dmft_loop(
     kmesh: MeshBrZone,
     epsilon: float,
     max_iter: int,
-) -> EDIpackSolver:
+) -> tuple[EDIpackSolver, DataFrame]:
     """DMFT loop.
 
     Parameters
     ----------
+    result_path
     tbl
     h
     h0_nambu_k
@@ -61,7 +65,10 @@ def dmft_loop(
     EDIpackSolver
 
     """
-    energy_window = (-2.0 * h.hopping_gr, 2.0 * h.hopping_gr)
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+
+    energy_window = (-4 * h.hopping_gr, 4 * h.hopping_gr)
 
     spins = ("up", "dn")
     orbs = range(tbl.n_orbitals)
@@ -138,8 +145,10 @@ def dmft_loop(
         bath_fitting_params=fit_params,
     )
 
+    results_rows = []
     for iloop in range(max_iter):
-        print(f"\nLoop {iloop + 1} of {max_iter}")
+        if rank == 0:
+            print(f"\nLoop {iloop + 1} of {max_iter}")
 
         # Solve the effective impurity problem
         solver.solve(
@@ -153,6 +162,17 @@ def dmft_loop(
         # Normal and anomalous components of computed self-energy
         s_iw = solver.Sigma_iw["up"]
         s_an_iw = solver.Sigma_an_iw["up_dn"]
+
+        dict1 = {"iteration": iloop}
+        n_iw0 = int(0.5 * len(s_iw.mesh))
+        iw_0 = s_iw.mesh[n_iw0].value.imag
+        for orbital in range(tbl.n_orbitals):
+            gap = s_an_iw[Idx(0)][orbital, orbital].real / (
+                1 - (s_iw[Idx(0)][orbital, orbital].imag / iw_0)
+            )
+            dict1.update({f"gap_{orbital}": gap})
+
+        results_rows.append(dict1)
 
         # Compute local Green's function
         g_iw, g_an_iw = get_gloc(s_iw, s_an_iw, h0_nambu_k, xmu, broadening, kmesh)
@@ -168,11 +188,11 @@ def dmft_loop(
 
         # Check convergence of the Weiss field
         g0 = np.asarray([g0_iw.data, g0_an_iw.data])
-        # Check convergence of the Weiss field
-        g0 = np.asarray([g0_iw.data, g0_an_iw.data])
         err, converged = _check_convergence(g0, epsilon, n_success, max_iter)
 
         if converged:
             break
 
-    return solver
+    gaps_and_iterations = pd.DataFrame(results_rows).sort_values("iteration").reset_index(drop=True)
+
+    return solver, gaps_and_iterations
