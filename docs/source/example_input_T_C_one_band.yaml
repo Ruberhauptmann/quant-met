@@ -4,17 +4,18 @@
 
 model:
   name: OneBand
-  hopping: 1
+  hopping: 0.5
   chemical_potential: 0.0
-  hubbard_int_orbital_basis: [5.0]
+  hubbard_int_orbital_basis: [0.37]
   lattice_constant: 1
+  beta: 4000
 
 control:
   calculation: crit-temp
   prefix: test
   outdir: test/
   conv_treshold: 1e-3
-  n_temp_points: 1
+  n_temp_points: 20
 
 k_points:
   nk1: 30
