@@ -10,6 +10,7 @@ model:
   chemical_potential: 0.0
   hubbard_int_orbital_basis: [1.0, 1.0, 1.0]
   lattice_constant: 1.73205080757
+  beta: 4000
 
 control:
   calculation: crit-temp

@@ -165,7 +165,7 @@ def search_crit_temp(
 ) -> tuple[pd.DataFrame, list[float], matplotlib.figure.Figure]:  # pragma: no cover
     """Search for critical temperature."""
     logger.info("Start search for bounds for T_C")
-    temp = 1 / h.beta if not np.isinf(h.beta) else 10 * h.hubbard_int_orbital_basis[0]
+    temp = 1 / h.beta if not np.isinf(h.beta) else 1 * h.hubbard_int_orbital_basis[0]
 
     delta_vs_temp_list = []
     critical_temp_list = []
