@@ -12,7 +12,7 @@ dependencies:
   - pip
   - triqs
   - uv
-  - edipack2=2.0.8
+  - edipack2=3.0.0
   - pip:
       - pre-commit
       - ipympl
