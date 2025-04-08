@@ -417,7 +417,12 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
     def calculate_bandstructure(
         self,
         k: npt.NDArray[np.floating],
-        overlaps: tuple[npt.NDArray[np.floating], npt.NDArray[np.floating]] | None = None,
+        overlaps: tuple[
+            npt.NDArray[np.floating],
+            npt.NDArray[np.floating],
+            npt.NDArray[np.floating[np.floating]],
+        ]
+        | None = None,
     ) -> pd.DataFrame:
         """Calculate the band structure.
 
@@ -454,9 +459,11 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
                     if overlaps is not None:
                         results.loc[i, f"wx_{band_index}"] = (
                             np.abs(np.dot(wavefunction_k[:, band_index], overlaps[0])) ** 2  # type: ignore[index]
-                            - np.abs(np.dot(wavefunction_k[:, band_index], overlaps[1])) ** 2  # type: ignore[index]
+                            - (
+                                np.abs(np.dot(wavefunction_k[:, band_index], overlaps[1])) ** 2  # type: ignore[index]
+                                + np.abs(np.dot(wavefunction_k[:, band_index], overlaps[2])) ** 2
+                            )  # type: ignore[index]
                         )
-
         return results
 
     def calculate_density_of_states(
@@ -668,9 +675,9 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
                                 for q in range(self.number_of_bands):
                                     s_weight = c_mnpq[m, n, p, q] * j_up[m, n] * j_down[q, p]
                                     if m == n and p == q:
-                                        s_weight_conv[i, j] += s_weight
+                                        s_weight_conv[i, j] += s_weight / len(k)
                                     else:
-                                        s_weight_geom[i, j] += s_weight
+                                        s_weight_geom[i, j] += s_weight / len(k)
 
         return s_weight_conv, s_weight_geom
 
@@ -693,6 +700,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
 
     def _c_factor(self, k: npt.NDArray[np.floating]) -> npt.NDArray[np.complexfloating]:
         bdg_energies, bdg_functions = self.diagonalize_bdg(k)
+        print(bdg_energies)
         c_mnpq = np.zeros(
             shape=(
                 self.number_of_bands,
@@ -714,9 +722,11 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
                                     c_tmp += (
                                         fermi_dirac(bdg_energies[i], self.beta)
                                         - fermi_dirac(bdg_energies[j], self.beta)
-                                    ) / (bdg_energies[i] - bdg_energies[j])
+                                    ) / (bdg_energies[j] - bdg_energies[i])
                                 else:
-                                    c_tmp -= _fermi_dirac_derivative()
+                                    c_tmp -= _fermi_dirac_derivative(
+                                        energy=bdg_energies[i], beta=self.beta
+                                    )
 
                                 c_tmp *= (
                                     bdg_functions[i, m].conjugate()
@@ -789,8 +799,8 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
         return np.real(quantum_geom_tensor) / number_k_points
 
 
-def _fermi_dirac_derivative() -> float:
-    return 0
+def _fermi_dirac_derivative(energy: float, beta: float) -> float:
+    return (beta * np.exp(beta * energy)) / (np.exp(beta * energy) + 1) ** 2
 
 
 def _gaussian(x: npt.NDArray[np.floating], sigma: float) -> npt.NDArray[np.floating]:
