@@ -66,4 +66,4 @@ class OneBand(BaseHamiltonian[OneBandParameters]):
         else:
             h[:, 0, 0] = -2 * hopping * lattice_constant * np.sin(lattice_constant * k[:, 0])
 
-        return h.squeeze()
+        return h

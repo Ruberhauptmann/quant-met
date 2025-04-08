@@ -44,13 +44,13 @@ def _get_bounds(
         if data_dict is not None:
             delta_vs_temp_list.append(data_dict)
             gap = np.array([data_dict[key] for key in data_dict if key.startswith("delta")])
-            if np.allclose(gap, 0, rtol=0, atol=0.10 * np.max(np.abs(zero_temperature_gap))):
+            if np.allclose(gap, 0, rtol=0, atol=0.1 * np.max(np.abs(zero_temperature_gap))):
                 logger.info("Found temperature with zero gap.")
                 zero_gap_temp = temp
                 found_zero_gap = True
                 temp = 0.5 * temp
             elif np.allclose(
-                gap, zero_temperature_gap, atol=0.10 * np.max(np.abs(zero_temperature_gap))
+                gap, zero_temperature_gap, atol=0.01 * np.max(np.abs(zero_temperature_gap))
             ):
                 logger.info("Found temperature with nonzero gap.")
                 nonzero_gap_temp = temp
