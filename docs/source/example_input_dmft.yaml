@@ -17,14 +17,13 @@ control:
   calculation: dmft-scf
   prefix: test
   outdir: test/
-  conv_treshold: 1e-4
-  max_iter: 100
-  n_spin: 1
-  n_success: 1
+  conv_treshold: 1e-1
+  max_iter: 2
+  n_success: 2
   wmixing: 0.5
   n_bath: 2
   n_iw: 1024
-  n_w: 4000
+  n_w: 6000
   broadening: 0.005
 
 k_points:
