@@ -6,7 +6,7 @@
 
 import pathlib
 from abc import ABC, abstractmethod
-from typing import Generic, TypeVar
+from typing import Generic, Self, TypeVar
 
 import h5py
 import numpy as np
@@ -152,7 +152,7 @@ class BaseHamiltonian(Generic[GenericParameters], ABC):
             f.attrs["lattice_constant"] = self.lattice.lattice_constant
 
     @classmethod
-    def from_file(cls: type[GenericHamiltonian], filename: pathlib.Path) -> GenericHamiltonian:
+    def from_file(cls, filename: pathlib.Path) -> Self:
         """Initialize a Hamiltonian from a previously saved HDF5 file.
 
         This class method allows users to reconstruct a Hamiltonian object

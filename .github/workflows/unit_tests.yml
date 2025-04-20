@@ -26,15 +26,8 @@ jobs:
         with:
           fetch-depth: 0
       - uses: actions/checkout@v4
-      - uses: conda-incubator/setup-miniconda@v3
-        with:
-          activate-environment: quant-met-dev
-          environment-file: environment.yml
-          python-version: 3.12
-          auto-activate-base: false
-      - run: git clone https://github.com/krivenko/edipack2triqs.git && cd edipack2triqs && pip install .
-      - run: pip install .
+      - uses: extractions/setup-just@v3
       - name: Run test suite
-        run: tox -- --without-slow-integration
+        run: just test --without-slow-integration
       - name: Coveralls
         uses: coverallsapp/github-action@v2
