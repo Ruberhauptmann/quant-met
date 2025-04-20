@@ -33,7 +33,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v5
       - name: Install the project
-        run: uv sync --all-extras --dev
+        run: uv sync --group=test
       - uses: extractions/setup-just@v3
       - name: Run test suite
         run: just test --without-slow-integration
