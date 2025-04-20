@@ -2,7 +2,6 @@
 #
 # SPDX-License-Identifier: MIT
 
--e .
 sphinx>=8.2
 pydata-sphinx-theme>=0.15.4
 myst-parser>=3.0.1
