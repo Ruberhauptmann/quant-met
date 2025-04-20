@@ -25,6 +25,8 @@ jobs:
         with:
           fetch-depth: 0
       - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
       - uses: extractions/setup-just@v3
       - name: Run test suite
         run: just test --with-slow-integration
