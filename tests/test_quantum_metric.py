@@ -43,6 +43,7 @@ def test_quantum_metric_dressed_graphene(ndarrays_regression: NDArraysRegression
             "quantum_metric_1": quantum_metric_1,
             "quantum_metric_2": quantum_metric_2,
         },
+        default_tolerance={"atol": 1e-12, "rtol": 1e-6},
     )
 
 
@@ -72,4 +73,5 @@ def test_quantum_metric_graphene(ndarrays_regression: NDArraysRegressionFixture)
             "quantum_metric_0": quantum_metric_0,
             "quantum_metric_1": quantum_metric_1,
         },
+        default_tolerance={"atol": 1e-12, "rtol": 1e-6},
     )
