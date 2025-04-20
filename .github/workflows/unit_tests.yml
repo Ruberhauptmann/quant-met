@@ -1,8 +1,9 @@
 # SPDX-FileCopyrightText: 2024 Tjark Sievers
+# SPDX-FileCopyrightText: 2025 Tjark Sievers
 #
 # SPDX-License-Identifier: MIT
 
-name: Unit tests, linting and type checking
+name: Unit tests
 
 on:
   workflow_call:
@@ -34,3 +35,16 @@ jobs:
         run: just test --without-slow-integration
       - name: Coveralls
         uses: coverallsapp/github-action@v2
+        with:
+          parallel: true
+          flag-name: python-${{ matrix.python-version }}
+
+  finish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close parallel build
+        uses: coverallsapp/github-action@v1
+        with:
+          parallel-finished: true
+          carryforward: "python-3.10,python-3.11,python-3.12,python-3.13"

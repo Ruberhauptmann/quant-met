@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2024 Tjark Sievers
-#
-# SPDX-License-Identifier: MIT
-
 set shell := ['uv', 'run', 'bash', '-euxo', 'pipefail', '-c']
 set positional-arguments
 export NUMBA_DISABLE_JIT:="1"

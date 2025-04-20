@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2024 Tjark Sievers
+# SPDX-FileCopyrightText: 2025 Tjark Sievers
 #
 # SPDX-License-Identifier: MIT
-
 
 from quant_met.mean_field.hamiltonians import BaseHamiltonian
 from quant_met.parameters import HamiltonianParameters
