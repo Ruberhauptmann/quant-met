@@ -1,5 +1,15 @@
-﻿quant\_met.plotting.scatter\_into\_bz
-=====================================
+﻿.. SPDX-FileCopyrightText: 2024 Tjark Sievers
+.. SPDX-FileCopyrightText: 2025 Tjark Sievers
+..
+.. SPDX-License-Identifier: MIT
+
+.. raw:: html
+
+   <div class="prename">quant_met.plotting.</div>
+   <div class="empty"></div>
+
+scatter_into_bz
+==================================
 
 .. currentmodule:: quant_met.plotting
 
