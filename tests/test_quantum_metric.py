@@ -19,7 +19,7 @@ def test_quantum_metric_dressed_graphene(ndarrays_regression: NDArraysRegression
     chemical_potential = 1
 
     graphene_lattice = geometry.GrapheneLattice(lattice_constant=np.sqrt(3))
-    bz_grid = graphene_lattice.generate_bz_grid(20, 20)
+    bz_grid = graphene_lattice.generate_bz_grid(30, 30)
 
     dressed_graphene_h = mean_field.hamiltonians.DressedGraphene(
         parameters=parameters.DressedGrapheneParameters(
