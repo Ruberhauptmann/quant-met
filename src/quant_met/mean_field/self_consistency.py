@@ -90,6 +90,6 @@ def self_consistency_loop(
             return h
 
         mixing_greed = 0.2
-        h.delta_orbital_basis = mixing_greed * new_gap + (1 - mixing_greed) * h.delta_orbital_basis
+        h.delta_orbital_basis = mixing_greed * new_gap + (1 - mixing_greed) * h.delta_orbital_basis  # type: ignore[assignment]
         logger.debug("Updated gaps: %s", h.delta_orbital_basis)
         logger.debug("Change in gaps: %s", np.abs(h.delta_orbital_basis - new_gap))
