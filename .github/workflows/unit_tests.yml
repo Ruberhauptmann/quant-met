@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Close parallel build
-        uses: coverallsapp/github-action@v1
+        uses: coverallsapp/github-action@v2
         with:
           parallel-finished: true
           carryforward: "python-3.10,python-3.11,python-3.12,python-3.13"
