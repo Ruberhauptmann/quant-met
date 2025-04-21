@@ -1,0 +1,38 @@
+# SPDX-FileCopyrightText: 2024 Tjark Sievers
+# SPDX-FileCopyrightText: 2025 Tjark Sievers
+#
+# SPDX-License-Identifier: MIT
+
+name: Codspeed
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 'main'
+
+permissions:
+  pull-requests: write
+
+env:
+  NUMBA_DISABLE_JIT: 0
+
+jobs:
+  test:
+    name: Codspeed
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Install the project
+        run: uv sync --group=test
+      - uses: extractions/setup-just@v3
+      - name: Run benchmarks
+        uses: CodSpeedHQ/action@v3
+        with:
+          token: ${{ secrets.CODSPEED_TOKEN }}
+          run: just test --codspeed

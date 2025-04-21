@@ -10,6 +10,7 @@ report.xml
 .tox/
 **/__pycache__/
 docs/build
+.codspeed/
 .hypothesis/
 result_images/
 **/.DS_Store
