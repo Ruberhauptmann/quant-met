@@ -14,9 +14,12 @@ on:
 permissions:
   pull-requests: write
 
+env:
+  NUMBA_DISABLE_JIT: 0
+
 jobs:
   test:
-    name: Integration tests
+    name: Codspeed
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
