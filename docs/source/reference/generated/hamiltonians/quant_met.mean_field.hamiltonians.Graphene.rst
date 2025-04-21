@@ -1,4 +1,5 @@
 .. SPDX-FileCopyrightText: 2024 Tjark Sievers
+.. SPDX-FileCopyrightText: 2025 Tjark Sievers
 ..
 .. SPDX-License-Identifier: MIT
 
@@ -16,28 +17,3 @@ Graphene
    :no-members:
    :no-inherited-members:
    :no-special-members:
-
-
-   .. HACK -- the point here is that we don't want this to appear in the output, but the autosummary should still generate the pages.
-      .. autosummary::
-         :toctree:
-
-         Graphene.bdg_hamiltonian
-         Graphene.bdg_hamiltonian_derivative
-         Graphene.calculate_bandstructure
-         Graphene.calculate_current_density
-         Graphene.calculate_density_of_states
-         Graphene.calculate_free_energy
-         Graphene.calculate_quantum_metric
-         Graphene.calculate_spectral_gap
-         Graphene.calculate_superfluid_weight
-         Graphene.diagonalize_bdg
-         Graphene.diagonalize_nonint
-         Graphene.from_file
-         Graphene.gap_equation
-         Graphene.gap_equation_loop
-         Graphene.get_parameters_model
-         Graphene.hamiltonian
-         Graphene.hamiltonian_derivative
-         Graphene.save
-         Graphene.setup_lattice

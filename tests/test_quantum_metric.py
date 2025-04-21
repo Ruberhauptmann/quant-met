@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2024 Tjark Sievers
+# SPDX-FileCopyrightText: 2025 Tjark Sievers
 #
 # SPDX-License-Identifier: MIT
 
@@ -18,7 +19,7 @@ def test_quantum_metric_dressed_graphene(ndarrays_regression: NDArraysRegression
     chemical_potential = 1
 
     graphene_lattice = geometry.GrapheneLattice(lattice_constant=np.sqrt(3))
-    bz_grid = graphene_lattice.generate_bz_grid(20, 20)
+    bz_grid = graphene_lattice.generate_bz_grid(30, 30)
 
     dressed_graphene_h = mean_field.hamiltonians.DressedGraphene(
         parameters=parameters.DressedGrapheneParameters(
@@ -42,6 +43,7 @@ def test_quantum_metric_dressed_graphene(ndarrays_regression: NDArraysRegression
             "quantum_metric_1": quantum_metric_1,
             "quantum_metric_2": quantum_metric_2,
         },
+        default_tolerance={"atol": 1e-12, "rtol": 1e-6},
     )
 
 
@@ -71,4 +73,5 @@ def test_quantum_metric_graphene(ndarrays_regression: NDArraysRegressionFixture)
             "quantum_metric_0": quantum_metric_0,
             "quantum_metric_1": quantum_metric_1,
         },
+        default_tolerance={"atol": 1e-12, "rtol": 1e-6},
     )
