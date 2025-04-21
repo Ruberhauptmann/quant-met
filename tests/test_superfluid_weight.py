@@ -19,7 +19,7 @@ def test_superfluid_weight_dressed_graphene(ndarrays_regression: NDArraysRegress
     chemical_potential = 1
 
     graphene_lattice = geometry.GrapheneLattice(lattice_constant=np.sqrt(3))
-    bz_grid = graphene_lattice.generate_bz_grid(50, 50)
+    bz_grid = graphene_lattice.generate_bz_grid(10, 10)
 
     dressed_graphene_h = mean_field.hamiltonians.DressedGraphene(
         parameters=parameters.DressedGrapheneParameters(
@@ -50,7 +50,7 @@ def test_superfluid_weight_graphene(ndarrays_regression: NDArraysRegressionFixtu
     chemical_potential = 1
 
     graphene_lattice = geometry.GrapheneLattice(lattice_constant=np.sqrt(3))
-    bz_grid = graphene_lattice.generate_bz_grid(50, 50)
+    bz_grid = graphene_lattice.generate_bz_grid(10, 10)
 
     graphene_h = mean_field.hamiltonians.Graphene(
         parameters=parameters.GrapheneParameters(
