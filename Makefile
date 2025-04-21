@@ -21,7 +21,7 @@ environment: # Install the development environment.
 ifeq (True,$(HAS_UV))
 	@echo ">>> Detected uv."
 	uv sync --all-groups
-	pre-commit install
+	uv run pre-commit install
 else
 	@echo ">>> Install uv first."
 	exit
