@@ -30,5 +30,8 @@ jobs:
       - name: Install the project
         run: uv sync --group=test
       - uses: extractions/setup-just@v3
-      - name: Run test suite
-        run: just test --with-slow-integration
+      - name: Run benchmarks
+        uses: CodSpeedHQ/action@v3
+        with:
+          token: ${{ secrets.CODSPEED_TOKEN }}
+          run: just test --codspeed
