@@ -18,7 +18,7 @@ import sys
 sys.path.insert(0, os.path.abspath('../src/'))
 
 project = "quant-met"
-copyright = "2024, Tjark Sievers"
+copyright = "2025, Tjark Sievers"
 author = "Tjark Sievers"
 language = "en"
 
