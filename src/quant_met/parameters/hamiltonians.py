@@ -19,6 +19,7 @@ Classes holding the configuration for the Hamiltonians.
 from typing import Annotated, Literal, TypeVar
 
 import numpy as np
+import numpy.typing as npt
 from numpydantic import NDArray, Shape
 from pydantic import BaseModel, Field, field_validator
 from pydantic_core.core_schema import ValidationInfo
@@ -50,7 +51,7 @@ class HamiltonianParameters(BaseModel):
 
     name: str
     """The name of the Hamiltonian model (e.g., "Graphene", "DressedGraphene")."""
-    hubbard_int_orbital_basis: Annotated[np.ndarray, NDArray]
+    hubbard_int_orbital_basis: Annotated[npt.NDArray[float], NDArray]
     """A numpy array representing the Hubbard interactions in the orbital basis."""
     beta: float = np.inf
     """The inverse temperature; default is set to infinity."""
