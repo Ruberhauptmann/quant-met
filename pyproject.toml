@@ -5,7 +5,7 @@
 
 [project]
 name = "quant-met"
-version = "0.0.26"
+version = "0.0.27"
 description = "Calculate superconductivity in flat-band systems."
 authors = [{name="Tjark Sievers", email="tsievers@physnet.uni-hamburg.de"}]
 readme = "README.md"
