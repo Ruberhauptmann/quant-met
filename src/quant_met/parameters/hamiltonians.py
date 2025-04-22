@@ -16,7 +16,7 @@ Classes holding the configuration for the Hamiltonians.
     ThreeBandParameters
 """  # noqa: D205, D400
 
-from typing import Any, Literal, TypeVar
+from typing import Annotated, Literal, TypeVar
 
 import numpy as np
 from numpydantic import NDArray, Shape
@@ -50,7 +50,7 @@ class HamiltonianParameters(BaseModel):
 
     name: str
     """The name of the Hamiltonian model (e.g., "Graphene", "DressedGraphene")."""
-    hubbard_int_orbital_basis: NDArray[tuple[Any, ...], float]
+    hubbard_int_orbital_basis: Annotated[NDArray[float], Shape["*"]]
     """A numpy array representing the Hubbard interactions in the orbital basis."""
     beta: float = np.inf
     """The inverse temperature; default is set to infinity."""
