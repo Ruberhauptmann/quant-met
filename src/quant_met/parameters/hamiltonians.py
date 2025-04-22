@@ -50,7 +50,7 @@ class HamiltonianParameters(BaseModel):
 
     name: str
     """The name of the Hamiltonian model (e.g., "Graphene", "DressedGraphene")."""
-    hubbard_int_orbital_basis: NDArray
+    hubbard_int_orbital_basis: NDArray[Shape["*"], np.float64]
     """A numpy array representing the Hubbard interactions in the orbital basis."""
     beta: float = np.inf
     """The inverse temperature; default is set to infinity."""

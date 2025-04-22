@@ -1,5 +1,4 @@
 version = 1
-revision = 1
 requires-python = ">=3.11"
 resolution-markers = [
     "python_full_version < '3.12'",
@@ -330,7 +329,7 @@ name = "click"
 version = "8.1.8"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "sys_platform == 'win32'" },
+    { name = "colorama", marker = "platform_system == 'Windows'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/b9/2e/0090cbf739cee7d23781ad4b89a9894a41538e4fcf4c31dcdd705b78eb8b/click-8.1.8.tar.gz", hash = "sha256:ed53c9d8990d83c2a27deae68e4ee337473f6330c040a31d4225c9574d16096a", size = 226593 }
 wheels = [
@@ -728,7 +727,7 @@ name = "ipykernel"
 version = "6.29.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "appnope", marker = "sys_platform == 'darwin'" },
+    { name = "appnope", marker = "platform_system == 'Darwin'" },
     { name = "comm" },
     { name = "debugpy" },
     { name = "ipython" },
@@ -1667,15 +1666,15 @@ wheels = [
 
 [[package]]
 name = "numpydantic"
-version = "1.6.6"
+version = "1.6.8"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "numpy" },
     { name = "pydantic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/91/b9/3afb3f86e1f54d3b55f1cc40713067869efe8a8d565fdf1dbc75d8d33d18/numpydantic-1.6.6.tar.gz", hash = "sha256:b3dcab2928ad7e150837647df3d1536b1b93ed3c1b311bf045f256f15b747de1", size = 77557 }
+sdist = { url = "https://files.pythonhosted.org/packages/8a/4f/55d9f3dba877f2aaab1823157c087065961fcc2bbb0b4d02cef70f82127d/numpydantic-1.6.8.tar.gz", hash = "sha256:bba93ee900a175818f87550c27ef7b09cbf730d9aa1cd1690b9054e4bc2346e3", size = 77766 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/5b/72/7ba1d8996eaa5915540fd80f472594cb1e6dbdbb2ac53cebbf687558b876/numpydantic-1.6.6-py3-none-any.whl", hash = "sha256:8b6113639dd39425caf80f5800e2ffc30059dcd6a74f7705c5ff8a71533ad95b", size = 85465 },
+    { url = "https://files.pythonhosted.org/packages/23/9a/9fade8990f76012509c58d282c65d6457f430257aca0d04773cbf427de95/numpydantic-1.6.8-py3-none-any.whl", hash = "sha256:93ca4a4c198ae217c66f9d391cd84387b43bef5c174a6eae35e07c1d418b802c", size = 85521 },
 ]
 
 [[package]]
@@ -2388,7 +2387,7 @@ requires-dist = [
     { name = "matplotlib", specifier = ">=3.10.0" },
     { name = "numba", specifier = ">=0.61.0" },
     { name = "numpy", specifier = ">=2.1" },
-    { name = "numpydantic", specifier = ">=1.6.6" },
+    { name = "numpydantic", specifier = ">=1.6.8" },
     { name = "pandas", specifier = ">=2.2.3" },
     { name = "pydantic", specifier = ">=2.10.4" },
     { name = "pythtb", specifier = ">=1.8.0" },
