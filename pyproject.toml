@@ -53,7 +53,8 @@ ignore = [
     "C901", # Check against too complex functions
     "PLR2004", # Check against "magic values"
     "T201", # Warn about print statements
-    "PLW0603" # Warn about global updates
+    "PLW0603", # Warn about global updates
+    "F722"
 ]
 
 [tool.ruff.lint.pydocstyle]
