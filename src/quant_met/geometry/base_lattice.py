@@ -1,8 +1,3 @@
-# SPDX-FileCopyrightText: 2024 Tjark Sievers
-# SPDX-FileCopyrightText: 2025 Tjark Sievers
-#
-# SPDX-License-Identifier: MIT
-
 """Base class for lattice geometries."""
 
 from abc import ABC, abstractmethod
