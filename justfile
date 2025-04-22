@@ -1,5 +1,4 @@
 set positional-arguments
-export NUMBA_DISABLE_JIT:="1"
 
 qa *args: lint type (test args)
 
