@@ -1,10 +1,11 @@
 # SPDX-FileCopyrightText: 2024 Tjark Sievers
+# SPDX-FileCopyrightText: 2025 Tjark Sievers
 #
 # SPDX-License-Identifier: MIT
 
 [project]
 name = "quant-met"
-version = "0.0.25"
+version = "0.0.26"
 description = "Calculate superconductivity in flat-band systems."
 authors = [{name="Tjark Sievers", email="tsievers@physnet.uni-hamburg.de"}]
 readme = "README.md"
@@ -15,11 +16,12 @@ dependencies = [
     "click>=8.1.8",
     "h5py>=3.12.1",
     "matplotlib>=3.10.0",
-    "numba>=0.60.0",
-    "numpy<2.1",
+    "numba>=0.61.0",
+    "numpy>=2.1",
     "numpydantic>=1.6.6",
     "pandas>=2.2.3",
     "pydantic>=2.10.4",
+    "pythtb>=1.8.0",
     "pyyaml>=6.0.2",
     "scipy>=1.15.0",
     "tables>=3.10.2",
@@ -59,3 +61,38 @@ ignore = [
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
+
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1",
+    "pre-commit>=4.0.1",
+    "rust-just>=1.40.0",
+    "scriv>=1.5.1",
+]
+lint = [
+    "ruff>=0.11.6",
+]
+test = [
+    "hypothesis>=6.131.6",
+    "pytest>=8.3.5",
+    "pytest-benchmark>=5.1.0",
+    "pytest-codspeed>=3.2.0",
+    "pytest-cov>=6.1.1",
+    "pytest-integration>=0.2.3",
+    "pytest-mock>=3.14.0",
+    "pytest-regressions>=2.7.0",
+]
+docs = [
+    "autodoc-pydantic>=2.2.0",
+    "myst-parser>=4.0.1",
+    "nbsphinx>=0.9.6",
+    "numpydoc>=1.8.0",
+    "pydata-sphinx-theme>=0.16.1",
+    "sphinx>=8.2.3",
+    "sphinx-design>=0.6.1",
+    "sphinx-gallery>=0.19.0",
+]
+type = [
+    "mypy>=1.15.0",
+    "types-pyyaml>=6.0.12.20250402",
+]

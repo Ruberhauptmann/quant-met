@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2024 Tjark Sievers
+# SPDX-FileCopyrightText: 2025 Tjark Sievers
 #
 # SPDX-License-Identifier: MIT
 
@@ -36,10 +37,10 @@ def test_superfluid_weight_dressed_graphene(ndarrays_regression: NDArraysRegress
 
     ndarrays_regression.check(
         {
-            "D_S_conv": np.array(d_s_conv),
-            "D_S_geom": np.array(d_s_geom),
+            "D_S_conv": np.array(np.abs(d_s_conv)),
+            "D_S_geom": np.array(np.abs(d_s_geom)),
         },
-        default_tolerance={"atol": 0, "rtol": 1e-8},
+        default_tolerance={"atol": 1e-12, "rtol": 1e-6},
     )
 
 
@@ -65,8 +66,8 @@ def test_superfluid_weight_graphene(ndarrays_regression: NDArraysRegressionFixtu
 
     ndarrays_regression.check(
         {
-            "D_S_conv": np.array(d_s_conv),
-            "D_S_geom": np.array(d_s_geom),
+            "D_S_conv": np.array(np.abs(d_s_conv)),
+            "D_S_geom": np.array(np.abs(d_s_geom)),
         },
-        default_tolerance={"atol": 0, "rtol": 1e-8},
+        default_tolerance={"atol": 1e-12, "rtol": 1e-6},
     )

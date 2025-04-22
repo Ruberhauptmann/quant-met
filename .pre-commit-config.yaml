@@ -1,19 +1,16 @@
 # SPDX-FileCopyrightText: 2024 Tjark Sievers
+# SPDX-FileCopyrightText: 2025 Tjark Sievers
 #
 # SPDX-License-Identifier: MIT
 
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.6.0
+  rev: v5.0.0
   hooks:
     - id: check-toml
     - id: check-yaml
     - id: end-of-file-fixer
     - id: trailing-whitespace
-- repo: https://github.com/fsfe/reuse-tool
-  rev: v4.0.3
-  hooks:
-    - id: reuse
 - repo: https://github.com/astral-sh/ruff-pre-commit
   # Ruff version.
   rev: v0.5.0
@@ -26,7 +23,7 @@ repos:
     - id: ruff-format
       types_or: [ python, pyi, jupyter ]
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.6.0
+  rev: v5.0.0
   hooks:
   - id: no-commit-to-branch
     args: [ --branch, main ]

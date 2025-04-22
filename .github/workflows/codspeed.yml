@@ -3,10 +3,9 @@
 #
 # SPDX-License-Identifier: MIT
 
-name: Integration tests
+name: Codspeed
 
 on:
-  workflow_call:
   pull_request:
   push:
     branches:
@@ -16,12 +15,11 @@ permissions:
   pull-requests: write
 
 env:
-  NUMBA_DISABLE_JIT: 1
+  NUMBA_DISABLE_JIT: 0
 
 jobs:
   test:
-    name: Integration tests
-    if: ${{ contains(github.event.head_commit.message, 'needs-integration') || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') }}
+    name: Codspeed
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,5 +31,8 @@ jobs:
       - name: Install the project
         run: uv sync --group=test
       - uses: extractions/setup-just@v3
-      - name: Run test suite
-        run: just test --with-slow-integration
+      - name: Run benchmarks
+        uses: CodSpeedHQ/action@v3
+        with:
+          token: ${{ secrets.CODSPEED_TOKEN }}
+          run: just test --codspeed

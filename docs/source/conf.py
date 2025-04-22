@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2024 Tjark Sievers
+# SPDX-FileCopyrightText: 2025 Tjark Sievers
 #
 # SPDX-License-Identifier: MIT
 
@@ -13,6 +14,8 @@
 
 import importlib.metadata
 import os
+import sys
+sys.path.insert(0, os.path.abspath('../src/'))
 
 project = "quant-met"
 copyright = "2024, Tjark Sievers"
@@ -64,9 +67,6 @@ if not version_match or version_match.isdigit() or version_match == "latest":
         version_match = f"{release}"
 elif version_match == "stable":
     version_match = f"{release}"
-
-print(version_match)
-print(json_url)
 
 html_theme_options = {
     "github_url": "https://github.com/Ruberhauptmann/quant-met",

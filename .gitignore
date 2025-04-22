@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2024 Tjark Sievers
+# SPDX-FileCopyrightText: 2025 Tjark Sievers
 #
 # SPDX-License-Identifier: MIT
 
@@ -9,6 +10,7 @@ report.xml
 .tox/
 **/__pycache__/
 docs/build
+.codspeed/
 .hypothesis/
 result_images/
 **/.DS_Store
