@@ -5,7 +5,7 @@ from pathlib import Path
 
 import h5py
 
-from quant_met import mean_field
+from quant_met import routines
 from quant_met.parameters import Parameters
 
 from ._utils import _hamiltonian_factory
@@ -30,7 +30,7 @@ def scf(parameters: Parameters) -> None:
         ncols=parameters.k_points.nk1, nrows=parameters.k_points.nk2
     )
 
-    solved_h = mean_field.self_consistency_loop(
+    solved_h = routines.self_consistency_loop(
         h=h,
         k_space_grid=k_space_grid,
         epsilon=parameters.control.conv_treshold,
@@ -47,13 +47,11 @@ def scf(parameters: Parameters) -> None:
     if parameters.control.calculate_additional is True:
         logger.info("Calculating additional things.")
         current = solved_h.calculate_current_density(k=k_space_grid)
-        free_energy = solved_h.calculate_free_energy(k=k_space_grid)
         sf_weight_conv, sf_weight_geom = solved_h.calculate_superfluid_weight(k=k_space_grid)
 
         with h5py.File(result_file, "a") as f:
             f.attrs["current_x"] = current[0]
             f.attrs["current_y"] = current[1]
-            f.attrs["free_energy"] = free_energy
             f.attrs["sf_weight_conv_xx"] = sf_weight_conv[0, 0]
             f.attrs["sf_weight_conv_xy"] = sf_weight_conv[0, 1]
             f.attrs["sf_weight_conv_yx"] = sf_weight_conv[1, 0]

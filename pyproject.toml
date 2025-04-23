@@ -55,7 +55,8 @@ ignore = [
     "PLR2004", # Check against "magic values"
     "T201", # Warn about print statements
     "PLW0603", # Warn about global updates
-    "F722"
+    "F722",
+    "ERA001"
 ]
 
 [tool.ruff.lint.pydocstyle]
