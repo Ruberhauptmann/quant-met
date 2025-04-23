@@ -1,13 +1,10 @@
-
-
 [project]
 name = "quant-met"
 version = "0.0.27"
 description = "Calculate superconductivity in flat-band systems."
 authors = [{name="Tjark Sievers", email="tsievers@physnet.uni-hamburg.de"}]
 readme = "README.md"
-homepage = "https://quant-met.tjarksievers.de"
-repository = "https://github.com/Ruberhauptmann/quant-met"
+
 requires-python = ">=3.11"
 dependencies = [
     "click>=8.1.8",
@@ -18,11 +15,15 @@ dependencies = [
     "numpydantic>=1.6.8",
     "pandas>=2.2.3",
     "pydantic>=2.10.4",
-    "pythtb>=1.8.0",
     "pyyaml>=6.0.2",
     "scipy>=1.15.0",
     "tables>=3.10.2",
+    "tbmodels>=1.4.3",
 ]
+
+[project.url]
+homepage = "https://quant-met.tjarksievers.de"
+sourcecode = "https://github.com/Ruberhauptmann/quant-met"
 
 [project.scripts]
 quant-met = 'quant_met.cli:cli'
