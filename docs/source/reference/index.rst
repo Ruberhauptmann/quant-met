@@ -15,4 +15,4 @@ API Reference
    :maxdepth: 1
    :caption: Bogoliubov–de Gennes (BdG)
 
-   quant_met.bdg <cli>
+   quant_met.bdg <bdg>
