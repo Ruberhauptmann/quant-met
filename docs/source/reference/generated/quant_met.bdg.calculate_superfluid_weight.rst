@@ -5,9 +5,9 @@
    <div class="prename">quant_met.bdg.</div>
    <div class="empty"></div>
 
-bdg_hamiltonian_derivative
-========================================
+calculate_superfluid_weight
+=========================================
 
 .. currentmodule:: quant_met.bdg
 
-.. autofunction:: bdg_hamiltonian_derivative
+.. autofunction:: calculate_superfluid_weight

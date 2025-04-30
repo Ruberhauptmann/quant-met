@@ -1,5 +1,5 @@
 
 
-.. _parameter:
+.. _parameters:
 
 .. automodule:: quant_met.parameters
