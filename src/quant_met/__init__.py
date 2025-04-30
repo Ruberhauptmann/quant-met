@@ -1,5 +1,5 @@
 """quant-met, a package to treat superconductivity in flat-band systems."""
 
-from . import cli, geometry, mean_field, parameters, plotting
+from . import bdg, cli, quantum_geometry, routines
 
-__all__ = ["cli", "geometry", "mean_field", "parameters", "plotting"]
+__all__ = ["cli", "quantum_geometry", "bdg", "routines"]
