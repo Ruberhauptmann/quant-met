@@ -2,7 +2,7 @@ import numpy as np
 from quant_met.bdg import bdg_hamiltonian
 
 
-def test_bdg_shape_and_symmetry(square_lattice_tb):
+def test_bdg_square_lattice(square_lattice_tb):
     # Test point at Gamma
     k = np.array([0.0, 0.0, 0.0])
 

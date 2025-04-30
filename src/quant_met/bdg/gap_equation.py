@@ -19,6 +19,7 @@ def gap_equation(
 
     Parameters
     ----------
+    delta_orbital_basis
     hubbard_int_orbital_basis
     beta
     hamiltonian

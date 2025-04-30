@@ -3,7 +3,6 @@
 import numpy as np
 import numpy.typing as npt
 import sisl
-import tbmodels
 
 
 def bdg_hamiltonian(
@@ -58,50 +57,6 @@ def bdg_hamiltonian(
     return h.squeeze()
 
 
-def bdg_hamiltonian_derivative(
-    model: tbmodels.Model, k: npt.NDArray[np.floating], direction: str
-) -> npt.NDArray[np.complexfloating]:
-    """Calculate the derivative of the BdG Hamiltonian.
-
-    This method computes the spatial derivative of the Bogoliubov-de Gennes
-    Hamiltonian with respect to the specified direction.
-
-    Parameters
-    ----------
-    k : :class:`numpy.ndarray`
-        List of k points in reciprocal space.
-    direction : str
-        Direction for the derivative, either 'x' or 'y'.
-
-    Returns
-    -------
-    :class:`numpy.ndarray`
-        The derivative of the BdG Hamiltonian matrix in the specified direction.
-    """
-    if k.ndim == 1:
-        k = np.expand_dims(k, axis=0)
-
-    print(k, model, direction)
-
-    """
-    h = np.zeros(
-        (k.shape[0], 2 * self.number_of_bands, 2 * self.number_of_bands),
-        dtype=np.complex128,
-    )
-
-    h[:, 0 : self.number_of_bands, 0 : self.number_of_bands] = self.hamiltonian_derivative(
-        k, direction
-    )
-    h[
-        :,
-        self.number_of_bands : 2 * self.number_of_bands,
-        self.number_of_bands : 2 * self.number_of_bands,
-    ] = -self.hamiltonian_derivative(-k, direction).conjugate()
-
-    return h.squeeze()
-    """
-
-
 def diagonalize_bdg(
     hamiltonian: sisl.Hamiltonian,
     k: npt.NDArray[np.floating],
@@ -115,6 +70,7 @@ def diagonalize_bdg(
 
     Parameters
     ----------
+    delta_orbital_basis
     hamiltonian
     k : :class:`numpy.ndarray`
         List of k points in reciprocal space.

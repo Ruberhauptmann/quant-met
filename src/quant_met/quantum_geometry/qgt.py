@@ -2,67 +2,36 @@
 
 import numpy as np
 import numpy.typing as npt
-import tbmodels
+import sisl
 
 
 def calculate_qgt(
-    model: tbmodels.Model, k: npt.NDArray[np.floating], bands: list[int]
+    hamiltonian: sisl.Hamiltonian,
+    k_grid: npt.NDArray[np.floating],
+    bands: list[int],
 ) -> npt.NDArray[np.floating]:
-    """Calculate the quantum geometric tensor.
+    """Calculate the quantum geometric tensor for selected bands."""
+    qgt = np.zeros((2, 2), dtype=np.complex128)
 
-    This function computes the quantum geometric tensor associated with
-    the specified bands of a given Hamiltonian over a grid of k-points.
-    The output is a 2x2 matrix representing the quantum metric.
-    It gets summed over the band specified in the list `bands`.
+    for k_point in k_grid:
+        # Diagonalize at this k-point
+        hk = hamiltonian.Hk(k=k_point, format="array")
+        energies, bloch = np.linalg.eigh(hk)
 
-    Parameters
-    ----------
-    model : :class:`tbmodels.Model`
-        Model for which the quantum geometric tensor is calculated.
-    k : numpy.ndarray
-        Array of k points in the Brillouin zone.
-    bands : list of int
-        Indices of the bands for which the quantum geometric tensor is calculated.
+        # Derivatives of H at this k-point
+        der_h_k = hamiltonian.dHk(k=k_point, format="array")
 
-    Returns
-    -------
-    :class:`numpy.ndarray`
-        A 2x2 matrix representing the quantum geometric tensor.
+        for band in bands:
+            for i, der_h_i in enumerate(der_h_k):  # i: x=0, y=1
+                for j, der_h_j in enumerate(der_h_k):  # j: x=0, y=1
+                    for n in range(len(energies)):
+                        if n == band:
+                            continue
+                        denom = (energies[band] - energies[n]) ** 2
+                        if np.isclose(denom, 0.0):
+                            continue  # avoid division by zero
+                        mni = np.vdot(bloch[:, band], der_h_i @ bloch[:, n])
+                        mnj = np.vdot(bloch[:, n], der_h_j @ bloch[:, band])
+                        qgt[i, j] += mni * mnj / denom
 
-    Raises
-    ------
-    ValueError
-        If `bands` contains invalid indices or `k_grid` is empty.
-    """
-    energies, bloch = (1, 1)
-    print(model)
-
-    number_k_points = len(k)
-
-    quantum_geom_tensor = np.zeros(shape=(2, 2), dtype=np.complex128)
-
-    for band in bands:
-        for i, direction_1 in enumerate(["x", "y"]):
-            # h_derivative_direction_1 = self.hamiltonian_derivative(k=k, direction=direction_1)
-            h_derivative_direction_1 = direction_1
-            for j, direction_2 in enumerate(["x", "y"]):
-                # h_derivative_direction_2 = self.hamiltonian_derivative(k=k, direction=direction_2)
-                h_derivative_direction_2 = direction_2
-                for k_index in range(len(k)):
-                    # for n in [m for m in range(self.number_of_bands) if m != band]:
-                    for n in [m for m in range(3) if m != band]:
-                        quantum_geom_tensor[i, j] += (
-                            (
-                                bloch[k_index][:, band].conjugate()
-                                @ h_derivative_direction_1[k_index]
-                                @ bloch[k_index][:, n]
-                            )
-                            * (
-                                bloch[k_index][:, n].conjugate()
-                                @ h_derivative_direction_2[k_index]
-                                @ bloch[k_index][:, band]
-                            )
-                            / (energies[k_index][band] - energies[k_index][n]) ** 2
-                        )
-
-    return np.real(quantum_geom_tensor) / number_k_points
+    return np.real(qgt) / len(k_grid)

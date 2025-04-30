@@ -30,6 +30,8 @@ def self_consistency_loop(
 
     Parameters
     ----------
+    hubbard_int_orbital_basis
+    beta
     hamiltonian : sisl.Hamiltonian
         The Hamiltonian object.
 

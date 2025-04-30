@@ -1,60 +1,64 @@
-"""Calculate the supercurrent density."""
+"""Calculate supercurrent."""
 
 import numpy as np
-import numpy.typing as npt
-import tbmodels
+import sisl
+from numpy.typing import NDArray
 
 
 def calculate_current_density(
-    model: tbmodels.Model, k: npt.NDArray[np.floating]
-) -> npt.NDArray[np.floating]:
-    """Calculate the current density.
+    hamiltonian: sisl.Hamiltonian,
+    k: NDArray[np.floating],
+    bdg_energies: NDArray[np.floating],
+    bdg_wavefunctions: NDArray[np.complexfloating],
+    beta: float,
+) -> NDArray[np.floating]:
+    """Calculate current density from BdG wavefunctions and normal-state Hamiltonian derivatives.
 
     Parameters
     ----------
-    model : tbmodels.Model
-    k
+    hamiltonian : sisl.Hamiltonian
+        The normal-state Hamiltonian.
+    k : np.ndarray
+        Array of k-points in the Brillouin zone.
+    bdg_energies : np.ndarray
+        BdG eigenvalues for each k-point.
+    bdg_wavefunctions : np.ndarray
+        BdG eigenvectors for each k-point.
+    beta : float
+        Inverse temperature (1 / k_B T).
 
     Returns
     -------
-    current_density
-
+    np.ndarray
+        Real current density vector (2D).
     """
-    print(model)
 
-    # bdg_energies, bdg_wavefunctions = self.diagonalize_bdg(k=k)
-    # h_der_x = self.hamiltonian_derivative(k=k, direction="x")
-    # h_der_y = self.hamiltonian_derivative(k=k, direction="y")
+    def fermi_dirac(e: float, beta: float) -> float:
+        return 1.0 / (np.exp(beta * e) + 1)
 
+    if k.ndim == 1:
+        k = np.expand_dims(k, axis=0)
+
+    num_bands = hamiltonian.no
     current = np.zeros(2, dtype=np.complex128)
 
-    """
-    matrix_x = np.zeros((3, 3), dtype=np.complex128)
-    matrix_y = np.zeros((3, 3), dtype=np.complex128)
-    for k_index in range(len(k)):
-        for i in range(self.number_of_bands):
-            for j in range(self.number_of_bands):
-                for n in range(2 * self.number_of_bands):
-                    matrix_x[i, j] += (
-                        h_der_x[k_index, i, j]
-                        * np.conjugate(bdg_wavefunctions[k_index, i, n])
-                        * bdg_wavefunctions[k_index, j, n]
-                        * _fermi_dirac(bdg_energies[k_index, n].item(), self.beta)
-                    )
-                    matrix_y[i, j] += (
-                        h_der_y[k_index, i, j]
-                        * np.conjugate(bdg_wavefunctions[k_index, i, n])
-                        * bdg_wavefunctions[k_index, j, n]
-                        * _fermi_dirac(bdg_energies[k_index, n].item(), self.beta)
-                    )
+    for dir_idx, _direction in enumerate(["x", "y"]):
+        matrix = np.zeros((num_bands, num_bands), dtype=np.complex128)
 
-    current[0] = np.sum(matrix_x, axis=None)
-    current[1] = np.sum(matrix_y, axis=None)
-    assert np.allclose(np.imag(current), 0, atol=1e-12)
-    """
+        for k_index, kpt in enumerate(k):
+            dhk = hamiltonian.dHk(kpt, format="array")[dir_idx]
 
+            for i in range(num_bands):
+                for j in range(num_bands):
+                    for n in range(2 * num_bands):
+                        matrix[i, j] += (
+                            dhk[i, j]
+                            * np.conj(bdg_wavefunctions[k_index, i, n])
+                            * bdg_wavefunctions[k_index, j, n]
+                            * fermi_dirac(bdg_energies[k_index, n], beta)
+                        )
+
+        current[dir_idx] = np.sum(matrix)
+
+    assert np.allclose(np.imag(current), 0.0, atol=1e-12)
     return (2 * np.real(current)) / len(k)
-
-
-def _fermi_dirac() -> float:
-    return 0
