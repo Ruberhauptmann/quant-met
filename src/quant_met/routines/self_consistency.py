@@ -4,20 +4,18 @@ import logging
 
 import numpy as np
 import numpy.typing as npt
-
-from quant_met.mean_field.hamiltonians.base_hamiltonian import BaseHamiltonian
-from quant_met.parameters import GenericParameters
+import tbmodels
 
 logger = logging.getLogger(__name__)
 
 
 def self_consistency_loop(
-    h: BaseHamiltonian[GenericParameters],
+    model: tbmodels.Model,
     k_space_grid: npt.NDArray[np.floating],
     epsilon: float,
     max_iter: int = 1000,
     delta_init: npt.NDArray[np.complex128] | None = None,
-) -> BaseHamiltonian[GenericParameters]:
+) -> None:
     """Self-consistently solves the gap equation for a given Hamiltonian.
 
     This function performs a self-consistency loop to solve the gap equation
@@ -57,6 +55,9 @@ def self_consistency_loop(
     """
     logger.info("Starting self-consistency loop.")
 
+    print(model, k_space_grid, epsilon, max_iter, delta_init)
+
+    """
     if delta_init is None:
         rng = np.random.default_rng()
         delta_init = np.zeros(shape=h.delta_orbital_basis.shape, dtype=np.complex128)
@@ -85,6 +86,7 @@ def self_consistency_loop(
             return h
 
         mixing_greed = 0.2
-        h.delta_orbital_basis = mixing_greed * new_gap + (1 - mixing_greed) * h.delta_orbital_basis  # type: ignore[assignment]
-        logger.debug("Updated gaps: %s", h.delta_orbital_basis)
-        logger.debug("Change in gaps: %s", np.abs(h.delta_orbital_basis - new_gap))
+        h.delta_orbital_basis = mixing_greed * new_gap + (1 - mixing_greed) * h.delta_orbital_basis
+        #logger.debug("Updated gaps: %s", h.delta_orbital_basis)
+        #logger.debug("Change in gaps: %s", np.abs(h.delta_orbital_basis - new_gap))
+    """

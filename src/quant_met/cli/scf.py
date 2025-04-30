@@ -3,12 +3,7 @@
 import logging
 from pathlib import Path
 
-import h5py
-
-from quant_met import routines
 from quant_met.parameters import Parameters
-
-from ._utils import _hamiltonian_factory
 
 logger = logging.getLogger(__name__)
 
@@ -25,14 +20,10 @@ def scf(parameters: Parameters) -> None:
     result_path = Path(parameters.control.outdir)
     result_path.mkdir(exist_ok=True, parents=True)
 
-    h = _hamiltonian_factory(parameters=parameters.model, classname=parameters.model.name)
-    k_space_grid = h.lattice.generate_bz_grid(
-        ncols=parameters.k_points.nk1, nrows=parameters.k_points.nk2
-    )
-
+    """
     solved_h = routines.self_consistency_loop(
-        h=h,
-        k_space_grid=k_space_grid,
+        model=model,
+        k_space_grid=np.array([1.0, 1.0]),
         epsilon=parameters.control.conv_treshold,
         max_iter=parameters.control.max_iter,
     )
@@ -62,3 +53,4 @@ def scf(parameters: Parameters) -> None:
             f.attrs["sf_weight_geom_yy"] = sf_weight_geom[1, 1]
 
         logger.info("Additional results saved to %s", result_file)
+    """
