@@ -2,58 +2,60 @@
 
 import numpy as np
 import numpy.typing as npt
+import sisl
 import tbmodels
 
 
 def bdg_hamiltonian(
-    model: tbmodels.Model, k: npt.NDArray[np.floating]
+    hamiltonian: sisl.Hamiltonian,
+    k: npt.NDArray[np.floating],
+    delta_orbital_basis: npt.NDArray[np.complexfloating],
+    q: npt.NDArray[np.floating] = None,
 ) -> npt.NDArray[np.complexfloating]:
-    """Generate the Bogoliubov-de Gennes (BdG) Hamiltonian.
-
-    The BdG Hamiltonian incorporates pairing interactions and is used to
-    study superfluid and superconducting phases. This method constructs a
-    2x2 block Hamiltonian based on the normal state Hamiltonian and the
-    pairing terms.
+    """
+    Construct the BdG Hamiltonian at momentum k using sisl.
 
     Parameters
     ----------
-    k : :class:`numpy.ndarray`
-        List of k points in reciprocal space.
+    hamiltonian : sisl.Hamiltonian
+        The normal-state tight-binding Hamiltonian.
+    k : np.ndarray
+        k-point(s) in reduced coordinates. Shape: (3,) or (N_k, 3).
+    delta_orbital_basis : np.ndarray
+        Pairing amplitudes in the orbital basis. Shape: (N_orbitals,)
+    q : np.ndarray, optional
+        Pairing momentum (e.g. for FFLO). Default is 0.
 
     Returns
     -------
-    :class:`numpy.ndarray`
-        The BdG Hamiltonian matrix evaluated at the specified k points.
+    np.ndarray
+        The BdG Hamiltonian. Shape: (2N, 2N) or (N_k, 2N, 2N)
     """
     if k.ndim == 1:
         k = np.expand_dims(k, axis=0)
 
-    print(model, k)
+    n_k_points = k.shape[0]
+    n_orbitals = hamiltonian.no
 
-    """
-    h = np.zeros(
-        (k.shape[0], 2 * self.number_of_bands, 2 * self.number_of_bands),
-        dtype=np.complex128,
-    )
+    if q is None:
+        q = np.zeros(3)
 
-    h[:, 0 : self.number_of_bands, 0 : self.number_of_bands] = self.hamiltonian(k)
-    h[
-        :,
-        self.number_of_bands : 2 * self.number_of_bands,
-        self.number_of_bands : 2 * self.number_of_bands,
-    ] = -self.hamiltonian(self.q - k).conjugate()
+    h = np.zeros((n_k_points, 2 * n_orbitals, 2 * n_orbitals), dtype=np.complex128)
 
-    for i in range(self.number_of_bands):
-        h[:, self.number_of_bands + i, i] = self.delta_orbital_basis[i]
+    for i, kpt in enumerate(k):
+        h[i, 0:n_orbitals, 0:n_orbitals] = hamiltonian.Hk(kpt).toarray()
+        h[i, n_orbitals : 2 * n_orbitals, n_orbitals : 2 * n_orbitals] = (
+            -hamiltonian.Hk(q - kpt).toarray().conj()
+        )
 
-    h[:, 0 : self.number_of_bands, self.number_of_bands : self.number_of_bands * 2] = (
-        h[:, self.number_of_bands : self.number_of_bands * 2, 0 : self.number_of_bands]
-        .copy()
-        .conjugate()
-    )
+        for j in range(n_orbitals):
+            h[i, n_orbitals + j, j] = delta_orbital_basis[j]
+
+        h[i, 0:n_orbitals, n_orbitals : 2 * n_orbitals] = (
+            h[i, n_orbitals : 2 * n_orbitals, 0:n_orbitals].conj().T
+        )
 
     return h.squeeze()
-    """
 
 
 def bdg_hamiltonian_derivative(
@@ -101,8 +103,9 @@ def bdg_hamiltonian_derivative(
 
 
 def diagonalize_bdg(
-    model: tbmodels.Model,
+    hamiltonian: sisl.Hamiltonian,
     k: npt.NDArray[np.floating],
+    delta_orbital_basis: np.ndarray,
 ) -> tuple[npt.NDArray[np.floating], npt.NDArray[np.complexfloating]]:
     """Diagonalizes the BdG Hamiltonian.
 
@@ -112,6 +115,7 @@ def diagonalize_bdg(
 
     Parameters
     ----------
+    hamiltonian
     k : :class:`numpy.ndarray`
         List of k points in reciprocal space.
 
@@ -122,21 +126,14 @@ def diagonalize_bdg(
         - :class:`numpy.ndarray`: Eigenvectors corresponding to the eigenvalues of the
           BdG Hamiltonian.
     """
-    print(model, k)
-    """
-    bdg_matrix = self.bdg_hamiltonian(k=k)
+    bdg_matrix = bdg_hamiltonian(
+        hamiltonian=hamiltonian, k=k, delta_orbital_basis=delta_orbital_basis
+    )
+
     if bdg_matrix.ndim == 2:
         bdg_matrix = np.expand_dims(bdg_matrix, axis=0)
-        k = np.expand_dims(k, axis=0)
 
-    bdg_wavefunctions = np.zeros(
-        (len(k), 2 * self.number_of_bands, 2 * self.number_of_bands),
-        dtype=np.complex128,
-    )
-    bdg_energies = np.zeros((len(k), 2 * self.number_of_bands))
+    results = [np.linalg.eigh(np.array(bdg_matrix[i])) for i in range(len(bdg_matrix))]
+    energies, wavefunctions = zip(*results, strict=False)
 
-    for i in range(len(k)):
-        bdg_energies[i], bdg_wavefunctions[i] = np.linalg.eigh(bdg_matrix[i])
-
-    return bdg_energies.squeeze(), bdg_wavefunctions.squeeze()
-    """
+    return np.squeeze(np.array(energies)), np.squeeze(np.array(wavefunctions))

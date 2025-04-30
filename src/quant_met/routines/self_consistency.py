@@ -4,18 +4,23 @@ import logging
 
 import numpy as np
 import numpy.typing as npt
-import tbmodels
+import sisl
+from numpy import complexfloating, dtype, ndarray
+
+from quant_met.bdg import gap_equation
 
 logger = logging.getLogger(__name__)
 
 
 def self_consistency_loop(
-    model: tbmodels.Model,
+    hamiltonian: sisl.Hamiltonian,
     k_space_grid: npt.NDArray[np.floating],
+    beta: float,
+    hubbard_int_orbital_basis: npt.NDArray[np.float64],
     epsilon: float,
     max_iter: int = 1000,
     delta_init: npt.NDArray[np.complex128] | None = None,
-) -> None:
+) -> ndarray[tuple[int, ...], dtype[complexfloating]]:
     """Self-consistently solves the gap equation for a given Hamiltonian.
 
     This function performs a self-consistency loop to solve the gap equation
@@ -25,8 +30,8 @@ def self_consistency_loop(
 
     Parameters
     ----------
-    h : :class:`BaseHamiltonian<quant_met.mean_field.hamiltonians.BaseHamiltonian>`
-        The Hamiltonian object with the parameters for the calculation.
+    hamiltonian : sisl.Hamiltonian
+        The Hamiltonian object.
 
     k_space_grid : :class:`numpy.ndarray`
         A grid of points in the Brillouin zone at which the gap equation is evaluated.
@@ -55,17 +60,14 @@ def self_consistency_loop(
     """
     logger.info("Starting self-consistency loop.")
 
-    print(model, k_space_grid, epsilon, max_iter, delta_init)
-
-    """
     if delta_init is None:
         rng = np.random.default_rng()
-        delta_init = np.zeros(shape=h.delta_orbital_basis.shape, dtype=np.complex128)
-        delta_init += (0.2 * rng.random(size=h.delta_orbital_basis.shape) - 1) + 1.0j * (
-            0.2 * rng.random(size=h.delta_orbital_basis.shape) - 1
+        delta_init = np.zeros(shape=hamiltonian.no, dtype=np.complex128)
+        delta_init += (0.2 * rng.random(size=hamiltonian.no) - 1) + 1.0j * (
+            0.2 * rng.random(size=hamiltonian.no) - 1
         )
-    h.delta_orbital_basis = delta_init  # type: ignore[assignment]
-    logger.debug("Initial gaps set to: %s", h.delta_orbital_basis)
+    logger.debug("Initial gaps set to: %s", delta_init)
+    delta = delta_init
 
     iteration_count = 0
     while True:
@@ -76,17 +78,19 @@ def self_consistency_loop(
 
         logger.debug("Iteration %d: Computing new gaps.", iteration_count)
 
-        new_gap = h.gap_equation(k=k_space_grid)
+        new_gap = gap_equation(
+            hamiltonian=hamiltonian,
+            k=k_space_grid,
+            beta=beta,
+            hubbard_int_orbital_basis=hubbard_int_orbital_basis,
+            delta_orbital_basis=delta,
+        )
 
         logger.debug("New gaps computed: %s", new_gap)
 
-        if np.allclose(h.delta_orbital_basis, new_gap, atol=1e-10, rtol=epsilon):
-            h.delta_orbital_basis = new_gap  # type: ignore[assignment]
+        if np.allclose(delta, new_gap, atol=1e-10, rtol=epsilon):
             logger.info("Convergence achieved after %d iterations.", iteration_count)
-            return h
+            return new_gap
 
         mixing_greed = 0.2
-        h.delta_orbital_basis = mixing_greed * new_gap + (1 - mixing_greed) * h.delta_orbital_basis
-        #logger.debug("Updated gaps: %s", h.delta_orbital_basis)
-        #logger.debug("Change in gaps: %s", np.abs(h.delta_orbital_basis - new_gap))
-    """
+        delta = mixing_greed * new_gap + (1 - mixing_greed) * delta

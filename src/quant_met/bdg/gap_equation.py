@@ -2,17 +2,26 @@
 
 import numpy as np
 import numpy.typing as npt
-import tbmodels
+import sisl
 from numba import jit
+
+from .bdg_hamiltonian import diagonalize_bdg
 
 
 def gap_equation(
-    model: tbmodels.Model, k: npt.NDArray[np.floating]
+    hamiltonian: sisl.Hamiltonian,
+    k: npt.NDArray[np.floating],
+    beta: float,
+    hubbard_int_orbital_basis: npt.NDArray[np.float64],
+    delta_orbital_basis: npt.NDArray[np.float64],
 ) -> npt.NDArray[np.complexfloating]:
     """Gap equation.
 
     Parameters
     ----------
+    hubbard_int_orbital_basis
+    beta
+    hamiltonian
     k : :class:`numpy.ndarray`
         k grid
 
@@ -20,14 +29,13 @@ def gap_equation(
     -------
     New delta
     """
-    print(k, model)
-    """
-    bdg_energies, bdg_wavefunctions = self.diagonalize_bdg(k=k)
-    delta = np.zeros(self.number_of_bands, dtype=np.complex128)
-    return self.gap_equation_loop(
-        bdg_energies, bdg_wavefunctions, delta, self.beta, self.hubbard_int_orbital_basis, k
+    bdg_energies, bdg_wavefunctions = diagonalize_bdg(
+        hamiltonian=hamiltonian, k=k, delta_orbital_basis=delta_orbital_basis
     )
-    """
+    delta = np.zeros(hamiltonian.no, dtype=np.complex128)
+    return gap_equation_loop(
+        bdg_energies, bdg_wavefunctions, delta, beta, hubbard_int_orbital_basis, k
+    )
 
 
 @jit
