@@ -23,6 +23,7 @@ class Control(BaseModel):
 
     calculation: str
     prefix: str
+    geometry_file: pathlib.Path
     outdir: pathlib.Path
     conv_treshold: float
     max_iter: int = 1000

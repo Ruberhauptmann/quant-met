@@ -10,7 +10,7 @@ from .bdg_hamiltonian import diagonalize_bdg
 
 def gap_equation(
     hamiltonian: sisl.Hamiltonian,
-    k: npt.NDArray[np.floating],
+    k: npt.NDArray[np.float64],
     beta: float,
     hubbard_int_orbital_basis: npt.NDArray[np.float64],
     delta_orbital_basis: npt.NDArray[np.float64],

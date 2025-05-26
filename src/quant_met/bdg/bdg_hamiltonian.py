@@ -59,9 +59,9 @@ def bdg_hamiltonian(
 
 def diagonalize_bdg(
     hamiltonian: sisl.Hamiltonian,
-    k: npt.NDArray[np.floating],
+    k: npt.NDArray[np.float64],
     delta_orbital_basis: np.ndarray,
-) -> tuple[npt.NDArray[np.floating], npt.NDArray[np.complexfloating]]:
+) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.complex128]]:
     """Diagonalizes the BdG Hamiltonian.
 
     This method computes the eigenvalues and eigenvectors of the Bogoliubov-de
