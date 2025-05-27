@@ -3,10 +3,8 @@
 import logging
 from pathlib import Path
 
-import numpy as np
 import sisl
 
-from quant_met import routines
 from quant_met.parameters import Parameters
 
 logger = logging.getLogger(__name__)
@@ -25,10 +23,12 @@ def scf(parameters: Parameters) -> None:
     result_path.mkdir(exist_ok=True, parents=True)
     result_file = result_path / f"{parameters.control.prefix}.hdf5"
 
-    sisl.io.get_sile(parameters.control.geometry_file).read_geometry()
+    geometry: sisl.Geometry = sisl.io.get_sile(parameters.control.geometry_file).read_geometry()
+    print(geometry)
 
+    """
     solved_gap = routines.self_consistency_loop(
-        k_space_grid=np.array([1.0, 1.0]),
+        k_space_grid=geometry.lattice,
         epsilon=parameters.control.conv_treshold,
         max_iter=parameters.control.max_iter,
     )
@@ -38,6 +38,7 @@ def scf(parameters: Parameters) -> None:
 
     # solved_h.save(filename=result_file)
     logger.info("Results saved to %s", result_file)
+    """
 
     if parameters.control.calculate_additional is True:
         logger.info("Calculating additional things.")

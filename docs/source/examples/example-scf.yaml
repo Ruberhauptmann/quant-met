@@ -1,0 +1,12 @@
+
+control:
+  calculation: scf
+  prefix: test
+  geometry_file: geometry.xyz
+  outdir: test/
+  conv_treshold: 0.01
+  max_iter: 1000
+  calculate_additional: true
+k_points:
+  nk1: 10
+  nk2: 10
