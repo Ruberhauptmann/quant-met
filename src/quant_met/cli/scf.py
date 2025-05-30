@@ -5,6 +5,7 @@ from pathlib import Path
 
 import sisl
 
+from quant_met import routines
 from quant_met.parameters import Parameters
 
 logger = logging.getLogger(__name__)
@@ -26,9 +27,7 @@ def scf(parameters: Parameters) -> None:
     geometry: sisl.Geometry = sisl.io.get_sile(parameters.control.geometry_file).read_geometry()
     print(geometry)
 
-    """
     solved_gap = routines.self_consistency_loop(
-        k_space_grid=geometry.lattice,
         epsilon=parameters.control.conv_treshold,
         max_iter=parameters.control.max_iter,
     )
@@ -38,7 +37,6 @@ def scf(parameters: Parameters) -> None:
 
     # solved_h.save(filename=result_file)
     logger.info("Results saved to %s", result_file)
-    """
 
     if parameters.control.calculate_additional is True:
         logger.info("Calculating additional things.")

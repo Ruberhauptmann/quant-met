@@ -14,12 +14,13 @@ logger = logging.getLogger(__name__)
 
 def self_consistency_loop(
     hamiltonian: sisl.Hamiltonian,
-    k_space_grid: npt.NDArray[np.floating],
+    kgrid: sisl.MonkhorstPack,
     beta: float,
     hubbard_int_orbital_basis: npt.NDArray[np.float64],
     epsilon: float,
     max_iter: int = 1000,
     delta_init: npt.NDArray[np.complex128] | None = None,
+    q: npt.NDArray[np.float64] | None = None,
 ) -> ndarray[tuple[int, ...], dtype[complexfloating]]:
     """Self-consistently solves the gap equation for a given Hamiltonian.
 
@@ -30,13 +31,12 @@ def self_consistency_loop(
 
     Parameters
     ----------
+    q
+    kgrid
     hubbard_int_orbital_basis
     beta
     hamiltonian : sisl.Hamiltonian
         The Hamiltonian object.
-
-    k_space_grid : :class:`numpy.ndarray`
-        A grid of points in the Brillouin zone at which the gap equation is evaluated.
 
     epsilon : float
         The convergence criterion. The loop will terminate when the change
@@ -82,7 +82,8 @@ def self_consistency_loop(
 
         new_gap = gap_equation(
             hamiltonian=hamiltonian,
-            k=k_space_grid,
+            kgrid=kgrid,
+            q=q,
             beta=beta,
             hubbard_int_orbital_basis=hubbard_int_orbital_basis,
             delta_orbital_basis=delta,

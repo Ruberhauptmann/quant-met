@@ -12,7 +12,7 @@ def bdg_hamiltonian(
     q: npt.NDArray[np.floating] = None,
 ) -> npt.NDArray[np.complexfloating]:
     """
-    Construct the BdG Hamiltonian at momentum k using sisl.
+    Construct the BdG Hamiltonian at momentum k.
 
     Parameters
     ----------
@@ -30,37 +30,35 @@ def bdg_hamiltonian(
     np.ndarray
         The BdG Hamiltonian. Shape: (2N, 2N) or (N_k, 2N, 2N)
     """
-    if k.ndim == 1:
-        k = np.expand_dims(k, axis=0)
-
+    k = np.atleast_2d(k)
     n_k_points = k.shape[0]
     n_orbitals = hamiltonian.no
 
     if q is None:
         q = np.zeros(3)
 
-    h = np.zeros((n_k_points, 2 * n_orbitals, 2 * n_orbitals), dtype=np.complex128)
+    h_bdg = np.zeros((n_k_points, 2 * n_orbitals, 2 * n_orbitals), dtype=np.complex128)
 
     for i, kpt in enumerate(k):
-        h[i, 0:n_orbitals, 0:n_orbitals] = hamiltonian.Hk(kpt).toarray()
-        h[i, n_orbitals : 2 * n_orbitals, n_orbitals : 2 * n_orbitals] = (
-            -hamiltonian.Hk(q - kpt).toarray().conj()
-        )
+        h_k = hamiltonian.Hk(kpt).toarray()
+        h_mkq = hamiltonian.Hk(q - kpt).toarray()
+
+        h_bdg[i, :n_orbitals, :n_orbitals] = h_k
+        h_bdg[i, n_orbitals:, n_orbitals:] = -h_mkq.conj()
 
         for j in range(n_orbitals):
-            h[i, n_orbitals + j, j] = delta_orbital_basis[j]
+            h_bdg[i, n_orbitals + j, j] = delta_orbital_basis[j]
 
-        h[i, 0:n_orbitals, n_orbitals : 2 * n_orbitals] = (
-            h[i, n_orbitals : 2 * n_orbitals, 0:n_orbitals].conj().T
-        )
+        h_bdg[i, :n_orbitals, n_orbitals:] = h_bdg[i, n_orbitals:, :n_orbitals].conj().T
 
-    return h.squeeze()
+    return h_bdg.squeeze()
 
 
 def diagonalize_bdg(
     hamiltonian: sisl.Hamiltonian,
-    k: npt.NDArray[np.float64],
+    kgrid: sisl.MonkhorstPack,
     delta_orbital_basis: np.ndarray,
+    q: npt.NDArray[np.floating],
 ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.complex128]]:
     """Diagonalizes the BdG Hamiltonian.
 
@@ -70,10 +68,10 @@ def diagonalize_bdg(
 
     Parameters
     ----------
+    q
+    kgrid
     delta_orbital_basis
     hamiltonian
-    k : :class:`numpy.ndarray`
-        List of k points in reciprocal space.
 
     Returns
     -------
@@ -82,14 +80,15 @@ def diagonalize_bdg(
         - :class:`numpy.ndarray`: Eigenvectors corresponding to the eigenvalues of the
           BdG Hamiltonian.
     """
-    bdg_matrix = bdg_hamiltonian(
-        hamiltonian=hamiltonian, k=k, delta_orbital_basis=delta_orbital_basis
-    )
+    energies = []
+    wavefunctions = []
 
-    if bdg_matrix.ndim == 2:
-        bdg_matrix = np.expand_dims(bdg_matrix, axis=0)
+    for kpt in kgrid:
+        bdg = bdg_hamiltonian(
+            hamiltonian=hamiltonian, delta_orbital_basis=delta_orbital_basis, k=kpt, q=q
+        )
+        e, v = np.linalg.eigh(bdg)
+        energies.append(e)
+        wavefunctions.append(v)
 
-    results = [np.linalg.eigh(np.array(bdg_matrix[i])) for i in range(len(bdg_matrix))]
-    energies, wavefunctions = zip(*results, strict=False)
-
-    return np.squeeze(np.array(energies)), np.squeeze(np.array(wavefunctions))
+    return np.array(energies), np.array(wavefunctions)

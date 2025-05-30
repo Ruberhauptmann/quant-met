@@ -10,32 +10,39 @@ from .bdg_hamiltonian import diagonalize_bdg
 
 def gap_equation(
     hamiltonian: sisl.Hamiltonian,
-    k: npt.NDArray[np.float64],
     beta: float,
     hubbard_int_orbital_basis: npt.NDArray[np.float64],
     delta_orbital_basis: npt.NDArray[np.float64],
+    kgrid: sisl.MonkhorstPack,
+    q: npt.NDArray[np.float64],
 ) -> npt.NDArray[np.complexfloating]:
     """Gap equation.
 
     Parameters
     ----------
+    q
+    kgrid
     delta_orbital_basis
     hubbard_int_orbital_basis
     beta
     hamiltonian
-    k : :class:`numpy.ndarray`
-        k grid
 
     Returns
     -------
     New delta
     """
     bdg_energies, bdg_wavefunctions = diagonalize_bdg(
-        hamiltonian=hamiltonian, k=k, delta_orbital_basis=delta_orbital_basis
+        hamiltonian=hamiltonian, kgrid=kgrid, q=q, delta_orbital_basis=delta_orbital_basis
     )
     delta = np.zeros(hamiltonian.no, dtype=np.complex128)
     return gap_equation_loop(
-        bdg_energies, bdg_wavefunctions, delta, beta, hubbard_int_orbital_basis, k
+        bdg_energies=bdg_energies,
+        bdg_wavefunctions=bdg_wavefunctions,
+        delta=delta,
+        beta=beta,
+        hubbard_int_orbital_basis=hubbard_int_orbital_basis,
+        kgrid=kgrid.k,
+        weights=kgrid.weight,
     )
 
 
@@ -46,7 +53,8 @@ def gap_equation_loop(
     delta: npt.NDArray[np.complex128],
     beta: float,
     hubbard_int_orbital_basis: npt.NDArray[np.float64],
-    k: npt.NDArray[np.floating],
+    kgrid: npt.NDArray[np.float64],
+    weights: npt.NDArray[np.float64],
 ) -> npt.NDArray[np.complexfloating]:
     """Calculate the gap equation.
 
@@ -55,6 +63,7 @@ def gap_equation_loop(
 
     Parameters
     ----------
+    kgrid
     bdg_energies : :class:`numpy.ndarray`
         BdG energies
     bdg_wavefunctions : :class:`numpy.ndarray`
@@ -74,21 +83,24 @@ def gap_equation_loop(
         New pairing gap in orbital basis, adjusted to remove global phase.
     """
     number_of_bands = len(delta)
+    new_delta = np.zeros_like(delta)
+
     for i in range(number_of_bands):
         sum_tmp = 0
-        for j in range(2 * number_of_bands):
-            for k_index in range(len(k)):
-                sum_tmp += (
-                    np.conjugate(bdg_wavefunctions[k_index, i, j])
-                    * bdg_wavefunctions[k_index, i + number_of_bands, j]
-                    * fermi_dirac(bdg_energies[k_index, j].item(), beta)
-                )
-        delta[i] = (-hubbard_int_orbital_basis[i] * sum_tmp / len(k)).conjugate()
+        for k_index in range(len(kgrid)):
+            weight = weights[k_index]
 
-    delta_without_phase: npt.NDArray[np.complexfloating] = delta * np.exp(
-        -1j * np.angle(delta[np.argmax(np.abs(delta))])
-    )
-    return delta_without_phase
+            for j in range(2 * number_of_bands):
+                sum_tmp += (
+                    np.conj(bdg_wavefunctions[k_index, i, j])
+                    * bdg_wavefunctions[k_index, i + number_of_bands, j]
+                    * fermi_dirac(bdg_energies[k_index, j], beta)
+                    * weight
+                )
+        new_delta[i] = (-hubbard_int_orbital_basis[i] * sum_tmp).conjugate()
+
+    new_delta *= np.exp(-1j * np.angle(new_delta[np.argmax(np.abs(new_delta))]))
+    return new_delta
 
 
 @jit

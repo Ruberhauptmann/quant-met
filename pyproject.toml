@@ -17,7 +17,7 @@ dependencies = [
     "pydantic>=2.10.4",
     "pyyaml>=6.0.2",
     "scipy>=1.15.0",
-    "sisl>=0.16.0",
+    "sisl[viz]>=0.16.0",
     "tables>=3.10.2",
     "tbmodels>=1.4.3",
 ]
