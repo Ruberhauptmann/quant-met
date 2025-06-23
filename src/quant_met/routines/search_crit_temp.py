@@ -123,29 +123,34 @@ def _fit_for_crit_temp(
 
 def _gap_for_temp(
     temp: float,
-    h: BaseHamiltonian[GenericParameters],
-    k_space_grid: npt.NDArray[np.floating],
+    hamiltonian: sisl.Hamiltonian,
+    kgrid: sisl.MonkhorstPack,
+    hubbard_int_orbital_basis: npt.NDArray[np.float64],
     epsilon: float,
     max_iter: int = 1000,
+    delta_init: npt.NDArray[np.complex128] | None = None,
+    q: npt.NDArray[np.float64] | None = None,
 ) -> dict[str, Any] | None:  # pragma: no cover
     beta = np.inf if temp == 0 else 1 / temp
-    h.beta = beta
     try:
-        solved_h = self_consistency_loop(h, k_space_grid, epsilon, max_iter)
+        gap = self_consistency_loop(
+            hamiltonian=hamiltonian,
+            kgrid=kgrid,
+            beta=beta,
+            hubbard_int_orbital_basis=hubbard_int_orbital_basis,
+            epsilon=epsilon,
+            max_iter=max_iter,
+            delta_init=delta_init,
+            q=q,
+        )
     except RuntimeError:
         logger.exception("Did not converge.")
         return None
     else:
-        data_dict = {
+        data_dict: dict[str, Any] = {
             "T": temp,
         }
-        zero_temperature_gap = solved_h.delta_orbital_basis
-        data_dict.update(
-            {
-                f"delta_{orbital}": zero_temperature_gap[orbital]
-                for orbital in range(len(zero_temperature_gap))
-            }
-        )
+        data_dict.update({f"delta_{orbital}": gap[orbital] for orbital in range(len(gap))})
         return data_dict
 
 
@@ -157,17 +162,26 @@ def search_crit_temp(
     max_iter: int,
     n_temp_points: int,
     delta_init: npt.NDArray[np.complex128] | None = None,
+    q: npt.NDArray[np.float64] | None = None,
     beta_init: float | None = None,
 ) -> tuple[pd.DataFrame, list[float], matplotlib.figure.Figure]:  # pragma: no cover
     """Search for critical temperature."""
     logger.info("Start search for bounds for T_C")
-    # temp = 1 / h.beta if not np.isinf(h.beta) else 10 * hubbard_int_orbital_basis[0]
+    beta = 10 * hubbard_int_orbital_basis[0] if beta_init is None else beta_init
+    temp = 1 / beta if not np.isinf(beta) else 1e-8
 
     delta_vs_temp_list = []
     critical_temp_list = []
 
     gap_for_temp_partial = partial(
-        _gap_for_temp, h=h, k_space_grid=k_space_grid, epsilon=epsilon, max_iter=max_iter
+        _gap_for_temp,
+        hamiltonian=hamiltonian,
+        kgrid=kgrid,
+        hubbard_int_orbital_basis=hubbard_int_orbital_basis,
+        epsilon=epsilon,
+        max_iter=max_iter,
+        delta_init=delta_init,
+        q=q,
     )
 
     logger.info("Calculating zero temperature gap")
@@ -209,14 +223,12 @@ def search_crit_temp(
 
     delta_vs_temp = pd.DataFrame(delta_vs_temp_list).sort_values(by=["T"]).reset_index(drop=True)
 
-    fit_fig, fit_axs = plt.subplots(
-        nrows=1, ncols=h.number_of_bands, figsize=(h.number_of_bands * 6, 6)
-    )
+    fit_fig, fit_axs = plt.subplots(nrows=1, ncols=hamiltonian.no, figsize=(hamiltonian.no * 6, 6))
 
-    for orbital in range(h.number_of_bands):
+    for orbital in range(hamiltonian.no):
         fit_range, filtered_range, intercept, slope = _fit_for_crit_temp(delta_vs_temp, orbital)
 
-        ax = fit_axs if h.number_of_bands == 1 else fit_axs[orbital]
+        ax = fit_axs if hamiltonian.no == 1 else fit_axs[orbital]
 
         if fit_range is not None and intercept is not None and slope is not None:
             critical_temp = -intercept / slope
@@ -244,7 +256,6 @@ def search_crit_temp(
             "--x",
             color=f"C{orbital}",
         )
-        ax = plotting.format_plot(ax)
         ax.set_ylabel(r"$\vert\Delta\vert^2\ [t^2]$")
 
     return delta_vs_temp, critical_temp_list, fit_fig

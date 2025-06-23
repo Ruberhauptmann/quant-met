@@ -19,8 +19,8 @@ from .superfluid_weight import calculate_superfluid_weight
 
 __all__ = [
     "bdg_hamiltonian",
-    "gap_equation",
-    "diagonalize_bdg",
     "calculate_current_density",
     "calculate_superfluid_weight",
+    "diagonalize_bdg",
+    "gap_equation",
 ]

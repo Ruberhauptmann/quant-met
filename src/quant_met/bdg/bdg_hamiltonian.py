@@ -9,7 +9,7 @@ def bdg_hamiltonian(
     hamiltonian: sisl.Hamiltonian,
     k: npt.NDArray[np.floating],
     delta_orbital_basis: npt.NDArray[np.complexfloating],
-    q: npt.NDArray[np.floating] = None,
+    q: npt.NDArray[np.floating] | None = None,
 ) -> npt.NDArray[np.complexfloating]:
     """
     Construct the BdG Hamiltonian at momentum k.
@@ -58,7 +58,7 @@ def diagonalize_bdg(
     hamiltonian: sisl.Hamiltonian,
     kgrid: sisl.MonkhorstPack,
     delta_orbital_basis: np.ndarray,
-    q: npt.NDArray[np.floating],
+    q: npt.NDArray[np.floating] | None,
 ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.complex128]]:
     """Diagonalizes the BdG Hamiltonian.
 
