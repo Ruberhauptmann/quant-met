@@ -2,15 +2,9 @@
 
 import pathlib
 
+import numpy as np
+from numpydantic import NDArray, Shape
 from pydantic import BaseModel, Field
-
-from .hamiltonians import (
-    DressedGrapheneParameters,
-    GrapheneParameters,
-    OneBandParameters,
-    ThreeBandParameters,
-    TwoBandParameters,
-)
 
 
 class Control(BaseModel):
@@ -31,19 +25,17 @@ class Control(BaseModel):
 
     calculation: str
     prefix: str
+    hamiltonian_file: pathlib.Path
     outdir: pathlib.Path
     conv_treshold: float
+    beta: float
+    hubbard_int_orbital_basis: NDArray[Shape["3"], np.float64] = Field(
+        ..., description="Hubbard interaction in orbital basis"
+    )
+    q: NDArray[Shape["2"], float] | None = None
     max_iter: int = 1000
     n_temp_points: int = 50
     calculate_additional: bool = False
-
-    n_spin: int = 1
-    n_success: int = 1
-    wmixing: float = 0.5
-    n_bath: int = 2
-    n_iw: int = 1024
-    n_w: int = 4000
-    broadening: float = 0.005
 
 
 class KPoints(BaseModel):
@@ -76,11 +68,4 @@ class Parameters(BaseModel):
     """
 
     control: Control
-    model: (
-        DressedGrapheneParameters
-        | GrapheneParameters
-        | OneBandParameters
-        | TwoBandParameters
-        | ThreeBandParameters
-    ) = Field(..., discriminator="name")
     k_points: KPoints

@@ -7,12 +7,6 @@ API Reference
 
 .. toctree::
    :maxdepth: 1
-   :caption: Mean field
-
-   quant_met.mean_field <mean_field>
-
-.. toctree::
-   :maxdepth: 1
    :caption: Command Line Interface
 
    quant_met.cli <cli>
@@ -20,8 +14,18 @@ API Reference
 
 .. toctree::
    :maxdepth: 1
-   :caption: Utilities
+   :caption: Bogoliubov–de Gennes (BdG)
 
-   quant_met.geometry <geometry>
-   quant_met.plotting <plotting>
-   quant_met.utils <utils>
+   quant_met.bdg <bdg>
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Quantum Geometry
+
+   quant_met.quantum_geometry <quantum_geometry>
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Routines
+
+   quant_met.routines <routines>
