@@ -7,7 +7,7 @@ from numpy.typing import NDArray
 
 def calculate_current_density(
     hamiltonian: sisl.Hamiltonian,
-    k: NDArray[np.floating],
+    k: sisl.MonkhorstPack,
     bdg_energies: NDArray[np.floating],
     bdg_wavefunctions: NDArray[np.complexfloating],
     beta: float,
@@ -35,9 +35,6 @@ def calculate_current_density(
 
     def fermi_dirac(e: float, beta: float) -> float:
         return 1.0 / (np.exp(beta * e) + 1)
-
-    if k.ndim == 1:
-        k = np.expand_dims(k, axis=0)
 
     num_bands = hamiltonian.no
     current = np.zeros(2, dtype=np.complex128)

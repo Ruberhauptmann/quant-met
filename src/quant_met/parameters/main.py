@@ -2,7 +2,9 @@
 
 import pathlib
 
-from pydantic import BaseModel
+import numpy as np
+from numpydantic import NDArray, Shape
+from pydantic import BaseModel, Field
 
 
 class Control(BaseModel):
@@ -23,9 +25,14 @@ class Control(BaseModel):
 
     calculation: str
     prefix: str
-    geometry_file: pathlib.Path
+    hamiltonian_file: pathlib.Path
     outdir: pathlib.Path
     conv_treshold: float
+    beta: float
+    hubbard_int_orbital_basis: NDArray[Shape["3"], np.float64] = Field(
+        ..., description="Hubbard interaction in orbital basis"
+    )
+    q: NDArray[Shape["2"], float] | None = None
     max_iter: int = 1000
     n_temp_points: int = 50
     calculate_additional: bool = False

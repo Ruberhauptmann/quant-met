@@ -9,7 +9,7 @@ from .bdg_hamiltonian import bdg_hamiltonian
 
 def calculate_superfluid_weight(
     hamiltonian: sisl.Hamiltonian,
-    k_grid: npt.NDArray[np.floating],
+    kgrid: sisl.MonkhorstPack,
     beta: float,
     delta_orbital_basis: npt.NDArray[np.complexfloating],
 ) -> tuple[npt.NDArray[np.complexfloating], npt.NDArray[np.complexfloating]]:
@@ -20,7 +20,7 @@ def calculate_superfluid_weight(
 
     for i, _dir1 in enumerate(["x", "y"]):
         for j, _dir2 in enumerate(["x", "y"]):
-            for k_point in k_grid:
+            for k_point in kgrid:
                 k_tuple = tuple(k_point)
 
                 # Solve BdG problem
@@ -32,12 +32,29 @@ def calculate_superfluid_weight(
                     c_mnpq_cache[k_tuple] = _c_factor(energies, wavefuncs, beta)
                 c_mnpq = c_mnpq_cache[k_tuple]
 
-                # Derivatives
-                h_deriv_1 = hamiltonian.dHk(k=k_point, format="array")[i]
-                h_deriv_2 = hamiltonian.dHk(k=-k_point, format="array")[j]
+                bdg_h_deriv_1 = np.zeros(
+                    (2 * hamiltonian.no, 2 * hamiltonian.no), dtype=np.complex128
+                )
+                bdg_h_deriv_2 = np.zeros(
+                    (2 * hamiltonian.no, 2 * hamiltonian.no), dtype=np.complex128
+                )
 
-                j_op_1 = _current_operator(h_deriv_1, wavefuncs)
-                j_op_2 = _current_operator(h_deriv_2, wavefuncs)
+                bdg_h_deriv_1[0 : hamiltonian.no, 0 : hamiltonian.no] = hamiltonian.dHk(
+                    k=k_point, format="array"
+                )[i]
+                bdg_h_deriv_1[
+                    hamiltonian.no : 2 * hamiltonian.no, hamiltonian.no : 2 * hamiltonian.no
+                ] = hamiltonian.dHk(k=-k_point, format="array")[i]
+
+                bdg_h_deriv_2[0 : hamiltonian.no, 0 : hamiltonian.no] = hamiltonian.dHk(
+                    k=k_point, format="array"
+                )[j]
+                bdg_h_deriv_2[
+                    hamiltonian.no : 2 * hamiltonian.no, hamiltonian.no : 2 * hamiltonian.no
+                ] = hamiltonian.dHk(k=-k_point, format="array")[j]
+
+                j_op_1 = _current_operator(bdg_h_deriv_1, wavefuncs)
+                j_op_2 = _current_operator(bdg_h_deriv_2, wavefuncs)
 
                 for m in range(len(wavefuncs)):
                     for n in range(len(wavefuncs)):
