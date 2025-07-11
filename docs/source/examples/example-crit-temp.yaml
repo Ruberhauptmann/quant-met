@@ -2,7 +2,9 @@
 control:
   calculation: crit-temp
   prefix: test
-  geometry_file: docs/source/examples/geometry.xyz
+  hamiltonian_file: docs/source/examples/hamiltonian.HSX
+  beta: 100
+  hubbard_int_orbital_basis: [0.1, 0.1, 0.1]
   outdir: test/
   conv_treshold: 0.01
   max_iter: 1000
