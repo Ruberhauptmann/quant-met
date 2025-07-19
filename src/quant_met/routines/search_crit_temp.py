@@ -161,7 +161,6 @@ def search_crit_temp(
     epsilon: float,
     max_iter: int,
     n_temp_points: int,
-    delta_init: npt.NDArray[np.complex128] | None = None,
     q: npt.NDArray[np.float64] | None = None,
     beta_init: float | None = None,
 ) -> tuple[pd.DataFrame, list[float], matplotlib.figure.Figure]:  # pragma: no cover
@@ -180,7 +179,6 @@ def search_crit_temp(
         hubbard_int_orbital_basis=hubbard_int_orbital_basis,
         epsilon=epsilon,
         max_iter=max_iter,
-        delta_init=delta_init,
         q=q,
     )
 

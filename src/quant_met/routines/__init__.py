@@ -8,7 +8,8 @@ Routines
     self_consistency_loop
 """  # noqa: D205, D400
 
+from .loop_over_q import loop_over_q
 from .search_crit_temp import search_crit_temp
 from .self_consistency import self_consistency_loop
 
-__all__ = ["self_consistency_loop", "search_crit_temp"]
+__all__ = ["loop_over_q", "search_crit_temp", "self_consistency_loop"]
