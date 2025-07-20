@@ -29,7 +29,7 @@ def _gap_for_q(
     beta = np.inf if temp == 0 else 1 / temp
     q = q_fraction * hamiltonian.geometry.rcell[0]
     data_dict: dict[str, Any] = {
-        "q": q_fraction,
+        "q_fraction": q_fraction,
     }
     try:
         gap = self_consistency_loop(
@@ -120,13 +120,13 @@ def loop_over_q(
         with Pool() as p:
             delta_vs_q_list = [x for x in p.map(gap_for_q_partial, q_list) if x is not None]  # type: ignore[arg-type]
 
-        delta_vs_q_tmp = pd.DataFrame(delta_vs_q_list).sort_values(by=["q"]).reset_index(drop=True)
+        delta_vs_q_tmp = pd.DataFrame(delta_vs_q_list).sort_values(by=["q_fraction"]).reset_index(drop=True)
         delta_vs_q[f"{temp}"] = delta_vs_q_tmp
 
         for orbital in range(hamiltonian.no):
             ax = axs[orbital]
             ax.plot(
-                delta_vs_q_tmp["q"], delta_vs_q_tmp[f"delta_{orbital}"], "x--", label=f"{temp:.2f}"
+                delta_vs_q_tmp["q_fraction"], delta_vs_q_tmp[f"delta_{orbital}"], "x--", label=f"{temp:.2f}"
             )
             ax.legend()
 

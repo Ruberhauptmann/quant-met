@@ -84,3 +84,8 @@ def q_loop(parameters: Parameters) -> None:
         df.to_hdf(result_file_q, key=f"temp_{float(key):.4f}")
 
     fig.savefig(f"{parameters.control.outdir}/{parameters.control.prefix}_q_plot.pdf")
+
+    routines.analyse_q_data(
+        q_data=delta_vs_q,
+        hamiltonian=hamiltonian
+    )
