@@ -45,4 +45,15 @@ class QLoop(ControlBase):
     crit_temp: CritTemp | pathlib.Path
 
 
-Control = Annotated[SCF | CritTemp | QLoop, Field(discriminator="calculation")]
+class QAnalysis(BaseModel):
+    """Parameters for the q-analysis calculation."""
+
+    calculation: Literal["q-analysis"]
+    q_data: pathlib.Path
+    hamiltonian_file: pathlib.Path
+    prefix: str
+    hamiltonian_file: pathlib.Path
+    outdir: pathlib.Path
+
+
+Control = Annotated[SCF | CritTemp | QLoop | QAnalysis, Field(discriminator="calculation")]

@@ -69,7 +69,7 @@ def q_loop(parameters: Parameters) -> None:
         logger.info("Read critical temperatures from file.")
         logger.info("Obtained T_Cs: %s", critical_temperatures)
 
-    delta_vs_q, fig = routines.loop_over_q(
+    delta_vs_q = routines.loop_over_q(
         hamiltonian=hamiltonian,
         kgrid=k_grid_obj,
         hubbard_int_orbital_basis=np.array(parameters.control.hubbard_int_orbital_basis),
@@ -80,12 +80,10 @@ def q_loop(parameters: Parameters) -> None:
     )
 
     result_file_q = result_path / f"{parameters.control.prefix}_q.hdf5"
+    result_file_q.unlink()
     for key, df in delta_vs_q.items():
-        df.to_hdf(result_file_q, key=f"temp_{float(key):.4f}")
-
-    fig.savefig(f"{parameters.control.outdir}/{parameters.control.prefix}_q_plot.pdf")
-
-    routines.analyse_q_data(
-        q_data=delta_vs_q,
-        hamiltonian=hamiltonian
-    )
+        df.to_hdf(result_file_q, key=f"temp_{float(key):.6f}")
+        with h5py.File(result_file_q, "a") as f:
+            grp = f[f"temp_{float(key):.6f}"]
+            grp.attrs["crit_temp"] = critical_temperatures
+            grp.attrs["temp"] = float(key)

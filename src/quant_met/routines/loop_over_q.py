@@ -5,12 +5,12 @@ from functools import partial
 from multiprocessing import Pool
 from typing import Any
 
-import matplotlib.figure
-import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
 import sisl
+
+from quant_met import bdg
 
 from .self_consistency import self_consistency_loop
 
@@ -45,7 +45,27 @@ def _gap_for_q(
         logger.exception("Did not converge.")
         return None
     else:
+        bdg_energies, bdg_wavefunctions = bdg.diagonalize_bdg(
+            hamiltonian=hamiltonian,
+            kgrid=kgrid,
+            delta_orbital_basis=gap,
+            q=q,
+        )
+        current = bdg.calculate_current_density(
+            hamiltonian=hamiltonian,
+            k=kgrid,
+            bdg_energies=bdg_energies,
+            bdg_wavefunctions=bdg_wavefunctions,
+            beta=beta,
+        )
         data_dict.update({f"delta_{orbital}": gap[orbital] for orbital in range(len(gap))})
+        data_dict.update(
+            {
+                "current_x": current[0],
+                "current_y": current[1],
+                "current_abs": np.linalg.norm(current),
+            }
+        )
         return data_dict
 
 
@@ -57,15 +77,13 @@ def loop_over_q(
     max_iter: int,
     n_q_points: int,
     crit_temps: npt.NDArray[np.float64],
-) -> tuple[dict[str, pd.DataFrame], matplotlib.figure.Figure]:  # pragma: no cover
+) -> dict[str, pd.DataFrame]:  # pragma: no cover
     """Loop over q."""
     logger.info("Start search for upper bound for q.")
 
     crit_temp = np.max(crit_temps)
-    # temp_list = [crit_temp * x for x in [0.65, 0.7, 0.75, 0.8, 0.85, 0.87, 0.89, 0.91, 0.93, 0.95]]
-    temp_list = [crit_temp * x for x in [0.70, 0.80, 0.90]]
-
-    fig, axs = plt.subplots(ncols=hamiltonian.no, figsize=(7 * hamiltonian.no, 5))
+    temp_list = [crit_temp * x for x in [0.65, 0.7, 0.75, 0.8, 0.85, 0.87, 0.89, 0.91, 0.93, 0.95]]
+    # temp_list = [crit_temp * x for x in [0.70, 0.80, 0.90]]
 
     delta_vs_q = {}
     for temp in temp_list:
@@ -120,14 +138,9 @@ def loop_over_q(
         with Pool() as p:
             delta_vs_q_list = [x for x in p.map(gap_for_q_partial, q_list) if x is not None]  # type: ignore[arg-type]
 
-        delta_vs_q_tmp = pd.DataFrame(delta_vs_q_list).sort_values(by=["q_fraction"]).reset_index(drop=True)
+        delta_vs_q_tmp = (
+            pd.DataFrame(delta_vs_q_list).sort_values(by=["q_fraction"]).reset_index(drop=True)
+        )
         delta_vs_q[f"{temp}"] = delta_vs_q_tmp
 
-        for orbital in range(hamiltonian.no):
-            ax = axs[orbital]
-            ax.plot(
-                delta_vs_q_tmp["q_fraction"], delta_vs_q_tmp[f"delta_{orbital}"], "x--", label=f"{temp:.2f}"
-            )
-            ax.legend()
-
-    return delta_vs_q, fig
+    return delta_vs_q

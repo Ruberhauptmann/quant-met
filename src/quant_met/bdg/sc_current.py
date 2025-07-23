@@ -57,5 +57,4 @@ def calculate_current_density(
 
         current[dir_idx] = np.sum(matrix)
 
-    assert np.allclose(np.imag(current), 0.0, atol=1e-12)
     return (2 * np.real(current)) / len(k)

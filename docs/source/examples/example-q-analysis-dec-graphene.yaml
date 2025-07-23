@@ -1,0 +1,9 @@
+control:
+  calculation: q-analysis
+  q_data: test/test_q.hdf5
+  prefix: test
+  hamiltonian_file: docs/source/examples/dec-graphene.HSX
+  outdir: test/
+k_points:
+  nk1: 15
+  nk2: 15
