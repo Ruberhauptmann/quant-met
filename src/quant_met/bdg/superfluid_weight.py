@@ -33,24 +33,30 @@ def calculate_superfluid_weight(
                 c_mnpq = c_mnpq_cache[k_tuple]
 
                 bdg_h_deriv_1 = np.zeros(
-                    (2 * hamiltonian.no, 2 * hamiltonian.no), dtype=np.complex128
+                    (2 * hamiltonian.no, 2 * hamiltonian.no),
+                    dtype=np.complex128,
                 )
                 bdg_h_deriv_2 = np.zeros(
-                    (2 * hamiltonian.no, 2 * hamiltonian.no), dtype=np.complex128
+                    (2 * hamiltonian.no, 2 * hamiltonian.no),
+                    dtype=np.complex128,
                 )
 
                 bdg_h_deriv_1[0 : hamiltonian.no, 0 : hamiltonian.no] = hamiltonian.dHk(
-                    k=k_point, format="array"
+                    k=k_point,
+                    format="array",
                 )[i]
                 bdg_h_deriv_1[
-                    hamiltonian.no : 2 * hamiltonian.no, hamiltonian.no : 2 * hamiltonian.no
+                    hamiltonian.no : 2 * hamiltonian.no,
+                    hamiltonian.no : 2 * hamiltonian.no,
                 ] = hamiltonian.dHk(k=-k_point, format="array")[i]
 
                 bdg_h_deriv_2[0 : hamiltonian.no, 0 : hamiltonian.no] = hamiltonian.dHk(
-                    k=k_point, format="array"
+                    k=k_point,
+                    format="array",
                 )[j]
                 bdg_h_deriv_2[
-                    hamiltonian.no : 2 * hamiltonian.no, hamiltonian.no : 2 * hamiltonian.no
+                    hamiltonian.no : 2 * hamiltonian.no,
+                    hamiltonian.no : 2 * hamiltonian.no,
                 ] = hamiltonian.dHk(k=-k_point, format="array")[j]
 
                 j_op_1 = _current_operator(bdg_h_deriv_1, wavefuncs)

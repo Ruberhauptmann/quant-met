@@ -24,11 +24,12 @@ def q_analysis(parameters: Parameters) -> None:
         and k-point specifications for the T_C calculation.
     """
     if not isinstance(parameters.control, QAnalysis):
-        raise ValueError("Wrong parameters for q-loop.")
+        err_msg = "Wrong parameters for q-loop."
+        raise TypeError(err_msg)
 
     q_data = {}
     with h5py.File(f"{parameters.control.q_data}") as f:
-        for key in f.keys():
+        for key in f:
             q_data.update({key: None})
 
     for key in q_data:
@@ -45,13 +46,14 @@ def q_analysis(parameters: Parameters) -> None:
     result_file.unlink()
     lengths_vs_temp.to_hdf(result_file, key="lengths_vs_temp")
     gap_and_current_fig.savefig(
-        f"{parameters.control.outdir}/{parameters.control.prefix}_gap_and_current_vs_q.pdf"
+        f"{parameters.control.outdir}/{parameters.control.prefix}_gap_and_current_vs_q.pdf",
     )
 
     zero_temp_lengths, length_vs_temp_fig = routines.get_zero_temperature_values(
-        hamiltonian=hamiltonian, lengths_vs_temp=lengths_vs_temp
+        hamiltonian=hamiltonian,
+        lengths_vs_temp=lengths_vs_temp,
     )
     zero_temp_lengths.to_hdf(result_file, key="zero_temp_lengths")
     length_vs_temp_fig.savefig(
-        f"{parameters.control.outdir}/{parameters.control.prefix}_lengths_vs_temperature.pdf"
+        f"{parameters.control.outdir}/{parameters.control.prefix}_lengths_vs_temperature.pdf",
     )

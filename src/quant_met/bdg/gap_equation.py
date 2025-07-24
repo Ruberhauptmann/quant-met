@@ -8,7 +8,7 @@ from numba import jit
 from .bdg_hamiltonian import diagonalize_bdg
 
 
-def gap_equation(
+def gap_equation(  # noqa: PLR0913
     hamiltonian: sisl.Hamiltonian,
     beta: float,
     hubbard_int_orbital_basis: npt.NDArray[np.float64],
@@ -32,7 +32,10 @@ def gap_equation(
     New delta
     """
     bdg_energies, bdg_wavefunctions = diagonalize_bdg(
-        hamiltonian=hamiltonian, kgrid=kgrid, q=q, delta_orbital_basis=delta_orbital_basis
+        hamiltonian=hamiltonian,
+        kgrid=kgrid,
+        q=q,
+        delta_orbital_basis=delta_orbital_basis,
     )
     delta = np.zeros(hamiltonian.no, dtype=np.complex128)
     return gap_equation_loop(
@@ -47,7 +50,7 @@ def gap_equation(
 
 
 @jit
-def gap_equation_loop(
+def gap_equation_loop(  # noqa: PLR0913
     bdg_energies: npt.NDArray[np.float64],
     bdg_wavefunctions: npt.NDArray[np.complex128],
     delta: npt.NDArray[np.complex128],

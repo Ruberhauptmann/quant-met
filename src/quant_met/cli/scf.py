@@ -26,7 +26,8 @@ def scf(parameters: Parameters) -> None:
 
     hamiltonian = sisl.get_sile(parameters.control.hamiltonian_file).read_hamiltonian()
     k_grid_obj = sisl.MonkhorstPack(
-        hamiltonian.geometry, [parameters.k_points.nk1, parameters.k_points.nk2, 1]
+        hamiltonian.geometry,
+        [parameters.k_points.nk1, parameters.k_points.nk2, 1],
     )
 
     solved_gap = routines.self_consistency_loop(

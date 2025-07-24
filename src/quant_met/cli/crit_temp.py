@@ -26,7 +26,8 @@ def crit_temp(parameters: Parameters) -> None:
 
     hamiltonian = sisl.get_sile(parameters.control.hamiltonian_file).read_hamiltonian()
     k_grid_obj = sisl.MonkhorstPack(
-        hamiltonian.geometry, [parameters.k_points.nk1, parameters.k_points.nk2, 1]
+        hamiltonian.geometry,
+        [parameters.k_points.nk1, parameters.k_points.nk2, 1],
     )
 
     delta_vs_temp, critical_temperatures, fit_fig = routines.search_crit_temp(

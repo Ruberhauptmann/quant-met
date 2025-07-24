@@ -1,10 +1,12 @@
+"""Control parameters."""
 import pathlib
 from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field, conlist
 
 HubbardInt = Annotated[
-    conlist(float, min_length=1), Field(..., description="Hubbard interaction in orbital basis")
+    conlist(float, min_length=1),
+    Field(..., description="Hubbard interaction in orbital basis"),
 ]
 QVector = Annotated[conlist(float, min_length=2, max_length=2), Field(..., description="q vector")]
 

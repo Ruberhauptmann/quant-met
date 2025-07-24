@@ -24,14 +24,16 @@ def q_loop(parameters: Parameters) -> None:
         and k-point specifications for the T_C calculation.
     """
     if not isinstance(parameters.control, QLoop):
-        raise ValueError("Wrong parameters for q-loop.")
+        err_msg = "Wrong parameters for q-loop."
+        raise TypeError(err_msg)
 
     result_path = Path(parameters.control.outdir)
     result_path.mkdir(exist_ok=True, parents=True)
 
     hamiltonian = sisl.get_sile(parameters.control.hamiltonian_file).read_hamiltonian()
     k_grid_obj = sisl.MonkhorstPack(
-        hamiltonian.geometry, [parameters.k_points.nk1, parameters.k_points.nk2, 1]
+        hamiltonian.geometry,
+        [parameters.k_points.nk1, parameters.k_points.nk2, 1],
     )
 
     if isinstance(parameters.control.crit_temp, CritTemp):
