@@ -1,9 +1,11 @@
 """Routine to analyse q data."""
+
 import logging
 
 import matplotlib.figure
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.typing as npt
 import pandas as pd
 import sisl
 from scipy.interpolate import CubicSpline
@@ -20,11 +22,15 @@ def _lambda_from_xi(xi: float, jdp: float) -> float:
     return np.sqrt(2 / (3 * np.sqrt(3) * xi * jdp))
 
 
-def _correl_length_temp_dependence(temp: float, xi_0: float, crit_temp: float) -> float:
+def _correl_length_temp_dependence(
+    temp: npt.NDArray[np.floating], xi_0: float, crit_temp: float
+) -> npt.NDArray[np.floating]:
     return xi_0 / np.sqrt(1 - temp / crit_temp)
 
 
-def _london_depth_temp_dependence(temp: float, lambda_0: float, crit_temp: float) -> float:
+def _london_depth_temp_dependence(
+    temp: npt.NDArray[np.floating], lambda_0: float, crit_temp: float
+) -> npt.NDArray[np.floating]:
     return lambda_0 / np.sqrt(1 - (temp / crit_temp))
 
 
@@ -200,7 +206,7 @@ def get_zero_temperature_values(
                 )
                 lambda_ax.plot(
                     temp_points_interpolate,
-                    _correl_length_temp_dependence(
+                    _london_depth_temp_dependence(
                         temp_points_interpolate, lambda_0, crit_temp_lambda
                     ),
                 )

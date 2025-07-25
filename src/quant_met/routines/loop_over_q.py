@@ -16,6 +16,45 @@ from .self_consistency import self_consistency_loop
 
 logger = logging.getLogger(__name__)
 
+MAX_Q = 0.5
+
+
+def is_gap_zero(result: dict[str, float], atol: float = 1e-8) -> bool:
+    """Check if all delta values in result are (approximately) zero."""
+    deltas = np.array([x for key, x in result.items() if key.startswith("delta")])
+    return np.isclose(np.max(np.abs(deltas)), 0, atol=atol)
+
+
+def adjust_q_upper_bound(
+    gap_for_q_partial: partial[dict[str, Any] | None], initial_q: float = 0.5
+) -> float:
+    """
+    Adjust q_upper_bound until gap is non-zero or exceeds upper limit.
+
+    Returns the adjusted q_upper_bound.
+    """
+    q_upper_bound = initial_q
+
+    while True:
+        result_tmp: dict[str, float] | None = gap_for_q_partial(q_upper_bound)
+
+        if result_tmp is None or is_gap_zero(result_tmp):
+            q_upper_bound /= 2
+        else:
+            break
+
+    while True:
+        result_tmp = gap_for_q_partial(q_upper_bound)
+
+        if result_tmp is None or is_gap_zero(result_tmp):
+            q_upper_bound *= 1.1
+            if q_upper_bound > MAX_Q:
+                break
+        else:
+            break
+
+    return q_upper_bound
+
 
 def _gap_for_q(  # noqa: PLR0913
     q_fraction: float,
@@ -69,7 +108,7 @@ def _gap_for_q(  # noqa: PLR0913
         return data_dict
 
 
-def loop_over_q(  # noqa: PLR0913, PLR0912
+def loop_over_q(  # noqa: PLR0913
     hamiltonian: sisl.Hamiltonian,
     kgrid: sisl.MonkhorstPack,
     hubbard_int_orbital_basis: npt.NDArray[np.float64],
@@ -95,37 +134,7 @@ def loop_over_q(  # noqa: PLR0913, PLR0912
             max_iter=max_iter,
             temp=temp,
         )
-
-        q_upper_bound = 0.5
-        while True:
-            result_tmp = gap_for_q_partial(q_upper_bound)
-            if result_tmp is None:
-                q_upper_bound = q_upper_bound / 2
-            else:
-                result_tmp = np.array(
-                    [x for key, x in result_tmp.items() if key.startswith("delta")],
-                )
-                if np.isclose(np.max(np.abs(result_tmp)), 0, atol=1e-8):
-                    q_upper_bound = q_upper_bound / 2
-                else:
-                    while True:
-                        result_tmp = gap_for_q_partial(q_upper_bound)
-                        if result_tmp is None:
-                            q_upper_bound = q_upper_bound + 0.1 * q_upper_bound
-                            if q_upper_bound > 0.5:  # noqa: PLR2004
-                                break
-                        else:
-                            result_tmp = np.array(
-                                [x for key, x in result_tmp.items() if key.startswith("delta")],
-                            )
-                            if not np.isclose(np.max(np.abs(result_tmp)), 0, atol=1e-8):
-                                q_upper_bound = q_upper_bound + 0.1 * q_upper_bound
-                                if q_upper_bound > 0.5:  # noqa: PLR2004
-                                    break
-                            else:
-                                break
-                break
-        q_upper_bound = min(q_upper_bound, 0.5)
+        q_upper_bound = adjust_q_upper_bound(gap_for_q_partial, initial_q=0.5)
         logger.info("q upper bound: %s", q_upper_bound)
 
         q_list = np.linspace(

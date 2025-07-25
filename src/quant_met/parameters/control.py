@@ -1,14 +1,11 @@
 """Control parameters."""
+
 import pathlib
-from typing import Annotated, Literal
+from typing import Annotated, Literal, TypeAlias
 
-from pydantic import BaseModel, Field, conlist
+from pydantic import BaseModel, Field
 
-HubbardInt = Annotated[
-    conlist(float, min_length=1),
-    Field(..., description="Hubbard interaction in orbital basis"),
-]
-QVector = Annotated[conlist(float, min_length=2, max_length=2), Field(..., description="q vector")]
+FloatList: TypeAlias = list[float]
 
 
 class ControlBase(BaseModel):
@@ -18,7 +15,7 @@ class ControlBase(BaseModel):
     hamiltonian_file: pathlib.Path
     outdir: pathlib.Path
     conv_treshold: float
-    hubbard_int_orbital_basis: HubbardInt
+    hubbard_int_orbital_basis: FloatList = Field(..., min_length=1)
     max_iter: int = 1000
 
 
@@ -28,7 +25,7 @@ class SCF(ControlBase):
     calculation: Literal["scf"]
     beta: float
     calculate_additional: bool = False
-    q: QVector | None = None
+    q: FloatList | None = Field(..., min_length=2, max_length=2)
 
 
 class CritTemp(ControlBase):
@@ -36,7 +33,7 @@ class CritTemp(ControlBase):
 
     calculation: Literal["crit-temp"]
     n_temp_points: int = 50
-    q: QVector | None = None
+    q: FloatList | None = Field(..., min_length=2, max_length=2)
 
 
 class QLoop(ControlBase):
@@ -54,7 +51,6 @@ class QAnalysis(BaseModel):
     q_data: pathlib.Path
     hamiltonian_file: pathlib.Path
     prefix: str
-    hamiltonian_file: pathlib.Path
     outdir: pathlib.Path
 
 

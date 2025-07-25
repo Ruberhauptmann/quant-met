@@ -4,10 +4,12 @@ import logging
 from pathlib import Path
 
 import h5py
+import numpy as np
 import sisl
 
 from quant_met import routines
 from quant_met.parameters import Parameters
+from quant_met.parameters.control import CritTemp
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +23,10 @@ def crit_temp(parameters: Parameters) -> None:
         An instance of Parameters containing control settings, the model,
         and k-point specifications for the T_C calculation.
     """
+    if not isinstance(parameters.control, CritTemp):
+        err_msg = "Wrong parameters for crit-temp."
+        raise TypeError(err_msg)
+
     result_path = Path(parameters.control.outdir)
     result_path.mkdir(exist_ok=True, parents=True)
 
@@ -33,10 +39,10 @@ def crit_temp(parameters: Parameters) -> None:
     delta_vs_temp, critical_temperatures, fit_fig = routines.search_crit_temp(
         hamiltonian=hamiltonian,
         kgrid=k_grid_obj,
-        hubbard_int_orbital_basis=parameters.control.hubbard_int_orbital_basis,
+        hubbard_int_orbital_basis=np.array(parameters.control.hubbard_int_orbital_basis),
         epsilon=parameters.control.conv_treshold,
         max_iter=parameters.control.max_iter,
-        q=parameters.control.q,
+        q=np.array(parameters.control.q),
         n_temp_points=parameters.control.n_temp_points,
     )
 

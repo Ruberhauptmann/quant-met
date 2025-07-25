@@ -27,13 +27,14 @@ def q_analysis(parameters: Parameters) -> None:
         err_msg = "Wrong parameters for q-loop."
         raise TypeError(err_msg)
 
-    q_data = {}
+    q_data: dict[str, pd.DataFrame] = {}
     with h5py.File(f"{parameters.control.q_data}") as f:
         for key in f:
-            q_data.update({key: None})
+            q_data.update({key: pd.DataFrame()})
 
     for key in q_data:
-        q_data[key] = pd.read_hdf(f"{parameters.control.q_data}", key=key)
+        data: pd.DataFrame = pd.read_hdf(f"{parameters.control.q_data}", key=key)
+        q_data[key] = data
 
     hamiltonian = sisl.get_sile(parameters.control.hamiltonian_file).read_hamiltonian()
 
