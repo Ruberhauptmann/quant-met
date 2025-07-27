@@ -1,4 +1,16 @@
 
+.. _changelog-0.1.1:
+
+0.1.1 — 2025-07-27
+------------------
+
+Fixed
+^^^^^
+
+- The crit-temp calculation in the q-loop now uses the correct control parameters instead of the ones in the q-loop calculation
+
+- Delete the q-loop result file only if it exists
+
 .. _changelog-0.1.0:
 
 0.1.0 — 2025-07-27
