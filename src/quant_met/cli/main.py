@@ -10,6 +10,8 @@ import yaml
 from quant_met.parameters import Parameters
 
 from .crit_temp import crit_temp
+from .q_analysis import q_analysis
+from .q_loop import q_loop
 from .scf import scf
 
 logger = logging.getLogger(__name__)
@@ -56,6 +58,12 @@ def cli(input_file: TextIO, *, debug: bool) -> None:
         case "crit-temp":
             logger.info("Starting T_C calculation.")
             crit_temp(params)
+        case "q-loop":
+            logger.info("Starting q-loop calculation.")
+            q_loop(params)
+        case "q-analysis":
+            logger.info("Starting analysis of q data.")
+            q_analysis(params)
         case _:
             logger.error("Calculation %s not found.", params.control.calculation)
             sys.exit(1)

@@ -35,6 +35,7 @@ extensions = [
     "sphinx_design",
     "sphinxcontrib.autodoc_pydantic"
 ]
+extensions.remove("sphinxcontrib.autodoc_pydantic")
 
 intersphinx_mapping = {
     "h5py": ("https://docs.h5py.org/en/latest/", None),

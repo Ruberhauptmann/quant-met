@@ -62,7 +62,7 @@ def generate_uniform_grid(
                 num=ncols,
             )
             for i in range(nrows)
-        ]
+        ],
     )
 
     return grid

@@ -12,7 +12,7 @@ from quant_met.bdg import gap_equation
 logger = logging.getLogger(__name__)
 
 
-def self_consistency_loop(
+def self_consistency_loop(  # noqa: PLR0913
     hamiltonian: sisl.Hamiltonian,
     kgrid: sisl.MonkhorstPack,
     beta: float,

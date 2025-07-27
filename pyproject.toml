@@ -33,6 +33,9 @@ quant-met = 'quant_met.cli:cli'
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.mypy]
+plugins = ['pydantic.mypy']
+
 # Config for ruff
 [tool.ruff]
 line-length = 100
@@ -42,22 +45,8 @@ extend-exclude = ["docs/source/conf.py", "tests/", "edipack2triqs/"]
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-    "D203", # one-blank-line-before-class
-    "D212", # multi-line-summary-first-line
     "COM812",
-    "ISC001",
-    "Q000",
-    "Q003",
-    "S101", # This checks against using assert
-    "PLR0913", # This checks against using more than 5 function arguments
-    "PLR0915", # This checks against too long functions
-    "PLR0912", # Check against too many branches
-    "C901", # Check against too complex functions
-    "PLR2004", # Check against "magic values"
-    "T201", # Warn about print statements
-    "PLW0603", # Warn about global updates
-    "F722",
-    "ERA001"
+    "PD"
 ]
 
 [tool.ruff.lint.pydocstyle]

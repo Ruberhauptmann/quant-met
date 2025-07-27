@@ -1,0 +1,21 @@
+control:
+  calculation: q-loop
+  n_q_points: 15
+  prefix: test
+  hamiltonian_file: docs/source/examples/dec-graphene.HSX
+  hubbard_int_orbital_basis: [0.01, 0.01, 0.01]
+  outdir: test/
+  conv_treshold: 0.01
+  max_iter: 5000
+  crit_temp: test/test_critical_temperatures.hdf5
+    #calculation: crit-temp
+    #prefix: test
+    #hamiltonian_file: docs/source/examples/dec-graphene.HSX
+    #beta: 100
+    #hubbard_int_orbital_basis: [0.01, 0.01, 0.01]
+    #outdir: test/
+    #conv_treshold: 0.01
+    #max_iter: 1000
+k_points:
+  nk1: 15
+  nk2: 15

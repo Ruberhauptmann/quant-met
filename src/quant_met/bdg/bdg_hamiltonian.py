@@ -85,7 +85,10 @@ def diagonalize_bdg(
 
     for kpt in kgrid:
         bdg = bdg_hamiltonian(
-            hamiltonian=hamiltonian, delta_orbital_basis=delta_orbital_basis, k=kpt, q=q
+            hamiltonian=hamiltonian,
+            delta_orbital_basis=delta_orbital_basis,
+            k=kpt,
+            q=q,
         )
         e, v = np.linalg.eigh(bdg)
         energies.append(e)

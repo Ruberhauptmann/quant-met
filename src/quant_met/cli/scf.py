@@ -4,10 +4,12 @@ import logging
 from pathlib import Path
 
 import h5py
+import numpy as np
 import sisl
 
 from quant_met import bdg, routines
 from quant_met.parameters import Parameters
+from quant_met.parameters.control import SCF
 
 logger = logging.getLogger(__name__)
 
@@ -20,23 +22,28 @@ def scf(parameters: Parameters) -> None:
     parameters: Parameters
         An instance of Parameters containing control settings.
     """
+    if not isinstance(parameters.control, SCF):
+        err_msg = "Wrong parameters for scf."
+        raise TypeError(err_msg)
+
     result_path = Path(parameters.control.outdir)
     result_path.mkdir(exist_ok=True, parents=True)
     result_file = result_path / f"{parameters.control.prefix}.hdf5"
 
     hamiltonian = sisl.get_sile(parameters.control.hamiltonian_file).read_hamiltonian()
     k_grid_obj = sisl.MonkhorstPack(
-        hamiltonian.geometry, [parameters.k_points.nk1, parameters.k_points.nk2, 1]
+        hamiltonian.geometry,
+        [parameters.k_points.nk1, parameters.k_points.nk2, 1],
     )
 
     solved_gap = routines.self_consistency_loop(
         hamiltonian=hamiltonian,
         kgrid=k_grid_obj,
         beta=parameters.control.beta,
-        hubbard_int_orbital_basis=parameters.control.hubbard_int_orbital_basis,
+        hubbard_int_orbital_basis=np.array(parameters.control.hubbard_int_orbital_basis),
         epsilon=parameters.control.conv_treshold,
         max_iter=parameters.control.max_iter,
-        q=parameters.control.q,
+        q=np.array(parameters.control.q),
     )
 
     logger.info("Self-consistency loop completed successfully.")
@@ -53,7 +60,7 @@ def scf(parameters: Parameters) -> None:
             hamiltonian=hamiltonian,
             kgrid=k_grid_obj,
             delta_orbital_basis=solved_gap,
-            q=parameters.control.q,
+            q=np.array(parameters.control.q),
         )
 
         current = bdg.calculate_current_density(
