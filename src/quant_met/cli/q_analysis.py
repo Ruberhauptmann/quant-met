@@ -44,7 +44,8 @@ def q_analysis(parameters: Parameters) -> None:
     ) = routines.get_lengths_vs_temp(q_data=q_data, hamiltonian=hamiltonian)
 
     result_file = Path(f"{parameters.control.outdir}/{parameters.control.prefix}_sc_lengths.hdf5")
-    result_file.unlink()
+    if result_file.exists():
+        result_file.unlink()
     lengths_vs_temp.to_hdf(result_file, key="lengths_vs_temp")
     gap_and_current_fig.savefig(
         f"{parameters.control.outdir}/{parameters.control.prefix}_gap_and_current_vs_q.pdf",
