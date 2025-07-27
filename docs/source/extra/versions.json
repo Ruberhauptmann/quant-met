@@ -4,19 +4,9 @@
         "url": "https://quant-met.tjarksievers.de/en/latest/"
     },
     {
-        "name": "0.0.42 (stable)",
-        "version": "0.0.42",
+        "name": "0.1 (stable)",
+        "version": "0.1.0",
         "url": "https://quant-met.tjarksievers.de/en/stable/",
         "preferred": true
-    },
-    {
-        "name": "0.0.20",
-        "version": "0.0.20",
-        "url": "https://quant-met.tjarksievers.de/en/0.0.20/"
-    },
-    {
-        "name": "0.0.10",
-        "version": "0.0.10",
-        "url": "https://quant-met.tjarksievers.de/en/0.0.10/"
     }
 ]
