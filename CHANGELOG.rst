@@ -1,4 +1,19 @@
 
+.. _changelog-0.1.0:
+
+0.1.0 — 2025-07-27
+------------------
+
+Added
+^^^^^
+
+- Routines to loop over finite momenta and analyse the resulting data
+
+Changed
+^^^^^^^
+
+- Switch whole architecture to use sisl as a basis for tight binding Hamiltonians
+
 
 .. _changelog-0.0.25:
 
