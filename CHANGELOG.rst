@@ -1,4 +1,14 @@
 
+.. _changelog-0.1.2:
+
+0.1.2 — 2025-07-27
+------------------
+
+Fixed
+^^^^^
+
+- q-analysis CLI routine deletes the result file only if it exists
+
 .. _changelog-0.1.1:
 
 0.1.1 — 2025-07-27
