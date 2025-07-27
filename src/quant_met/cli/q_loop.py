@@ -40,22 +40,24 @@ def q_loop(parameters: Parameters) -> None:
         delta_vs_temp, critical_temperatures, fit_fig = routines.search_crit_temp(
             hamiltonian=hamiltonian,
             kgrid=k_grid_obj,
-            hubbard_int_orbital_basis=np.array(parameters.control.hubbard_int_orbital_basis),
-            epsilon=parameters.control.conv_treshold,
-            max_iter=parameters.control.max_iter,
+            hubbard_int_orbital_basis=np.array(parameters.control.crit_temp.hubbard_int_orbital_basis),
+            epsilon=parameters.control.crit_temp.conv_treshold,
+            max_iter=parameters.control.crit_temp.max_iter,
             n_temp_points=20,
         )
         logger.info("Search for T_C completed successfully.")
         logger.info("Obtained T_Cs: %s", critical_temperatures)
 
         fit_fig.savefig(
-            result_path / f"{parameters.control.prefix}_critical_temperatures_fit.pdf",
+            result_path / f"{parameters.control.crit_temp.prefix}_critical_temperatures_fit.pdf",
             bbox_inches="tight",
         )
 
         result_file_crit_temp = (
-            result_path / f"{parameters.control.prefix}_critical_temperatures.hdf5"
+            result_path / f"{parameters.control.crit_temp.prefix}_critical_temperatures.hdf5"
         )
+        if result_file_crit_temp.exists():
+            result_file_crit_temp.exists()
         delta_vs_temp.to_hdf(result_file_crit_temp, key="delta_vs_temp")
         with h5py.File(result_file_crit_temp, mode="a") as file:
             for orbital, crit_temp_orbital in enumerate(critical_temperatures):
@@ -82,7 +84,9 @@ def q_loop(parameters: Parameters) -> None:
     )
 
     result_file_q = result_path / f"{parameters.control.prefix}_q.hdf5"
-    result_file_q.unlink()
+
+    if result_file_q.exists():
+        result_file_q.unlink()
     for key, df in delta_vs_q.items():
         df.to_hdf(result_file_q, key=f"temp_{float(key):.6f}")
         with h5py.File(result_file_q, "a") as f:
