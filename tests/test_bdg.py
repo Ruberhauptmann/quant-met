@@ -10,7 +10,8 @@ def test_bdg_square_lattice(square_lattice_tb):
     bdg = bdg_hamiltonian(
         hamiltonian=square_lattice_tb,
         k=k,
-        delta_orbital_basis=np.array([delta_0])
+        delta_orbital_basis=np.array([delta_0]),
+        q=np.array([0.0, 0.0, 0.0])
     )
 
     assert bdg.shape == (2, 2)

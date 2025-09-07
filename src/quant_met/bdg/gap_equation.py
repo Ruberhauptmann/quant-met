@@ -14,7 +14,7 @@ def gap_equation(  # noqa: PLR0913
     hubbard_int_orbital_basis: npt.NDArray[np.float64],
     delta_orbital_basis: npt.NDArray[np.complex128],
     kgrid: sisl.MonkhorstPack,
-    q: npt.NDArray[np.float64] | None,
+    q: npt.NDArray[np.float64],
 ) -> npt.NDArray[np.complexfloating]:
     """Gap equation.
 

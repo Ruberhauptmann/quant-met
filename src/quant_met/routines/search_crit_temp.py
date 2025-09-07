@@ -136,9 +136,9 @@ def _gap_for_temp(  # noqa: PLR0913
     kgrid: sisl.MonkhorstPack,
     hubbard_int_orbital_basis: npt.NDArray[np.float64],
     epsilon: float,
+    q: npt.NDArray[np.float64],
     max_iter: int = 1000,
     delta_init: npt.NDArray[np.complex128] | None = None,
-    q: npt.NDArray[np.float64] | None = None,
 ) -> dict[str, Any] | None:  # pragma: no cover
     beta = np.inf if temp == 0 else 1 / temp
     try:
@@ -170,7 +170,7 @@ def search_crit_temp(  # noqa: PLR0913
     epsilon: float,
     max_iter: int,
     n_temp_points: int,
-    q: npt.NDArray[np.float64] | None = None,
+    q: npt.NDArray[np.float64],
     beta_init: float | None = None,
 ) -> tuple[pd.DataFrame, list[float], matplotlib.figure.Figure]:  # pragma: no cover
     """Search for critical temperature."""

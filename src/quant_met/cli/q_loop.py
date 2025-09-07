@@ -40,10 +40,13 @@ def q_loop(parameters: Parameters) -> None:
         delta_vs_temp, critical_temperatures, fit_fig = routines.search_crit_temp(
             hamiltonian=hamiltonian,
             kgrid=k_grid_obj,
-            hubbard_int_orbital_basis=np.array(parameters.control.crit_temp.hubbard_int_orbital_basis),
+            hubbard_int_orbital_basis=np.array(
+                parameters.control.crit_temp.hubbard_int_orbital_basis
+            ),
             epsilon=parameters.control.crit_temp.conv_treshold,
             max_iter=parameters.control.crit_temp.max_iter,
             n_temp_points=20,
+            q=np.array([0.0, 0.0, 0.0]),
         )
         logger.info("Search for T_C completed successfully.")
         logger.info("Obtained T_Cs: %s", critical_temperatures)
