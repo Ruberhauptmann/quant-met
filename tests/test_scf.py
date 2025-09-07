@@ -12,5 +12,6 @@ def test_scf(square_lattice_tb):
         beta=np.inf,
         hubbard_int_orbital_basis=np.array([0.0]),
         epsilon=1e-2,
+        q=np.array([0.0, 0.0, 0.0])
     )
     assert np.allclose(solved_gap, 0)

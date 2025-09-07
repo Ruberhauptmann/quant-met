@@ -25,7 +25,7 @@ class SCF(ControlBase):
     calculation: Literal["scf"]
     beta: float
     calculate_additional: bool = False
-    q: FloatList | None = Field(..., min_length=2, max_length=2)
+    q: FloatList = [0.0, 0.0, 0.0]
 
 
 class CritTemp(ControlBase):
@@ -33,7 +33,7 @@ class CritTemp(ControlBase):
 
     calculation: Literal["crit-temp"]
     n_temp_points: int = 50
-    q: FloatList | None = Field(..., min_length=2, max_length=2)
+    q: FloatList = [0.0, 0.0, 0.0]
 
 
 class QLoop(ControlBase):
