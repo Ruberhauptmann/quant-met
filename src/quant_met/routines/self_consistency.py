@@ -18,9 +18,9 @@ def self_consistency_loop(  # noqa: PLR0913
     beta: float,
     hubbard_int_orbital_basis: npt.NDArray[np.float64],
     epsilon: float,
+    q: npt.NDArray[np.float64],
     max_iter: int = 1000,
     delta_init: npt.NDArray[np.complex128] | None = None,
-    q: npt.NDArray[np.float64] | None = None,
 ) -> ndarray[tuple[int, ...], dtype[complexfloating]]:
     """Self-consistently solves the gap equation for a given Hamiltonian.
 

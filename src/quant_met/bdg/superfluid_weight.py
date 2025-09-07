@@ -24,7 +24,9 @@ def calculate_superfluid_weight(
                 k_tuple = tuple(k_point)
 
                 # Solve BdG problem
-                bdg_h = bdg_hamiltonian(hamiltonian, k_point, delta_orbital_basis)
+                bdg_h = bdg_hamiltonian(
+                    hamiltonian, k_point, delta_orbital_basis, q=np.array([0.0, 0.0, 0.0])
+                )
                 energies, wavefuncs = np.linalg.eigh(bdg_h)
 
                 # Cache coefficient tensor
