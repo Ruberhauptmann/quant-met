@@ -1,4 +1,14 @@
 
+.. _changelog-0.1.3:
+
+0.1.3 — 2025-09-07
+------------------
+
+Fixed
+^^^^^
+
+- Add a default (0, 0, 0) for q in parameters
+
 .. _changelog-0.1.2:
 
 0.1.2 — 2025-07-27
