@@ -27,6 +27,9 @@ def q_analysis(parameters: Parameters) -> None:
         err_msg = "Wrong parameters for q-loop."
         raise TypeError(err_msg)
 
+    result_path = Path(parameters.control.outdir)
+    result_path.mkdir(exist_ok=True, parents=True)
+
     q_data: dict[str, pd.DataFrame] = {}
     with h5py.File(f"{parameters.control.q_data}") as f:
         for key in f:
@@ -43,13 +46,11 @@ def q_analysis(parameters: Parameters) -> None:
         gap_and_current_fig,
     ) = routines.get_lengths_vs_temp(q_data=q_data, hamiltonian=hamiltonian)
 
-    result_file = Path(f"{parameters.control.outdir}/{parameters.control.prefix}_sc_lengths.hdf5")
+    result_file = result_path / f"{parameters.control.prefix}_sc_lengths.hdf5"
     if result_file.exists():
         result_file.unlink()
     lengths_vs_temp.to_hdf(result_file, key="lengths_vs_temp")
-    gap_and_current_fig.savefig(
-        f"{parameters.control.outdir}/{parameters.control.prefix}_gap_and_current_vs_q.pdf",
-    )
+    gap_and_current_fig.savefig(result_path / f"{parameters.control.prefix}_gap_and_current_vs_q.pdf")
 
     zero_temp_lengths, length_vs_temp_fig = routines.get_zero_temperature_values(
         hamiltonian=hamiltonian,

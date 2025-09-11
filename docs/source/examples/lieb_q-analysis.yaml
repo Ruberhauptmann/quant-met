@@ -1,0 +1,9 @@
+control:
+  calculation: q-analysis
+  q_data: q-loop/lieb_q.hdf5
+  prefix: lieb
+  hamiltonian_file: docs/source/examples/lieb.HSX
+  outdir: q-results/
+k_points:
+  nk1: 15
+  nk2: 15

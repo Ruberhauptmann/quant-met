@@ -2,7 +2,7 @@ control:
   calculation: q-loop
   n_q_points: 10
   prefix: test
-  hamiltonian_file: docs/source/examples/hamiltonian.HSX
+  hamiltonian_file: docs/source/examples/dec-graphene.HSX
   hubbard_int_orbital_basis: [0.1, 0.1, 0.1]
   outdir: test/
   conv_treshold: 0.01
@@ -10,7 +10,7 @@ control:
   crit_temp:
     calculation: crit-temp
     prefix: test
-    hamiltonian_file: docs/source/examples/hamiltonian.HSX
+    hamiltonian_file: docs/source/examples/dec-graphene.HSX
     beta: 100
     hubbard_int_orbital_basis: [0.1, 0.1, 0.1]
     outdir: test/
