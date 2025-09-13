@@ -48,11 +48,10 @@ def adjust_q_upper_bound(
 
         if result_tmp is None or is_gap_zero(result_tmp):
             break
-        else:
-            q_upper_bound *= 1.1
-            if q_upper_bound > MAX_Q:
-                q_upper_bound = MAX_Q
-                break
+        q_upper_bound *= 1.1
+        if q_upper_bound > MAX_Q:
+            q_upper_bound = MAX_Q
+            break
 
     return q_upper_bound
 

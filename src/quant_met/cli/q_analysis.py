@@ -50,7 +50,9 @@ def q_analysis(parameters: Parameters) -> None:
     if result_file.exists():
         result_file.unlink()
     lengths_vs_temp.to_hdf(result_file, key="lengths_vs_temp")
-    gap_and_current_fig.savefig(result_path / f"{parameters.control.prefix}_gap_and_current_vs_q.pdf")
+    gap_and_current_fig.savefig(
+        result_path / f"{parameters.control.prefix}_gap_and_current_vs_q.pdf"
+    )
 
     zero_temp_lengths, length_vs_temp_fig = routines.get_zero_temperature_values(
         hamiltonian=hamiltonian,

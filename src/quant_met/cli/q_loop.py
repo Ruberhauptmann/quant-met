@@ -54,12 +54,14 @@ def q_loop(parameters: Parameters) -> None:
         logger.info("Obtained T_Cs: %s", critical_temperatures)
 
         fit_fig.savefig(
-            result_path_crit_temp / f"{parameters.control.crit_temp.prefix}_critical_temperatures_fit.pdf",
+            result_path_crit_temp
+            / f"{parameters.control.crit_temp.prefix}_critical_temperatures_fit.pdf",
             bbox_inches="tight",
         )
 
         result_file_crit_temp = (
-            result_path_crit_temp / f"{parameters.control.crit_temp.prefix}_critical_temperatures.hdf5"
+            result_path_crit_temp
+            / f"{parameters.control.crit_temp.prefix}_critical_temperatures.hdf5"
         )
         if result_file_crit_temp.exists():
             result_file_crit_temp.unlink()
