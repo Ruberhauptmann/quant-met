@@ -238,6 +238,8 @@ def search_crit_temp(  # noqa: PLR0913
         delta_vs_temp_list.extend(p.map(gap_for_temp_partial, temperature_list))  # type: ignore[arg-type]
         delta_vs_temp_list = [x for x in delta_vs_temp_list if x is not None]
 
+    p.join()
+
     delta_vs_temp = pd.DataFrame(delta_vs_temp_list).sort_values(by=["T"]).reset_index(drop=True)
 
     fit_fig, fit_axs = plt.subplots(nrows=1, ncols=hamiltonian.no, figsize=(hamiltonian.no * 6, 6))
