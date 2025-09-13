@@ -6,8 +6,8 @@ help:
 
 qa *args: lint type (test args)
 
-test *args:
-    uv run pytest tests/ --import-mode importlib --cov --cov-report xml --junitxml=report.xml "$@"
+test $NUMBA_DISABLE_JIT="1":
+    uv run pytest tests/ --import-mode importlib --cov --cov-report xml --junitxml=report.xml
     uv run coverage report
 
 lint:
