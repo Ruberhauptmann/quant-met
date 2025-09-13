@@ -41,6 +41,8 @@ jobs:
         with:
           parallel: true
           flag-name: python-${{ matrix.python-version }}
+          format: cobertura
+          file: coverage.xml
 
   finish:
     needs: test

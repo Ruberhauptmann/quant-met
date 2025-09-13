@@ -15,6 +15,6 @@ def test_scf(square_lattice_tb):
         max_iter=500,
         epsilon=1e-1,
         q=np.array([0.0, 0.0, 0.0]),
-        beta_init=4
+        beta_init=10
     )
     assert np.allclose(np.array(critical_temp_list), 0.25, rtol=0.1, atol=0.05)
