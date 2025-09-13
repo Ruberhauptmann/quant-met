@@ -36,6 +36,9 @@ build-backend = "hatchling.build"
 [tool.mypy]
 plugins = ['pydantic.mypy']
 
+[tool.pytest]
+pythonpath = "src/"
+
 # Config for ruff
 [tool.ruff]
 line-length = 100
