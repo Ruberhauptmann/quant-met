@@ -112,8 +112,8 @@ def loop_over_q(  # noqa: PLR0913
     hamiltonian: sisl.Hamiltonian,
     kgrid: sisl.MonkhorstPack,
     hubbard_int_orbital_basis: npt.NDArray[np.float64],
-    epsilon: float,
     max_iter: int,
+    epsilon: float,
     n_q_points: int,
     crit_temps: npt.NDArray[np.float64],
 ) -> dict[str, pd.DataFrame]:  # pragma: no cover

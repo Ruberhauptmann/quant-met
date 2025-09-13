@@ -13,6 +13,7 @@ def test_scf(square_lattice_tb):
         kgrid=k_grid,
         beta=np.inf,
         hubbard_int_orbital_basis=np.array([0.0]),
+        max_iter=1000,
         epsilon=1e-2,
         q=np.array([0.0, 0.0, 0.0])
     )
@@ -22,6 +23,7 @@ def test_scf(square_lattice_tb):
         kgrid=k_grid,
         beta=np.inf,
         hubbard_int_orbital_basis=np.array([0.0]),
+        max_iter=1000,
         epsilon=1e-2,
         delta_init=np.array([1.0]),
         q=np.array([0.0, 0.0, 0.0])
