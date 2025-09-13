@@ -69,7 +69,6 @@ test = [
     "hypothesis>=6.131.6",
     "pytest>=8.3.5",
     "pytest-benchmark>=5.1.0",
-    "pytest-codspeed>=3.2.0",
     "pytest-cov>=6.1.1",
     "pytest-integration>=0.2.3",
     "pytest-mock>=3.14.0",
