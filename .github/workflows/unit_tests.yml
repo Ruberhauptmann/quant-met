@@ -35,12 +35,14 @@ jobs:
         run: uv sync --group=test
       - uses: extractions/setup-just@v3
       - name: Run test suite
-        run: just test --without-slow-integration
+        run: just test
       - name: Coveralls
         uses: coverallsapp/github-action@v2
         with:
           parallel: true
           flag-name: python-${{ matrix.python-version }}
+          format: cobertura
+          file: coverage.xml
 
   finish:
     needs: test
@@ -50,4 +52,4 @@ jobs:
         uses: coverallsapp/github-action@v2
         with:
           parallel-finished: true
-          carryforward: "python-3.10,python-3.11,python-3.12,python-3.13"
+          carryforward: "python-3.11,python-3.12,python-3.13"

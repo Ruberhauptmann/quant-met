@@ -34,7 +34,7 @@ def _london_depth_temp_dependence(
     return lambda_0 / np.sqrt(1 - (temp / crit_temp))
 
 
-def get_lengths_vs_temp(
+def get_lengths_vs_temp(  # noqa: C901
     q_data: dict[str, pd.DataFrame],
     hamiltonian: sisl.Hamiltonian,
 ) -> tuple[pd.DataFrame, matplotlib.figure.Figure]:
@@ -106,14 +106,19 @@ def get_lengths_vs_temp(
     for temperature, data in q_data.items():
         for orbital in range(hamiltonian.no):
             gap_ax = gap_and_current_axs[orbital]
-            gap_ax.plot(
-                data["q_fraction"],
-                data[f"delta_{orbital}"],
-                "x--",
-                label=f"{float(temperature.split('_')[-1]):.2f}",
-            )
-            gap_ax.plot(lengths_vs_temp[f"Q_{orbital}"], lengths_vs_temp[f"delta_{orbital}"], "o--")
+            if f"delta_{orbital}" in data:
+                gap_ax.plot(
+                    data["q_fraction"],
+                    data[f"delta_{orbital}"],
+                    "x--",
+                    label=f"{float(temperature.split('_')[-1]):.2f}",
+                )
+            if f"Q_{orbital}" in lengths_vs_temp:
+                gap_ax.plot(
+                    lengths_vs_temp[f"Q_{orbital}"], lengths_vs_temp[f"delta_{orbital}"], "o--"
+                )
             gap_ax.legend()
+
         current_ax = gap_and_current_axs[hamiltonian.no]
         current_ax.plot(
             data["q_fraction"],
@@ -123,8 +128,9 @@ def get_lengths_vs_temp(
         )
         current_ax.legend()
 
-    current_ax = gap_and_current_axs[hamiltonian.no]
-    current_ax.plot(lengths_vs_temp["q_j_max"], lengths_vs_temp["j_dp"], "o--")
+    if "q_j_max" in lengths_vs_temp:
+        current_ax = gap_and_current_axs[hamiltonian.no]
+        current_ax.plot(lengths_vs_temp["q_j_max"], lengths_vs_temp["j_dp"], "o--")
 
     return lengths_vs_temp, gap_and_current_fig
 

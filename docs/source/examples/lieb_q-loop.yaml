@@ -1,0 +1,13 @@
+control:
+  calculation: q-loop
+  n_q_points: 15
+  prefix: lieb
+  hamiltonian_file: docs/source/examples/lieb.HSX
+  hubbard_int_orbital_basis: [0.1, 0.1, 0.1]
+  outdir: q-loop/
+  conv_treshold: 0.01
+  max_iter: 5000
+  crit_temp: crit_temp/lieb_critical_temperatures.hdf5
+k_points:
+  nk1: 15
+  nk2: 15

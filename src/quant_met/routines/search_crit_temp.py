@@ -25,7 +25,7 @@ def _get_bounds(
     initial_temp: float,
     gap_for_temp_partial: partial[dict[str, Any] | None],
     zero_temperature_gap: npt.NDArray[np.complexfloating],
-) -> tuple[list[dict[str, Any]], float, float]:  # pragma: no cover
+) -> tuple[list[dict[str, Any]], float, float]:
     delta_vs_temp_list = []
     zero_gap_temp = nonzero_gap_temp = 0.0
     found_zero_gap = False
@@ -87,7 +87,7 @@ def _get_bounds(
 def _fit_for_crit_temp(
     delta_vs_temp: pd.DataFrame,
     orbital: int,
-) -> tuple[pd.DataFrame | None, pd.DataFrame, float | None, float | None]:  # pragma: no cover
+) -> tuple[pd.DataFrame | None, pd.DataFrame, float | None, float | None]:
     filtered_results = delta_vs_temp.iloc[
         np.where(
             np.invert(
@@ -139,7 +139,7 @@ def _gap_for_temp(  # noqa: PLR0913
     q: npt.NDArray[np.float64],
     max_iter: int = 1000,
     delta_init: npt.NDArray[np.complex128] | None = None,
-) -> dict[str, Any] | None:  # pragma: no cover
+) -> dict[str, Any] | None:
     beta = np.inf if temp == 0 else 1 / temp
     try:
         gap = self_consistency_loop(
@@ -172,7 +172,7 @@ def search_crit_temp(  # noqa: PLR0913
     n_temp_points: int,
     q: npt.NDArray[np.float64],
     beta_init: float | None = None,
-) -> tuple[pd.DataFrame, list[float], matplotlib.figure.Figure]:  # pragma: no cover
+) -> tuple[pd.DataFrame, list[float], matplotlib.figure.Figure]:
     """Search for critical temperature."""
     logger.info("Start search for bounds for T_C")
     beta = 10 * hubbard_int_orbital_basis[0] if beta_init is None else beta_init
@@ -237,6 +237,8 @@ def search_crit_temp(  # noqa: PLR0913
     with Pool() as p:
         delta_vs_temp_list.extend(p.map(gap_for_temp_partial, temperature_list))  # type: ignore[arg-type]
         delta_vs_temp_list = [x for x in delta_vs_temp_list if x is not None]
+
+    p.join()
 
     delta_vs_temp = pd.DataFrame(delta_vs_temp_list).sort_values(by=["T"]).reset_index(drop=True)
 

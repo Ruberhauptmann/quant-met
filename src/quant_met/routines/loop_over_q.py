@@ -47,10 +47,10 @@ def adjust_q_upper_bound(
         result_tmp = gap_for_q_partial(q_upper_bound)
 
         if result_tmp is None or is_gap_zero(result_tmp):
-            q_upper_bound *= 1.1
-            if q_upper_bound > MAX_Q:
-                break
-        else:
+            break
+        q_upper_bound *= 1.1
+        if q_upper_bound > MAX_Q:
+            q_upper_bound = MAX_Q
             break
 
     return q_upper_bound
@@ -66,7 +66,7 @@ def _gap_for_q(  # noqa: PLR0913
     max_iter: int = 1000,
 ) -> dict[str, Any] | None:  # pragma: no cover
     beta = np.inf if temp == 0 else 1 / temp
-    q = q_fraction * hamiltonian.geometry.rcell[0]
+    q = np.array([q_fraction, 0, 0])
     data_dict: dict[str, Any] = {
         "q_fraction": q_fraction,
     }
@@ -112,8 +112,8 @@ def loop_over_q(  # noqa: PLR0913
     hamiltonian: sisl.Hamiltonian,
     kgrid: sisl.MonkhorstPack,
     hubbard_int_orbital_basis: npt.NDArray[np.float64],
-    epsilon: float,
     max_iter: int,
+    epsilon: float,
     n_q_points: int,
     crit_temps: npt.NDArray[np.float64],
 ) -> dict[str, pd.DataFrame]:  # pragma: no cover

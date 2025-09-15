@@ -1,4 +1,16 @@
 
+.. _changelog-0.1.4:
+
+0.1.4 — 2025-09-13
+------------------
+
+Fixed
+^^^^^
+
+- Create result directories for q-analysis and crit temp (when in q-loop)
+
+- Algorithm to find the bounds for q in q-loop
+
 .. _changelog-0.1.3:
 
 0.1.3 — 2025-09-07

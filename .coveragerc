@@ -1,11 +1,9 @@
 [paths]
 source =
    src
-   */site-packages
 
 [run]
 branch = true
-parallel = true
 source =
     quant_met
 

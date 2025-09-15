@@ -37,6 +37,8 @@ def q_loop(parameters: Parameters) -> None:
     )
 
     if isinstance(parameters.control.crit_temp, CritTemp):
+        result_path_crit_temp = Path(parameters.control.crit_temp.outdir)
+        result_path_crit_temp.mkdir(exist_ok=True, parents=True)
         delta_vs_temp, critical_temperatures, fit_fig = routines.search_crit_temp(
             hamiltonian=hamiltonian,
             kgrid=k_grid_obj,
@@ -52,15 +54,17 @@ def q_loop(parameters: Parameters) -> None:
         logger.info("Obtained T_Cs: %s", critical_temperatures)
 
         fit_fig.savefig(
-            result_path / f"{parameters.control.crit_temp.prefix}_critical_temperatures_fit.pdf",
+            result_path_crit_temp
+            / f"{parameters.control.crit_temp.prefix}_critical_temperatures_fit.pdf",
             bbox_inches="tight",
         )
 
         result_file_crit_temp = (
-            result_path / f"{parameters.control.crit_temp.prefix}_critical_temperatures.hdf5"
+            result_path_crit_temp
+            / f"{parameters.control.crit_temp.prefix}_critical_temperatures.hdf5"
         )
         if result_file_crit_temp.exists():
-            result_file_crit_temp.exists()
+            result_file_crit_temp.unlink()
         delta_vs_temp.to_hdf(result_file_crit_temp, key="delta_vs_temp")
         with h5py.File(result_file_crit_temp, mode="a") as file:
             for orbital, crit_temp_orbital in enumerate(critical_temperatures):
