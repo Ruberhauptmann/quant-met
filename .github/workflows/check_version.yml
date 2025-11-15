@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ startsWith(github.head_ref, 'release') }}
     steps:
-      - uses: getsentry/action-setup-venv@v2.2.0
+      - uses: getsentry/action-setup-venv@v3.0.0
         id: venv
         with:
           python-version: 3.12.2
