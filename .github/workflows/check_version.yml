@@ -16,6 +16,6 @@ jobs:
         with:
           python-version: 3.12.2
           install-cmd: pip install quant-met poetry
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: check version
         run: ./check_version.sh
