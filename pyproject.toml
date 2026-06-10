@@ -18,9 +18,6 @@ wheel.expand-macos-universal-tags = true
 metadata.version.provider = "scikit_build_core.metadata.setuptools_scm"
 wheel.install-dir = "quant_met"
 
-[tool.scikit-build.stubs]
-generated-dir = "src"
-
 [tool.setuptools_scm]
 
 [dependency-groups]
