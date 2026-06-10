@@ -35,7 +35,7 @@ jobs:
       - name: Install the project
         run: uv sync --group=lint
 
-      - uses: extractions/setup-just@v3
+      - uses: extractions/setup-just@v4
 
       - name: Run test suite
         run: just lint
