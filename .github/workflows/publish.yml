@@ -21,7 +21,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.21.0 # Uses isolated docker/VM contexts to build
         env:
           # Tell cibuildwheel any custom environment variables if needed
-          CIBW_BEFORE_ALL_LINUX: "yum install -y eigen3-devel"
+          CIBW_BEFORE_ALL_LINUX: "apt install -y libeigen3-dev libomp-dev"
           CIBW_BEFORE_ALL_MACOS: "brew install eigen libomp"
 
       - uses: actions/upload-artifact@v4
