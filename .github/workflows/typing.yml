@@ -1,5 +1,3 @@
-
-
 name: Type checking
 
 on:
@@ -14,20 +12,30 @@ permissions:
 
 jobs:
   test:
-    name: Type checking
+    name: Linting
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake libomp-dev
+
       - name: Set up Python 3.12
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+
       - name: Install uv
         uses: astral-sh/setup-uv@v6
+
       - name: Install the project
         run: uv sync --group=type
+
       - uses: extractions/setup-just@v3
+
       - name: Run test suite
         run: just type
