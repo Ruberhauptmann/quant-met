@@ -11,13 +11,13 @@ test $NUMBA_DISABLE_JIT="1":
     uv run coverage xml
 
 lint:
-    uv run ruff check --fix .
+    uvx ruff check --fix .
 
 format:
-    uv run ruff format .
+    uvx ruff format .
 
 type:
-    uv run mypy --ignore-missing-imports src/
+    uvx ty check
 
 # Install the development environment
 environment:
