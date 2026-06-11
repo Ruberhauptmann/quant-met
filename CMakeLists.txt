@@ -27,3 +27,5 @@ target_link_libraries(quant_met_core PRIVATE
         OpenMP::OpenMP_CXX
         Eigen3::Eigen
 )
+
+install(TARGETS quant_met_core DESTINATION quant_met)
