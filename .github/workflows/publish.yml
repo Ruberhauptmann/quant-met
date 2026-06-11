@@ -18,9 +18,9 @@ jobs:
           fetch-depth: 0 # Tells git to fetch all tags and history
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.21.0 # Uses isolated docker/VM contexts to build
+        uses: pypa/cibuildwheel@v4.0.0
         env:
-          CIBW_BEFORE_ALL_LINUX: "apt install -y libeigen3-dev libomp-dev"
+          CIBW_BEFORE_ALL_LINUX: "yum install -y epel-release && yum install -y libgomp eigen3-devel"
           CIBW_BEFORE_ALL_MACOS: "brew install eigen libomp"
 
       - uses: actions/upload-artifact@v4
