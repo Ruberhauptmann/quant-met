@@ -10,16 +10,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # We split the macos runners to pass custom architecture keys
-        include:
-          - os: ubuntu-latest
-            arch: auto
-          - os: windows-latest
-            arch: auto
-          - os: macos-13
-            arch: x86_64  # Intel Mac only builds for Intel
-          - os: macos-14
-            arch: arm64   # Apple Silicon Mac only builds for Apple Silicon
+        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest, windows-11-arm, macos-15-intel, macos-14]
 
     steps:
       - uses: actions/checkout@v6
@@ -30,7 +21,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.21.0 # Uses isolated docker/VM contexts to build
         env:
           CIBW_ARCHS_MACOS: ${{ matrix.arch }}
-          # Tell cibuildwheel any custom environment variables if needed
+          ARCHFLAGS: "-arch arm64"
           CIBW_BEFORE_ALL_LINUX: "apt install -y libeigen3-dev libomp-dev"
           CIBW_BEFORE_ALL_MACOS: "brew install eigen libomp"
 
