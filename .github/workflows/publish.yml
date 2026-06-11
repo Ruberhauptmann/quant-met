@@ -32,10 +32,9 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v4.0.0
         env:
-          CIBW_BEFORE_ALL_LINUX: "yum install -y epel-release && yum install -y libgomp eigen3-devel"
+          CIBW_BEFORE_ALL_LINUX: "yum install -y libgomp eigen3-devel"
           CIBW_BEFORE_ALL_MACOS: "brew install eigen libomp"
-          CIBW_SKIP: "cp38-* cp39-*"
-          ARCHFLAGS: "${{ matrix.arch == 'arm64' && '-arch arm64' || matrix.arch == 'x86_64' && '-arch x86_64' || '' }}"
+          CIBW_SKIP: "cp39-*"
 
       - uses: actions/upload-artifact@v4
         with:

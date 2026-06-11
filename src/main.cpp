@@ -1,16 +1,16 @@
-#include "quant_met.h"
-#include <omp.h>
+#include <pybind11/pybind11.h>
+#include <Eigen/Core>
 
-Eigen::MatrixXcd scale_matrix_parallel(const Eigen::MatrixXcd& input, double factor) {
-    Eigen::MatrixXcd result = input;
+namespace py = pybind11;
 
-    // Simple OpenMP test to verify multi-threading works
-#pragma omp parallel for collapse(2)
-    for (int i = 0; i < result.rows(); ++i) {
-        for (int j = 0; j < result.cols(); ++j) {
-            result(i, j) *= factor;
-        }
+Eigen::MatrixXcd scale_quantum_matrix(const Eigen::MatrixXcd& input_matrix, double scaling_factor) {
+    // Standard validation guardrail
+    if (input_matrix.rows() == 0 || input_matrix.cols() == 0) {
+        return input_matrix;
     }
+
+    // Direct element-wise operation (Eigen automatically optimizes this under the hood)
+    Eigen::MatrixXcd result = input_matrix * scaling_factor;
 
     return result;
 }
