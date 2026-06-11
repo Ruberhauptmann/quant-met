@@ -10,7 +10,19 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest, windows-11-arm, macos-15-intel, macos-14]
+        include:
+          - os: ubuntu-latest
+            arch: auto
+          - os: ubuntu-24.04-arm
+            arch: auto
+          - os: windows-latest
+            arch: auto
+          - os: windows-11-arm
+            arch: auto
+          - os: macos-15-intel
+            arch: x86_64     # Force Intel execution
+          - os: macos-14
+            arch: arm64      # Force Apple Silicon execution
 
     steps:
       - uses: actions/checkout@v6
@@ -22,6 +34,8 @@ jobs:
         env:
           CIBW_BEFORE_ALL_LINUX: "yum install -y epel-release && yum install -y libgomp eigen3-devel"
           CIBW_BEFORE_ALL_MACOS: "brew install eigen libomp"
+          CIBW_SKIP: "cp38-* cp39-*"
+          ARCHFLAGS: "${{ matrix.arch == 'arm64' && '-arch arm64' || matrix.arch == 'x86_64' && '-arch x86_64' || '' }}"
 
       - uses: actions/upload-artifact@v4
         with:
