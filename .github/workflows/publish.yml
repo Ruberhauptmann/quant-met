@@ -20,9 +20,9 @@ jobs:
           #- os: windows-11-arm
           #  arch: auto
           - os: macos-15-intel
-            arch: x86_64     # Force Intel execution
-          #- os: macos-14
-          #  arch: arm64      # Force Apple Silicon execution
+            arch: x86_64
+          - os: macos-14
+            arch: arm64
 
     steps:
       - uses: actions/checkout@v6
